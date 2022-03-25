@@ -5,10 +5,7 @@ let pp_big_int fmt i =
   Format.fprintf fmt "%s" (string_of_big_int i)
 
 type expr = 
-| StorageEntry of iden
-
 | LocalRef of iden 
-| StorageRef of iden
 | GlobalRef of iden
 
 | None

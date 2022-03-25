@@ -48,7 +48,6 @@
            <expr> IN <expr>
          | LET LPAR <param_opt_typed> (COMMA <param_opt_typed>)* RPAR EQ
            <expr>
-         | <left> EQ <expr>
          | <expr> ADD <expr>
          | <expr> SUB <expr>
          | <expr> DIV <expr>
@@ -73,7 +72,6 @@
          | <expr> LPAR [<expr> (COMMA <expr>)*] RPAR
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
-         | LPAR <expr> SEMICOLON fun_body RPAR
 
 <dtype> ::= TYPE IDENT EQ <type_sig> SEMICOLON
 

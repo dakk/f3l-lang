@@ -5,7 +5,7 @@ open Helpers.Errors
 let run action filename opt = 
   (match action with 
   | "compile" -> Compiler.compile filename opt
-  | "extract-interface" -> Compiler.extract_interface filename opt
+  (* | "extract-interface" -> Compiler.extract_interface filename opt *)
   | _ -> raise @@ CompilerError ("Invalid compiler action: " ^ action)
   )
 
@@ -37,7 +37,7 @@ let command =
           target = if is_none target then Some("tz") else target;
           print_pt = ppt;
           print_ast = past;
-          print_c = pc;
+          print_ligo = pc;
           verbose = verbose;
           no_remove_unused = noremoveunused;
         } in (

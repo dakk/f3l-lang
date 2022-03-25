@@ -7,7 +7,7 @@ open Helpers
 
 module SymbolSet = Set.Make(String)
 
-let used_globalref_in_expr (t, e) = 
+(* let used_globalref_in_expr (t, e) = 
   traverse (t, e) (fun (_, e) -> 
     match e with | GlobalRef (i) -> SymbolSet.singleton i
   ) SymbolSet.union SymbolSet.empty
@@ -22,4 +22,4 @@ let remove_unused _ (ast: Ast.t) =
         Errors.emit_warning None "Unused defant" @@ "The defant '" ^ i ^ "' is not used, dropping from ast";
         false)
     ) ast.defs
-  }
+  } *)

@@ -50,8 +50,5 @@ let rec pp_ltype fmt (a: ttype) = match a with
   fprintf fmt "(%a)" 
     (pp_list " * " pp_ltype) tl
 
-| TContract (t) -> 
-  fprintf fmt "%a contract" pp_ltype t
-
 | _ -> raise @@ TypeError (None, sprintf "Type '%s' is not translable to ligo" (show_ttype a))
 

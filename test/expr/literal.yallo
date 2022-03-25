@@ -1,0 +1,13 @@
+def litString: string = "hola";
+def litNat: nat = 1n;
+def litInt: int = 12;
+def litNone: int option = None;
+def litSome: int option = Some(12);
+def litTuple: (int, nat, string) = (12, 32n, "ciao");
+def litList: int list = [13, 12, 11];
+def litLambda: int -> int	= (a: int) => (2);
+def litRec2: record { a: string, b: int } = { a="ciao", b=12 };
+
+type a = enum (Ciao | Mondo);
+def b: a = a#Ciao;
+

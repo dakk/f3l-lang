@@ -1,0 +1,9 @@
+def a: bytes = Bytes.pack (12n);
+
+def b: nat option = Bytes.unpack (a);
+def c = (Bytes.unpack (a) : nat option);
+def c2: nat option = Bytes.unpack (a);
+
+def lp: nat -> nat = (a1: nat) => (a1*2n);
+def plp = Bytes.pack (lp);
+def lp2: (nat -> nat) option = Bytes.unpack (plp);

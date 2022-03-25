@@ -10,8 +10,6 @@
   ast_remove_unused
   parse_tree_to_ast
   ast_to_ligo 
-  ast_to_interface 
-  ast_to_coq
  )
  (modules intermediate passes compiler))
 

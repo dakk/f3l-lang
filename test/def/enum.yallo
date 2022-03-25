@@ -1,0 +1,7 @@
+type a = enum (Padre | Madre);
+type b = enum (Zio | Zia);
+def c: a = a#Padre;
+def d: a = a#Madre;
+def e: b = b#Zio;
+def f: b = b#Zia;
+def g: (b, a) = (b#Zia, a#Madre);

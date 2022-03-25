@@ -4,18 +4,16 @@ open Ast_expr
 open Helpers.Errors
 
 
-type st = | Type | Interface | Def | Contract [@@deriving show {with_path = false}]
+type st = | Type | Def [@@deriving show {with_path = false}]
 
 
 type t = {
   types:       (iden * ttype) list;
   defs:      (iden * texpr) list;
-  ifaces:      (iden * entry_sig list) list;
   symbols:     (iden * st) list
 } [@@deriving show {with_path = false}]
 
 let start_env = {
-  ifaces=[];
   defs=[];
   types=[
     "unit", TUnit;

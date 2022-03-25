@@ -98,8 +98,6 @@
 		| LET LPAR tl=separated_nonempty_list(COMMA, param_opt_typed) RPAR EQ e=expr 
 			{ loce $startpos $endpos @@ Parse_tree.PELetTuple (tl, e) }
 
-		// storage assignment
-		| i=left EQ e=expr { loce $startpos $endpos @@ Parse_tree.PEAssign (i, e) }
 
     // arithm
     | e1=expr ADD e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PEAdd (e1,e2) }
@@ -138,7 +136,6 @@
 		
     | LPAR e=expr RPAR 				  { loce $startpos $endpos @@ e }
     | LPAR v=expr COLON t=type_sig RPAR { loce $startpos $endpos @@ Parse_tree.PETyped (v, t) }
-		| LPAR e1=expr SEMICOLON f=fun_body RPAR { loce $startpos $endpos @@ Parse_tree.PESeq (e1, f) }
 
 
 

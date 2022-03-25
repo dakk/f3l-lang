@@ -1,0 +1,4 @@
+import "test/import/a.yallo";
+
+def a: t = (12, "ciao");
+

@@ -11,6 +11,6 @@
 * [Tezos functions](docs/tezos-functions.md)
 * [Helper functions](docs/helper-functions.md)
 * [Import](docs/import.md)
-* [Globals: function and constant](docs/function-and-constant.md)
+* [Globals: function and defant](docs/function-and-defant.md)
 * [Expressions](docs/expressions.md)
 * [Control flow](docs/control-flow.md)

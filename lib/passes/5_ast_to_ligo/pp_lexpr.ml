@@ -35,10 +35,6 @@ match e with
 | LocalRef (id) -> 
   fprintf fmt "%s" id
 
-| StorageRef (id) -> 
-  fprintf fmt "s.%s" id
-
-
 | None -> 
   fprintf fmt "None"
 

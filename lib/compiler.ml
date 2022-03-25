@@ -5,6 +5,7 @@ type options = {
   target: string option;
   print_pt: bool;
   print_ast: bool;
+  print_ligo: bool;
   verbose: bool;
   no_remove_unused: bool;
 }
@@ -13,6 +14,7 @@ let default_options = {
   target = Some ("c");
   print_pt = true;
   print_ast = true;
+  print_ligo = true;
   verbose = true;
   no_remove_unused = false;
 }
@@ -81,9 +83,9 @@ let compile (filename: string) opt =
     |> (fun ast -> 
       match opt.target with 
       | None -> ""
-      | Some ("coq") -> 
-        if opt.verbose then printf "===> Generating coq code\n\n%!";  
-        Passes.Ast_to_coq.generate_coq ast (ctr ())
+      | Some ("ligo") -> 
+        if opt.verbose then printf "===> Generating ligo code\n\n%!";        
+        Passes.Ast_to_ligo.generate_ligo ast
     )
     |> print_endline
 

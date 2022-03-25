@@ -12,13 +12,10 @@ let show_ttype_not_cmp t1 t2 = "Types '" ^ show_ttype t1 ^ "' and '" ^ show_ttyp
 
 
 type iref = 
-| Storage of ttype
-| StorageEntry of ttype list
 | Local of ttype
 [@@deriving show {with_path = false}]
 
 type ireft = 
-| IStorage
 | ILocal
 | IAny
 
@@ -29,8 +26,6 @@ let binding_find ic (st: ireft) i: iref option =
   match (List.find_opt (fun (a, b) -> 
     match st, b with 
     | IAny, _ when i=a -> true
-    | IStorage, Storage(_) when i=a -> true
-    | IStorage, StorageEntry(_) when i=a -> true
     | ILocal, Local(_) when i=a -> true
     | _, _ -> false
   ) ic) with 
@@ -158,18 +153,12 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | _, TList (l), "fold", [(TLambda (TTuple([ll; rt']), rt), lame); (ft, ff)] when l=ll && rt=rt' && rt=ft -> 
         ft, ListFold((te, ee), (TLambda (TTuple([ll; rt']), rt), lame), (ft, ff))
 
-      | StorageRef(sr), TList (l), "prepend", [(ll, e)] when ll = l -> 
-        TUnit, SAssign(sr, (TList (l), ListPrepend ((te, ee), (ll, e))))
       | _, TList (l), "prepend", [(ll, e)] when ll = l -> 
         TList (l), ListPrepend ((te, ee), (ll, e))
 
-      | StorageRef(sr), TList (l), "mapWith", [(TLambda (ll, rt), lame)] when l = ll -> 
-        TUnit, SAssign(sr, (TList (rt), ListMapWith ((te, ee), (TLambda (ll, rt), lame))))
       | _, TList (l), "mapWith", [(TLambda (ll, rt), lame)] when l = ll -> 
         TList (rt), ListMapWith ((te, ee), (TLambda (ll, rt), lame))
 
-      | StorageRef(sr), TList (l), "filter", [(TLambda (ll, TBool), lame)] when l=ll -> 
-        TUnit, SAssign(sr, (TList(l), ListFilter((te, ee), (TLambda (ll, TBool), lame))))
       | _, TList (l), "filter", [(TLambda (ll, TBool), lame)] when l=ll -> 
         TList (l), ListFilter((te, ee), (TLambda (ll, TBool), lame))
 
@@ -498,24 +487,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     if tt1 <> TUnit then raise @@ InvalidExpression (pel, "Cannot ignore non unit expression in sequence");
     (tt2, Seq((tt1, ee1), (tt2, ee2)))
 
-  (* Storage assign *)
-  | PEAssign (PESRef (x), e) -> 
-    let (tte, eee) = transform_expr e env' ic in 
-    let se = List.assoc x ic in 
-    if Storage(tte) <> se then raise @@ InvalidExpression (pel, "Invalid assignment: " ^ show_iref (Storage(tte)) ^ " " ^ show_iref se);
-    TUnit, SAssign(x, (tte, eee))
 
-  (* Storage record assign *)
-  | PEAssign (PEDot(PESRef (x), i), e) -> 
-    let (tte, eee) = transform_expr e env' ic in 
-    (match List.assoc x ic with 
-    | Storage(TRecord (tl)) ->
-      let recel = List.assoc i tl in 
-      if tte <> recel then raise @@ InvalidExpression (pel, "Invalid assignment");
-      TUnit, SRecAssign(x, i, (tte, eee))
-    | _ -> raise @@ InvalidExpression (pel, "Invalid assignment"))
 
-    
 
   | ex -> raise @@ InvalidExpression (pel, "Expression not handled yet: " ^ Parse_tree.show_pexpr ex)
   ) in 
