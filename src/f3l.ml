@@ -28,7 +28,6 @@ let command =
         and filename  = anon ("filename" %: string)
         and past      = flag "-print-ast" no_arg ~doc:" print ast"
         and ppt       = flag "-print-pt" no_arg ~doc:" print parse-tree"
-        and pc     = flag "-print-c" no_arg ~doc:" print c code"
         and verbose   = flag "-verbose" no_arg ~doc:" enable verbosity"
         and noremoveunused   = flag "-no-remove-unused" no_arg ~doc:" disable removing unused symbols"
         and target    = flag "-target" (optional string) ~doc:" target language (c, coq)"
@@ -37,7 +36,6 @@ let command =
           target = if is_none target then Some("tz") else target;
           print_pt = ppt;
           print_ast = past;
-          print_ligo = pc;
           verbose = verbose;
           no_remove_unused = noremoveunused;
         } in (
@@ -52,7 +50,7 @@ let command =
           | DeclarationError (p,m) -> print_endline @@ pp_err p "DeclarationError" m
           | InvalidExpression (p,m) -> print_endline @@ pp_err p "InvalidExpression" m
           | APIError (p,m) -> print_endline @@ pp_err p "APIError" m
-          | GenerateLigoError (p,m) -> print_endline @@ pp_err p "GenerateLigoError" m
+          | GenerateError (p,m) -> print_endline @@ pp_err p "GenerateError" m
         )
       )
         

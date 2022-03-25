@@ -10,8 +10,8 @@
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
 %token LAMBDAB, NEQ, UNIT, UNDERSCORE
-%token IMPORT
-%token LAMBDA, EXTERN
+%token IMPORT, OPEN, EXTERN, MODULE, BEGIN, END
+%token LAMBDA
 %token <string> STRING
 %token <string> BYTES
 %token <int> INT
@@ -32,7 +32,7 @@
 %start <Parse_tree.t> program
 
 %%
-  program: il=list(dimport) dl=list(declaration) EOF { il @ dl }
+  program: dl=list(declaration) EOF { dl }
 
   parameter: | i=IDENT COLON t=type_sig { (i, t) }
 
@@ -57,6 +57,7 @@
   type_expr: | te=type_sig {te}
 
   dimport: | IMPORT p=STRING SEMICOLON { Parse_tree.DImport (p) }
+  dopen: | OPEN p=STRING SEMICOLON { Parse_tree.DOpen (p) }
 
   erec_element:
     | i=IDENT EQ b=expr { (i, b) }
@@ -153,11 +154,17 @@
     | EXTERN x=IDENT COLON t=type_expr SEMICOLON
       { Parse_tree.DExtern ({ id=x; t=t }) }
 
+  dmodule:
+    | MODULE x=IDENT BEGIN dl=list(declaration) END
+      { Parse_tree.DModule ({ id=x; dl=dl }) }
+
   declaration:
     | t=dtype      { locd $startpos $endpos t }
     | d=ddef       { locd $startpos $endpos d }
     | e=dext       { locd $startpos $endpos e }
-    // | m=dmodule    { locd $startpos $endpos m  }
+    | i=dimport    { locd $startpos $endpos i }
+    | o=dopen      { locd $startpos $endpos o }
+    | m=dmodule    { locd $startpos $endpos m }
 
   // braced (S):
   // | LPAR s=S RPAR { s }

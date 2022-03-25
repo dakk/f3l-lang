@@ -15,7 +15,7 @@ f3l-lang compiler
 === actions ===
 
   compile file.f3l [-target c]
-                 compiles a 
+                 compiles file.f3l to target language c
 
 
 

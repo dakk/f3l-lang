@@ -236,7 +236,6 @@ match e with
     pp_lexpr a 
     pp_lexpr b
 
-
 | Apply(lam, par) -> 
   fprintf fmt "%a (%a)" 
     pp_lexpr lam 
@@ -273,9 +272,6 @@ match e with
     "tmatchwithtemp"
     pp_lexpr e
     rr el
-
-| Copy (e) -> 
-  fprintf fmt "(%a)" pp_lexpr e
      
 | Let (id, tt, e) -> 
   fprintf fmt "let %s: %a = %a in " 

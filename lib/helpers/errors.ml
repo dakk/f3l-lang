@@ -6,7 +6,7 @@ exception DuplicateSymbolError of Loc.l option * string
 exception DeclarationError of Loc.l option * string
 exception InvalidExpression of Loc.l option * string
 exception APIError of Loc.l option * string
-exception GenerateLigoError of Loc.l option * string
+exception GenerateError of Loc.l option * string
 exception CompilerError of string
 
 let red s = Printf.sprintf "\x1b[31m%s\x1b[0m" s

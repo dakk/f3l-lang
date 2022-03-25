@@ -1,4 +1,4 @@
-<program> ::= <dimport>* <declaration>* EOF
+<program> ::= <declaration>* EOF
 
 <parameter> ::= IDENT COLON <type_sig>
 
@@ -18,6 +18,8 @@
 <type_expr> ::= <type_sig>
 
 <dimport> ::= IMPORT STRING SEMICOLON
+
+<dopen> ::= OPEN STRING SEMICOLON
 
 <erec_element> ::= IDENT EQ <expr>
 
@@ -81,8 +83,13 @@
 
 <dext> ::= EXTERN IDENT COLON <type_expr> SEMICOLON
 
+<dmodule> ::= MODULE IDENT BEGIN <declaration>* END
+
 <declaration> ::= <dtype>
                 | <ddef>
                 | <dext>
+                | <dimport>
+                | <dopen>
+                | <dmodule>
 
 

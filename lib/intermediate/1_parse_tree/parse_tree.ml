@@ -92,6 +92,12 @@ and pexpr =
 (* a declaration could be a type alias *)
 type declaration = 
   | DImport of string
+  | DOpen of string
+
+  | DModule of {
+    id: iden;
+    dl: declaration list;
+  }
 
   (* defant value *)
   | DDef of { 

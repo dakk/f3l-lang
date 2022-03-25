@@ -11,6 +11,11 @@
 		"def";
 		"var";
 		"list";
+    "import";
+    "module";
+    "begin";
+    "end";
+    "open";
 		"option";
     "extern";
 		"let";
@@ -59,8 +64,12 @@ rule token = parse
   | int as i 			  { INT (int_of_string i) }
   | nat as i 			  { NAT (int_of_string (String.sub i 0 ((String.length i) - 1))) }
 
+  | "module"        { MODULE }
+  | "begin"         { BEGIN }
+  | "end"           { END }
   | "extern"        { EXTERN }
   | "import"        { IMPORT }
+  | "open"          { OPEN }
   | "type"          { TYPE }
   | "enum"          { ENUM }
   | "list"          { CONT "list" }

@@ -344,11 +344,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     )
 
   (* apply *)
-  | PEApply (PERef("copy"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "copy needs only one argument");
-    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
-    tt1, Copy ((tt1, ee1))
-
   | PEApply (PERef("abs"), c) -> 
     if List.length c <> 1 then raise @@ APIError (pel, "abs needs only one argument");
     let (tt1, ee1) = transform_expr (List.hd c) env' ic in 

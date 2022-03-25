@@ -85,8 +85,6 @@ type expr =
 | MatchWith of texpr * (texpr * texpr) list
 | CaseDefault
 | Apply of texpr * texpr
-
-| Copy of texpr 
      
 | LetIn of iden * ttype * texpr * texpr
 | Let of iden * ttype * texpr 
