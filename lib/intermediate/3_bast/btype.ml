@@ -15,4 +15,3 @@ type btype =
   | TOption of btype
   | TPair of btype * btype
   | TOr of btype * btype
-  | TContract of btype 

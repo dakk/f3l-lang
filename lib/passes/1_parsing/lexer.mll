@@ -5,15 +5,11 @@
 	
 	exception SyntaxError2 of string
 
-  let reserved = [ 
-    "interface"; 
-    "contract"; 
-    "entry"; 
-    "function"; 
+  let reserved = [
     "type"; 
     "enum";
     "record";
-		"const";
+		"def";
 		"var";
 		"list";
 		"option";
@@ -60,17 +56,13 @@ rule token = parse
   | int as i 			  { INT (big_int_of_string i) }
   | nat as i 			  { NAT (big_int_of_string (String.sub i 0 ((String.length i) - 1))) }
 
-  | "interface"     { INTERFACE }
-  | "contract"      { CONTRACT }
   | "import"        { IMPORT }
-  | "function"      { FUNCTION }
-  | "field"				  { FIELD }
   | "type"          { TYPE }
   | "enum"          { ENUM }
   | "list"          { CONT "list" }
   | "option"        { CONT "option" }
   (* | "callback"      { CONT "callback" } *)
-  | "const"				  { CONST }
+  | "def"				  { DEF }
   | "record"        { RECORD }
   | "if"				  	{ IF }
   | "then"				  { THEN }

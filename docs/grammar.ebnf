@@ -7,14 +7,9 @@
 
 <ident> ::= IDENT
 
-<signature> ::= ENTRY IDENT LPAR [<parameter> (COMMA <parameter>)*] RPAR
-              | VIEW IDENT LPAR [<parameter> (COMMA <parameter>)*] RPAR COLON
-                <type_sig>
-
 <type_sig> ::= <ident>
              | <type_expr> CONT
              | LPAR <type_sig> COMMA <type_sig> (COMMA <type_sig>)* RPAR
-             | <type_expr> CONTRACT
              | RECORD LBRACE <parameter> (COMMA <parameter>)* RBRACE
              | ENUM LPAR [<ident> (PIPE <ident>)*] RPAR
              | LPAR <type_sig> RPAR
@@ -78,24 +73,14 @@
          | <expr> LPAR [<expr> (COMMA <expr>)*] RPAR
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
-         | LPAR <expr> SEMICOLON <fun_body> RPAR
-
-<fun_body> ::= <expr> (SEMICOLON <expr>)*
-
-<dfunction> ::= FUNCTION IDENT LPAR [<parameter> (COMMA <parameter>)*] RPAR
-                COLON <type_sig> LBRACE <fun_body> RBRACE
-
-<dcontract_body> ::= (dcontract_field SEMICOLON)* dcontract_entry*
-                   | (dcontract_field SEMICOLON)* dcontract_entry*
+         | LPAR <expr> SEMICOLON fun_body RPAR
 
 <dtype> ::= TYPE IDENT EQ <type_sig> SEMICOLON
 
-<dconst> ::= CONST IDENT COLON <type_expr> EQ <expr> SEMICOLON
-           | CONST IDENT EQ <expr> SEMICOLON
+<ddef> ::= DEF IDENT COLON <type_expr> EQ <expr> SEMICOLON
+         | DEF IDENT EQ <expr> SEMICOLON
 
-<declaration> ::= <dfunction>
-                | <dtype>
-                | <dconst>
-                | dmodule
+<declaration> ::= <dtype>
+                | <ddef>
 
 

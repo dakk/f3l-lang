@@ -43,9 +43,7 @@ let rec pp_ctype fmt a = match a with
   let pp_rec_field fmt (x, xt) = fprintf fmt "%s: %a" x pp_ltype xt in
   fprintf fmt "{ @[%a@] }" 
     (pp_list ";@." pp_rec_field) l
-
-| TContract (t) -> 
-  fprintf fmt "%a contract" pp_ltype t *)
+*)
 
 | TTuple (tl) -> 
   fprintf fmt "(%a)" 

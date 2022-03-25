@@ -22,7 +22,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.yallo",
-				"match": "\\b(=>|function|match|with|if|then|else|contract|interface|const|type)\\b"
+				"match": "\\b(=>|match|with|if|then|else|def|type)\\b"
 			}]
 		},
 		"types": {
@@ -43,7 +43,7 @@
 			"end": "\"",
 			"patterns": [
 				{
-					"name": "constant.character.escape.yallo",
+					"name": "defant.character.escape.yallo",
 					"match": "\\\\."
 				}
 			]

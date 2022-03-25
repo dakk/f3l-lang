@@ -2,21 +2,17 @@ open Printf
 open Helpers.Errors
 
 type options = {
-  contract: string option;
   target: string option;
   print_pt: bool;
   print_ast: bool;
-  print_ligo: bool;
   verbose: bool;
   no_remove_unused: bool;
 }
 
 let default_options = {
-  contract = None;
-  target = Some ("tz");
+  target = Some ("c");
   print_pt = true;
   print_ast = true;
-  print_ligo = true;
   verbose = true;
   no_remove_unused = false;
 }
@@ -78,36 +74,16 @@ let compile (filename: string) opt =
   build_ast filename opt
     (* remove unused *)
     |> app opt.verbose @@ print_str "===> Dropping unused code" 
-    |> ap (not opt.no_remove_unused) @@ Passes.Ast_remove_unused.remove_unused opt.contract
+    (* |> ap (not opt.no_remove_unused) @@ Passes.Ast_remove_unused.remove_unused opt.contract *)
     |> app opt.print_ast print_ast 
 
     (* output to a final language - first pass *)
     |> (fun ast -> 
-      let ctr () = match opt.contract with 
-      | None when (List.length ast.contracts) > 0 -> fst @@ List.nth ast.contracts @@ (List.length ast.contracts) - 1
-      | Some (ctr) -> ctr 
-      | None -> raise @@ CompilerError ("No contract specified for compilation")
-      in      
       match opt.target with 
       | None -> ""
       | Some ("coq") -> 
         if opt.verbose then printf "===> Generating coq code\n\n%!";  
         Passes.Ast_to_coq.generate_coq ast (ctr ())
-      | Some ("tz")
-      | Some ("ligo") -> 
-        if opt.verbose then printf "===> Generating ligo code\n\n%!";        
-        Passes.Ast_to_ligo.generate_ligo ast (ctr ())
-    )
-    (* output to a final language - second pass *)
-    |> (fun comp -> match opt.target with 
-      | Some("tz") -> 
-        if opt.print_ligo then comp |> print_endline;
-        if opt.verbose then printf "===> Compilingo ligo to michelson\n\n%!";        
-        write_file "/tmp/temp.mligo" comp;
-        let r = Sys.command "ligo compile-contract /tmp/temp.mligo main" in
-        if r <> 0 then raise @@ CompilerError ("Failed to compile ligo to tz");
-        ""
-      | _ -> comp
     )
     |> print_endline
 

@@ -12,7 +12,6 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Record (a) -> 
     (List.fold_left (fun acc e -> jf (traverse' @@ snd e) acc) empty a)
 
-  | BuildContractCodeAndStorage (_, a)
   | List (a)
   | Tuple (a) -> 
     (List.fold_left (fun acc e -> jf (traverse' e) acc) empty a)
@@ -41,7 +40,6 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | CaseDefault -> empty
 
   | Lambda (_, a)
-  | ContractInstance (a) 
   | Some (a)
   | RecordAccess (a, _)
   | OptionGetSome (a) 

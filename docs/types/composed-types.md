@@ -5,16 +5,16 @@
 Options represents a value that could be defined _Some\(value\)_ or not _None_.
 
 ```csharp
-const a: nat option = None;
-const b: nat option = Some(12n);
+def a: nat option = None;
+def b: nat option = Some(12n);
 ```
 
 The option type offers some helpers:
 
 ```csharp
-const c: bool = isNone(a); // returns true if a is None
-const d: bool = isSome(a); // returns true if a is Some(_)
-const e: nat = getSome(b): // extract the value (if any) or fail
+def c: bool = isNone(a); // returns true if a is None
+def d: bool = isSome(a); // returns true if a is Some(_)
+def e: nat = getSome(b): // extract the value (if any) or fail
 ```
 
 ## List
@@ -79,13 +79,13 @@ _update, remove, mapWith, fold, filter_ are applied in-place if used over storag
 Lambda type represent anonymous functions.
 
 ```csharp
-const e_sum: int -> int = (a: int) => (0 + 1);
-const e_gt: int -> bool = (a: int) => (0 > 1);
-const e_gt2: int -> bool = (a: int) => (a > 1);
-const e_comp: (int, int) -> bool = (a: int, b: int) => ((a * 8) > (b - 12));
-const e_comp2: (int, int) -> bool = (a: int, b: int) => ((a * (b - 8)) > (b - 12));
-const e_apply: int -> bool = (a: int) => (e_comp (12, 13));
+def e_sum: int -> int = (a: int) => (0 + 1);
+def e_gt: int -> bool = (a: int) => (0 > 1);
+def e_gt2: int -> bool = (a: int) => (a > 1);
+def e_comp: (int, int) -> bool = (a: int, b: int) => ((a * 8) > (b - 12));
+def e_comp2: (int, int) -> bool = (a: int, b: int) => ((a * (b - 8)) > (b - 12));
+def e_apply: int -> bool = (a: int) => (e_comp (12, 13));
 
-const e_apply2: int -> int = (a: int) => (((b: int) => (b))(12));
-const e_apply3: int -> int = (a: int) => (e_apply2 (12));
+def e_apply2: int -> int = (a: int) => (((b: int) => (b))(12));
+def e_apply3: int -> int = (a: int) => (e_apply2 (12));
 ```

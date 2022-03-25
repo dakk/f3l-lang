@@ -18,14 +18,6 @@ let rec pp_cexpr fmt ((te,e): texpr) =
   let pp_infix2 fmt op a b = fprintf fmt "(%a) %s (%a)" pp_cexpr a op pp_cexpr b in
     
   match e with
-  (* 
-  | ContractInstance of expr 
-  
-  | BuildContractCodeAndStorage of iden * expr list
-  
-  | Entrypoint of expr * iden
-  
-  *)
   
   
   (* 

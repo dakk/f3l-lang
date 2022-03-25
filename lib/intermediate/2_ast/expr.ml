@@ -5,9 +5,7 @@ let pp_big_int fmt i =
   Format.fprintf fmt "%s" (string_of_big_int i)
 
 type expr = 
-| ContractInstance of texpr 
 | StorageEntry of iden
-| BuildContractCodeAndStorage of iden * texpr list
 
 | LocalRef of iden 
 | StorageRef of iden

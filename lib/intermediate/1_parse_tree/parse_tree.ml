@@ -70,7 +70,6 @@ and pexpr =
   | PEDot of pexpr * iden
   | PEApply of pexpr * pexpr list
 
-
   | PELetIn of iden * ptype option * pexpr * pexpr
   | PELet of iden * ptype option * pexpr 
   | PELetTuple of (iden * ptype option) list * pexpr 
@@ -87,12 +86,12 @@ and pexpr =
 
 
 
-(* a declaration could be a type alias, an interface or a contract *)
+(* a declaration could be a type alias *)
 type declaration = 
   | DImport of string
 
-  (* constant value *)
-  | DConst of { 
+  (* defant value *)
+  | DDef of { 
     id: iden; 
     t: ptype option; 
     v: pexpr; 
@@ -102,27 +101,6 @@ type declaration =
   | DType of { 
     id: iden; 
     t: ptype; 
-  }
-
-  (* interface *)
-  | DInterface of { 
-    id: iden;
-    signatures: signature list;
-  }
-
-  (* contract *)
-  | DContract of {
-    id: iden;
-    fields: contract_field list;
-    entries: contract_entry list;
-  }
-
-  (* pure function *)
-  | DFunction of {
-    id: iden;
-    params: (iden * ptype) list;
-    rettype: ptype;
-    exp: pexpr;
   }
 [@@deriving show {with_path = false}]
 

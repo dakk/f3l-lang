@@ -7,13 +7,13 @@
 Nat type represents natural numbers \(positive integers U { 0 }\); a nat literal should be always followed by an _n._
 
 ```c
-const a: nat = 12n;
+def a: nat = 12n;
 ```
 
 A nat value can be converted to _int_ type using the _int\(nat\)_ builtin function:
 
 ```c
-const b: int = int(12n);
+def b: int = int(12n);
 ```
 
 ### Int
@@ -21,27 +21,27 @@ const b: int = int(12n);
 Int type represents integer numbers; we define an _int_:
 
 ```c
-const a: int = 12;
+def a: int = 12;
 ```
 
 We can check if the _int_ is a _nat_:
 
 ```c
-const b1: bool = isNat(12);  // true
-const b2: bool = isNat(-12); // false
+def b1: bool = isNat(12);  // true
+def b2: bool = isNat(-12); // false
 ```
 
 Transform an _int_ to a _nat_:
 
 ```c
-const c: nat = abs(-12);
+def c: nat = abs(-12);
 ```
 
 And negate a _nat_ or _int_ \(the result type is always an int\):
 
 ```c
-const d1: int = neg(12n);   // = -12
-const d2: int = neg(-12);   // = 12
+def d1: int = neg(12n);   // = -12
+def d2: int = neg(-12);   // = 12
 ```
 
 ### Mutez
@@ -49,8 +49,8 @@ const d2: int = neg(-12);   // = 12
 Mutez type represents a tez amount. A mutez literal si preceeded by mtz or tz; 1000000mtz = 1tz.
 
 ```c
-const a: mutez = 1tz;
-const b: mutez = 1mtz;
+def a: mutez = 1tz;
+def b: mutez = 1mtz;
 ```
 
 ## Bool
@@ -58,8 +58,8 @@ const b: mutez = 1mtz;
 Bool type represents a boolean, which has two possible values: _true_ and _false._
 
 ```cpp
-const aTrue: bool = true;
-const aFalse: bool = false;
+def aTrue: bool = true;
+def aFalse: bool = false;
 ```
 
 ## Enum
@@ -118,7 +118,7 @@ let c: bool = n = (Option.getSome(b));
 The unit type is a type which has only a value _Unit._
 
 ```cpp
-const a: unit = Unit;
+def a: unit = Unit;
 ```
 
 

@@ -94,7 +94,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     | TOption (TAny), TOption(t), None -> TOption(t), None
     | TOption (TAny), TOption(t), be -> TOption(t), be
     | TList (TAny), TList(t), ee -> TList(t), ee
-    | TContract (TAny), TContract(t), ee -> TContract(t), ee
     | a, b, _ when a=b -> a, ee
     | a, b, c -> raise @@ TypeError (pel, "Invalid cast from '" ^ show_ttype a ^ "' to '" ^ show_ttype b ^ "' for value: " ^ show_expr c))
 
@@ -196,17 +195,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEDot (e, i) -> 
     let (te, ee) = transform_expr e env' ic in
     (match te with 
-    (* PEDot entrypoint access *)
-    | TContractInstance(TInterface(ct)) -> 
-      (match List.assoc_opt i ct with 
-        | None -> raise @@ ContractError (pel, "Unkown contract entrypoint '" ^ i ^ "'")
-        | Some(tl) when List.length tl > 1 -> 
-          TContract(TTuple(tl)), Entrypoint((te, ee), (TString, String(i)))
-        | Some(tl) when List.length tl = 1 -> 
-          TContract(List.hd tl), Entrypoint((te, ee), (TString, String(i)))
-        | Some(_) -> 
-          TContract(TUnit), Entrypoint((te, ee), (TString, String(i))))
-
     (* PEDot record access *)
     | TRecord(t) -> 
       (match List.assoc_opt i t with 
@@ -356,17 +344,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
   (* symbol reference *)
 
-  
-  | PESRef (i) ->
-    (match binding_find ic IStorage i with 
-      | None -> raise @@ ContractError (pel, "Unknow storage field: '" ^ i ^ "'")
-      | Some (Storage(t)) -> t, StorageRef (i)
-      | Some (StorageEntry(tl)) when List.length tl = 0 -> TContract(TUnit), StorageEntry (i)
-      | Some (StorageEntry(tl)) when List.length tl = 1 -> TContract(List.hd tl), StorageEntry (i)
-      | Some (StorageEntry(tl)) when List.length tl > 1 -> TContract(TTuple(tl)), StorageEntry (i)
-      | _ -> raise @@ ContractError (pel, "Symbol '" ^ i ^ "' is not a storage field")
-      )
-  
+    
   | PERef (i) -> 
     (match binding_find ic ILocal i with 
     | None -> Env.get_ref i env', GlobalRef (i)
@@ -427,11 +405,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       else
         rettype, Apply((tt, ee), List.hd ap)
 
-    (* Apply on contract name, it is a buildcontractcodeandstorage, which is the argument of create_contract *)
-    | TContractCode (tl) -> 
-      (* TODO: check constructor parameters *)
-      let cc = (match ee with | GlobalRef (c) -> c | _ -> raise @@ InvalidExpression (pel, "Expected a globalref")) in
-      TTuple([TContractCode (tl); TContractStorage]), BuildContractCodeAndStorage (cc, el |> transform_expr_list)
       
     | _ -> raise @@ TypeError (pel, "Applying on not a lambda: " ^ show_ttype tt)
     

@@ -4,9 +4,7 @@
  (libraries helpers ast)
  (modules 
   ast_remove_unused 
-  unused_const
-  unused_contract
-  unused_field
+  unused_def
  ))
 
 (env

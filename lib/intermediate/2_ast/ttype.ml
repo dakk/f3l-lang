@@ -15,13 +15,8 @@ type ttype =
   | TOption of ttype
   | TRecord of (iden * ttype) list
   | TTuple of ttype list 
-  | TContract of ttype 
 
-  (* custom abstract types *)
-  | TContractCode of (iden * ttype list) list
-  | TContractStorage
-  | TInterface of (iden * ttype list) list
-  | TContractInstance of ttype
+
 
 
 type tattr = {
@@ -61,20 +56,10 @@ let attributes (t: ttype) = match t with
   | TOption (_) ->    { cmp=false; pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
   | TRecord (_) ->    { cmp=false; pass=true;  store=true;  push=true;  pack=true;  bm_val=true  } 
   | TTuple (_) ->     { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TContract (_) ->  { cmp=false; pass=true;  store=false; push=false; pack=true;  bm_val=true  }
  
   (* internal types *)
   | TAny ->           { cmp=false; pass=false; store=false; push=false; pack=false; bm_val=false }
-  | TContractCode (_) ->  
-                      { cmp=false; pass=false; store=false; push=false; pack=false; bm_val=false }
-  | TContractStorage ->  
-                      { cmp=false; pass=false; store=false; push=false; pack=false; bm_val=false }
-  | TInterface (_) ->     
-                      { cmp=false; pass=false; store=false; push=false; pack=false; bm_val=false }
-  | TContractInstance (_) -> 
-                      { cmp=false; pass=false; store=false; push=false; pack=false; bm_val=false }
-
-
+  
 let rec show_ttype (at: ttype) = match at with 
 | TAny -> "'a"
 | TUnit -> "unit"
@@ -89,12 +74,6 @@ let rec show_ttype (at: ttype) = match at with
 | TOption (t) -> show_ttype t ^ " option"
 | TRecord (l) -> "record { " ^ List.fold_left (fun acc (x, xt) -> acc ^ (if acc = "" then "" else ", ") ^ x ^ ": " ^ show_ttype xt) "" l ^ " }"
 | TTuple (tl) -> "(" ^ List.fold_left (fun acc x -> acc ^ (if acc = "" then "" else " * ") ^ show_ttype x) "" tl ^ ")"
-| TContract (t) -> show_ttype t ^ " contract"
-
-| TContractCode (_) -> "code"
-| TContractStorage -> "storage"
-| TInterface (_) -> "interface"
-| TContractInstance (_) -> "instance"
 
 let pp_ttype fmt (t: ttype) = Format.pp_print_string fmt (show_ttype t); ()
 
@@ -102,7 +81,6 @@ let compare t1 t2 = t1 = t2
 
 let compare_type_lazy t t' = (match t', t with 
   | TList(_), TList(TAny) -> true 
-  | TContract(_), TContract(TAny) -> true
   | a, b when a=b -> true
   | _, _ -> false
 ) 

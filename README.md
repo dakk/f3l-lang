@@ -14,19 +14,15 @@ f3l-lang compiler
 
 === actions ===
 
-  compile file.f3l [-dcontract ContractName] [-target ligo]
-                 compiles a contract ContractName to ligo language
+  compile file.f3l [-target c]
+                 compiles a 
 
-  extract-interface file.f3l -dcontract ContractName
-                 extracts the f3l interface for the given contract
 
 
 === flags ===
 
-  [-contract _]        selected contract
   [-no-remove-unused]  disable removing unused symbols
   [-print-ast]         print ast
-  [-print-ligo]        print ligo code
   [-print-pt]          print parse-tree
   [-target _]          target language
   [-verbose]           enable verbosity

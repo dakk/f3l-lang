@@ -26,13 +26,13 @@ let pp_storage fmt fields =
     (pp_list ";@\n" pp_par) fields
 
 
-let pp_consts fmt consts =
-  let pp_const fmt (i, (t, e)) =
+let pp_defs fmt defs =
+  let pp_def fmt (i, (t, e)) =
     fprintf fmt "Definition %s := @[%a@].@\n@\n" 
     i 
     pp_cexpr (t,e)
   in
-  (pp_list "@\n" pp_const) fmt @@ List.rev consts
+  (pp_list "@\n" pp_def) fmt @@ List.rev defs
   
 
 let pp_actions fmt entries = 
@@ -92,8 +92,8 @@ let generate_coq_code (ast: t) (contract: string) =
   pp_pre sfmt ce;
   fprintf sfmt "@\n@\n";
 
-  (* generate consts *)
-  pp_consts sfmt ast.consts;
+  (* generate defs *)
+  pp_defs sfmt ast.defs;
 
   (* generate storage *)
   pp_storage sfmt ce.fields;

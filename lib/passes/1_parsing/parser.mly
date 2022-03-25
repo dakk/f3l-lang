@@ -6,8 +6,7 @@
 %token EOF
 // QUOTE SIZE HT ASTERISK AT GET HAS QUESTION ASSERT
 %token LBRACE, RBRACE, LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ, DOT, LSQUARE, RSQUARE
-%token INTERFACE, CONTRACT, FUNCTION
-%token ENUM, TYPE, RECORD, CONST, AND, OR, NOT, TRUE, FALSE
+%token ENUM, TYPE, RECORD, DEF, AND, OR, NOT, TRUE, FALSE
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
 %token LAMBDAB, NEQ, UNIT, UNDERSCORE
@@ -48,7 +47,6 @@
     | bt=type_expr c=CONT                           { Parse_tree.PTCont (c, bt) }
     | LPAR t1=type_sig COMMA tl=separated_nonempty_list(COMMA, type_sig) RPAR         
                                                     { Parse_tree.PTTuple (t1::tl) }
-    | bt=type_expr CONTRACT                         { Parse_tree.PTCont ("contract", bt) }
     | RECORD LBRACE tl=separated_nonempty_list(COMMA, parameter) RBRACE
                                                     { Parse_tree.PTRecord (tl)}
     | ENUM LPAR el=separated_list(PIPE, ident) RPAR { Parse_tree.PTEnum (el) }
@@ -142,37 +140,22 @@
     | LPAR v=expr COLON t=type_sig RPAR { loce $startpos $endpos @@ Parse_tree.PETyped (v, t) }
 		| LPAR e1=expr SEMICOLON f=fun_body RPAR { loce $startpos $endpos @@ Parse_tree.PESeq (e1, f) }
 
-  fun_body:
-		| e1=expr SEMICOLON f=fun_body { loce $startpos $endpos @@ Parse_tree.PESeq (e1, f) }
-		| e1=expr { e1 }
-
-  dfunction:
-    | FUNCTION n=IDENT LPAR pl=separated_list(COMMA, parameter) RPAR COLON tt=type_sig LBRACE b=fun_body RBRACE
-      { Parse_tree.DFunction ({id=n; params=pl; rettype=tt; exp=b }) }
-
-
-  dcontract_body:
-    | fl=list(terminated(dcontract_field, SEMICOLON)) el=list(dcontract_entry)
-      { (fl, el, Some(c)) }
-    | fl=list(terminated(dcontract_field, SEMICOLON)) el=list(dcontract_entry)
-      { (fl, el, None) }
 
 
   dtype:
     | TYPE x=IDENT EQ tl=type_sig SEMICOLON
       { Parse_tree.DType ({ id=x; t=tl }) }
 
-  dconst:
-    | CONST x=IDENT COLON t=type_expr EQ v=expr SEMICOLON
-      { Parse_tree.DConst ({ id=x; t=Some(t); v=v }) }
-    | CONST x=IDENT EQ v=expr SEMICOLON
-      { Parse_tree.DConst ({ id=x; t=None; v=v }) }
+  ddef:
+    | DEF x=IDENT COLON t=type_expr EQ v=expr SEMICOLON
+      { Parse_tree.DDef ({ id=x; t=Some(t); v=v }) }
+    | DEF x=IDENT EQ v=expr SEMICOLON
+      { Parse_tree.DDef ({ id=x; t=None; v=v }) }
 
   declaration:
-    | f=dfunction  { locd $startpos $endpos f }
     | t=dtype      { locd $startpos $endpos t }
-    | cc=dconst    { locd $startpos $endpos cc }
-    | m=dmodule    { locd $startpos $endpos m  }
+    | d=ddef       { locd $startpos $endpos d }
+    // | m=dmodule    { locd $startpos $endpos m  }
 
   // braced (S):
   // | LPAR s=S RPAR { s }
