@@ -6,7 +6,7 @@
 %token EOF
 // QUOTE SIZE HT ASTERISK AT GET HAS QUESTION ASSERT
 %token LBRACE, RBRACE, LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ, DOT, LSQUARE, RSQUARE
-%token ENUM, TYPE, RECORD, DEF, AND, OR, NOT, TRUE, FALSE
+%token ENUM, TYPE, DEF, AND, OR, NOT, TRUE, FALSE
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
 %token LAMBDAB, NEQ, UNIT, UNDERSCORE
@@ -48,7 +48,7 @@
     | bt=type_expr c=CONT                           { Parse_tree.PTCont (c, bt) }
     | LPAR t1=type_sig COMMA tl=separated_nonempty_list(COMMA, type_sig) RPAR         
                                                     { Parse_tree.PTTuple (t1::tl) }
-    | RECORD LBRACE tl=separated_nonempty_list(COMMA, parameter) RBRACE
+    | LBRACE tl=separated_nonempty_list(SEMICOLON, parameter) RBRACE
                                                     { Parse_tree.PTRecord (tl)}
     | ENUM LPAR el=separated_list(PIPE, ident) RPAR { Parse_tree.PTEnum (el) }
     | LPAR t=type_sig RPAR											    { t }
@@ -81,7 +81,7 @@
     | x=INT 					{ loce $startpos $endpos @@ Parse_tree.PEInt (x) }
     | x=NAT 					{ loce $startpos $endpos @@ Parse_tree.PENat (x) }
     | SOME LPAR x=expr RPAR 	  { loce $startpos $endpos @@ Parse_tree.PESome (x) }
-    | LBRACE tl=separated_nonempty_list(COMMA, erec_element) RBRACE
+    | LBRACE tl=separated_nonempty_list(SEMICOLON, erec_element) RBRACE
                                 { loce $startpos $endpos @@ Parse_tree.PERecord (tl) }
     | LSQUARE tl=separated_list(COMMA, expr) RSQUARE
                                 { loce $startpos $endpos @@ Parse_tree.PEList (tl) }

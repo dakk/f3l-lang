@@ -7,7 +7,6 @@
   let reserved = [
     "type"; 
     "enum";
-    "record";
 		"def";
 		"var";
 		"list";
@@ -73,12 +72,10 @@ rule token = parse
   | "import"        { IMPORT }
   | "open"          { OPEN }
   | "type"          { TYPE }
-  | "enum"          { ENUM }
   | "list"          { CONT "list" }
   | "option"        { CONT "option" }
   (* | "callback"      { CONT "callback" } *)
   | "def"				    { DEF }
-  | "record"        { RECORD }
   | "if"				  	{ IF }
   | "then"				  { THEN }
   | "else"				  { ELSE }
@@ -92,6 +89,7 @@ rule token = parse
 	| "Unit"					{ UNIT }
 	| "let"						{ LET }
 	| "in"						{ IN }
+  | "enum"          { ENUM }
   
 	| "#"							{ HT }
   | "->"				 	 	{ LAMBDA }

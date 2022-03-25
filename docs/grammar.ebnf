@@ -10,7 +10,7 @@
 <type_sig> ::= <ident>
              | <type_expr> CONT
              | LPAR <type_sig> COMMA <type_sig> (COMMA <type_sig>)* RPAR
-             | RECORD LBRACE <parameter> (COMMA <parameter>)* RBRACE
+             | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
              | ENUM LPAR [<ident> (PIPE <ident>)*] RPAR
              | LPAR <type_sig> RPAR
              | <type_sig> LAMBDA <type_sig>
@@ -38,7 +38,7 @@
          | INT
          | NAT
          | SOME LPAR <expr> RPAR
-         | LBRACE <erec_element> (COMMA <erec_element>)* RBRACE
+         | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
          | LPAR <expr> COMMA <expr> (COMMA <expr>)* RPAR
          | LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDAB LPAR <expr>
