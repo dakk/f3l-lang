@@ -1,10 +1,3 @@
-
-let pp_int fmt i = 
-  Format.fprintf fmt "%d" i
-
-let pp_float fmt i = 
-  Format.fprintf fmt "%f" i
-
 type iden = string [@@deriving show {with_path = false}]
 
 type ptype = 
@@ -40,9 +33,6 @@ and pexpr =
   | PERecord of (iden * pexpr) list
 
   | PERef of iden
-  | PESRef of iden
-  | PETRef of iden
-  | PECRef of iden
 
   (* aritmetic *)
   | PEAdd of pexpr * pexpr

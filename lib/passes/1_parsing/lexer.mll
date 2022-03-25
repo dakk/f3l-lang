@@ -42,7 +42,7 @@ let letter_up = ['A'-'Z']
 let letter_dw = ['a'-'z']
 let letter = letter_up | letter_dw
 
-let module_ident = letter_up (letter | digit | '_')*
+(* let mident = letter_up (letter | digit | '_')* *)
 let ident = letter (letter | digit | '_')*
 let nat = digit digit* "n"
 let int = digit digit*

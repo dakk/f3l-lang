@@ -1,10 +1,5 @@
 open Ttype
 
-let pp_int fmt i = 
-  Format.fprintf fmt "%d" i
-
-let pp_float fmt i = 
-  Format.fprintf fmt "%f" i
 
 type expr = 
 | LocalRef of iden 

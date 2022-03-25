@@ -1,7 +1,3 @@
 module Test begin
     def a: int = 12;
-
-    module Test2 begin
-        def a: int = 12;
-    end
 end
