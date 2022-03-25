@@ -4,7 +4,6 @@ open Ast_expr
 open Helpers.Errors
 open Parsing
 open Translate_ptype
-open Big_int
 
 let show_ttype_got_expect t1 t2 = "got: '" ^ show_ttype t1 ^ "' expect '" ^ show_ttype t2 ^ "'"
 let show_ttype_between_na t1 t2 = "between '" ^ show_ttype t1 ^ "' and '" ^ show_ttype t2 ^ "' is not allowed"
@@ -66,6 +65,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEString (s) -> TString, String (s)
   | PEBytes (s) -> TBytes, Bytes (Bytes.of_string s)
   | PENat (n) -> TNat, Nat (n)
+  | PEFloat (f) -> TFloat, Float (f)
   | PEInt (n) -> TInt, Int (n)
   | PEBool (b) -> TBool, Bool (b)
 
@@ -203,6 +203,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | TNat, TInt -> TInt 
       | TInt, TNat -> TInt
       | TInt, TInt -> TInt
+      | TFloat, TFloat -> TFloat
       | TString, TString -> TString 
       | TBytes, TBytes -> TBytes 
       | _, _ -> raise @@ TypeError (pel, "Add " ^ show_ttype_between_na tt1 tt2)
@@ -219,6 +220,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | TNat, TInt -> TInt 
       | TInt, TNat -> TInt
       | TInt, TInt -> TInt
+      | TFloat, TFloat -> TFloat
       | _, _ -> raise @@ TypeError (pel, "Mul " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, Mul ((tt1, ee1), (tt2, ee2))

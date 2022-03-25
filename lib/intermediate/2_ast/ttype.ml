@@ -6,6 +6,7 @@ type ttype =
   | TUnit
   | TInt
   | TNat
+  | TFloat
   | TBool
   | TString
   | TBytes
@@ -47,6 +48,7 @@ let attributes (t: ttype) = match t with
   | TUnit ->          { cmp=false; pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
   | TInt ->           { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
   | TNat ->           { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
+  | TFloat ->         { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
   | TBool ->          { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
   | TString ->        { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
   | TBytes ->         { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
@@ -65,6 +67,7 @@ let rec show_ttype (at: ttype) = match at with
 | TUnit -> "unit"
 | TInt -> "int"
 | TNat -> "nat"
+| TFloat -> "float"
 | TBool -> "bool"
 | TString -> "string"
 | TBytes -> "bytes"

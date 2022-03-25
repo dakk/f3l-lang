@@ -1,8 +1,10 @@
 open Ttype
-open Big_int
 
-let pp_big_int fmt i = 
-  Format.fprintf fmt "%s" (string_of_big_int i)
+let pp_int fmt i = 
+  Format.fprintf fmt "%d" i
+
+let pp_float fmt i = 
+  Format.fprintf fmt "%f" i
 
 type expr = 
 | LocalRef of iden 
@@ -11,8 +13,9 @@ type expr =
 | None
 | Unit 
 | Bool of bool
-| Nat of big_int 
-| Int of big_int 
+| Nat of int 
+| Int of int 
+| Float of float
 | String of string
 | Bytes of bytes
 | Some of texpr
@@ -91,6 +94,7 @@ type expr =
 | LetTupleIn of (iden * ttype) list * texpr * texpr
 | SAssign of iden * texpr
 | SRecAssign of iden * iden * texpr 
+| Extern of iden * ttype
 
 | Seq of texpr * texpr
 

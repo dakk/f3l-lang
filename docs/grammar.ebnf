@@ -32,6 +32,7 @@
          | FALSE
          | STRING
          | BYTES
+         | FLOAT
          | INT
          | NAT
          | SOME LPAR <expr> RPAR
@@ -78,7 +79,10 @@
 <ddef> ::= DEF IDENT COLON <type_expr> EQ <expr> SEMICOLON
          | DEF IDENT EQ <expr> SEMICOLON
 
+<dext> ::= EXTERN IDENT COLON <type_expr> SEMICOLON
+
 <declaration> ::= <dtype>
                 | <ddef>
+                | <dext>
 
 

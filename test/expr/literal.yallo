@@ -1,5 +1,7 @@
 def litString: string = "hola";
 def litNat: nat = 1n;
+def litFloat: float = 12.;
+def litFloat2: float = 12.034;
 def litInt: int = 12;
 def litNone: int option = None;
 def litSome: int option = Some(12);

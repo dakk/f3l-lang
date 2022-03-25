@@ -1,7 +1,9 @@
-open Big_int
 
-let pp_big_int fmt i = 
-  Format.fprintf fmt "%s" (string_of_big_int i)
+let pp_int fmt i = 
+  Format.fprintf fmt "%d" i
+
+let pp_float fmt i = 
+  Format.fprintf fmt "%f" i
 
 type iden = string [@@deriving show {with_path = false}]
 
@@ -24,8 +26,9 @@ and pexpr =
   | PEUnit
   | PENone
   | PEBool of bool
-  | PENat of big_int 
-  | PEInt of big_int 
+  | PENat of int 
+  | PEInt of int 
+  | PEFloat of float
   | PEString of string
   | PEBytes of string
   | PESome of pexpr
@@ -101,6 +104,11 @@ type declaration =
   | DType of { 
     id: iden; 
     t: ptype; 
+  }
+
+  | DExtern of {
+    id: iden;
+    t: ptype;
   }
 [@@deriving show {with_path = false}]
 

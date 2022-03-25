@@ -1,7 +1,6 @@
 {
   open Parser
   open Lexing
-	open Big_int
 	
 	exception SyntaxError2 of string
 
@@ -13,6 +12,7 @@
 		"var";
 		"list";
 		"option";
+    "extern";
 		"let";
 		"in";
 		"true";
@@ -37,9 +37,11 @@ let letter_up = ['A'-'Z']
 let letter_dw = ['a'-'z']
 let letter = letter_up | letter_dw
 
+let module_ident = letter_up (letter | digit | '_')*
 let ident = letter (letter | digit | '_')*
 let nat = digit digit* "n"
 let int = digit digit*
+let float = digit digit* "." digit*
 
 let hex_digit = ['a'-'f'] | ['A' - 'F'] | ['0' - '9']
 
@@ -53,16 +55,18 @@ let bytes = 'b' string
 rule token = parse 
   | newline         { Lexing.new_line lexbuf; token lexbuf }
   | blank+          { token lexbuf }
-  | int as i 			  { INT (big_int_of_string i) }
-  | nat as i 			  { NAT (big_int_of_string (String.sub i 0 ((String.length i) - 1))) }
+  | float as f      { FLOAT (float_of_string f) }
+  | int as i 			  { INT (int_of_string i) }
+  | nat as i 			  { NAT (int_of_string (String.sub i 0 ((String.length i) - 1))) }
 
+  | "extern"        { EXTERN }
   | "import"        { IMPORT }
   | "type"          { TYPE }
   | "enum"          { ENUM }
   | "list"          { CONT "list" }
   | "option"        { CONT "option" }
   (* | "callback"      { CONT "callback" } *)
-  | "def"				  { DEF }
+  | "def"				    { DEF }
   | "record"        { RECORD }
   | "if"				  	{ IF }
   | "then"				  { THEN }

@@ -7,6 +7,7 @@ type btype =
   | TUnit
   | TInt
   | TNat
+  | TFloat
   | TBool
   | TString
   | TBytes

@@ -5,7 +5,6 @@ open Helpers.Errors
 open Parsing
 open Format
 open Helpers.Gen_utils
-open Big_int
 open Pp_ltype
 
 
@@ -45,10 +44,13 @@ match e with
   fprintf fmt "%b" i
 
 | Nat (i) -> 
-  fprintf fmt "%sn" @@ string_of_big_int i
+  fprintf fmt "%dn" i
 
 | Int (i) -> 
-  fprintf fmt "%s" @@ string_of_big_int i
+  fprintf fmt "%d" i
+
+| Float (i) -> 
+  fprintf fmt "%f" i
 
 | String (s) -> 
   fprintf fmt "\"%s\"" s

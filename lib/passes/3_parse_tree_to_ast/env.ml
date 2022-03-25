@@ -19,6 +19,7 @@ let start_env = {
     "unit", TUnit;
     "int", TInt;
     "nat", TNat;
+    "float", TFloat;
     "bool", TBool;
     "string", TString;
     "bytes", TBytes;
@@ -27,6 +28,7 @@ let start_env = {
     "unit", Type;
     "int", Type;
     "nat", Type;
+    "float", Type;
     "bool", Type;
     "string", Type;
     "bytes", Type;

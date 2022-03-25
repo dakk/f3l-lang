@@ -5,7 +5,6 @@ open Helpers.Errors
 open Parsing
 open Format
 open Helpers.Gen_utils
-open Big_int
 
 let rec pp_ltype fmt (a: ttype) = match a with
 | TUnit -> 
@@ -16,6 +15,9 @@ let rec pp_ltype fmt (a: ttype) = match a with
 
 | TNat -> 
   fprintf fmt "nat"
+
+| TFloat -> 
+  fprintf fmt "float"
 
 | TBool -> 
   fprintf fmt "bool"

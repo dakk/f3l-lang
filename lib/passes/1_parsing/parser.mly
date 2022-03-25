@@ -11,11 +11,12 @@
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
 %token LAMBDAB, NEQ, UNIT, UNDERSCORE
 %token IMPORT
-%token LAMBDA
+%token LAMBDA, EXTERN
 %token <string> STRING
 %token <string> BYTES
-%token <Big_int.big_int> INT
-%token <Big_int.big_int> NAT
+%token <int> INT
+%token <int> NAT
+%token <float> FLOAT
 %token <string> CONT
 %token <string> IDENT
 
@@ -75,6 +76,7 @@
     | FALSE           { loce $startpos $endpos @@ Parse_tree.PEBool (false) }
     | x=STRING 				{ loce $startpos $endpos @@ Parse_tree.PEString (x) }
     | x=BYTES			 		{ loce $startpos $endpos @@ Parse_tree.PEBytes (x) }
+    | x=FLOAT					{ loce $startpos $endpos @@ Parse_tree.PEFloat (x) }
     | x=INT 					{ loce $startpos $endpos @@ Parse_tree.PEInt (x) }
     | x=NAT 					{ loce $startpos $endpos @@ Parse_tree.PENat (x) }
     | SOME LPAR x=expr RPAR 	  { loce $startpos $endpos @@ Parse_tree.PESome (x) }
@@ -137,8 +139,6 @@
     | LPAR e=expr RPAR 				  { loce $startpos $endpos @@ e }
     | LPAR v=expr COLON t=type_sig RPAR { loce $startpos $endpos @@ Parse_tree.PETyped (v, t) }
 
-
-
   dtype:
     | TYPE x=IDENT EQ tl=type_sig SEMICOLON
       { Parse_tree.DType ({ id=x; t=tl }) }
@@ -149,10 +149,14 @@
     | DEF x=IDENT EQ v=expr SEMICOLON
       { Parse_tree.DDef ({ id=x; t=None; v=v }) }
 
+  dext:
+    | EXTERN x=IDENT COLON t=type_expr SEMICOLON
+      { Parse_tree.DExtern ({ id=x; t=t }) }
 
   declaration:
     | t=dtype      { locd $startpos $endpos t }
     | d=ddef       { locd $startpos $endpos d }
+    | e=dext       { locd $startpos $endpos e }
     // | m=dmodule    { locd $startpos $endpos m  }
 
   // braced (S):

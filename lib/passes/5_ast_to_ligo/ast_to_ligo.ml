@@ -5,7 +5,6 @@ open Helpers.Errors
 open Parsing
 open Format
 open Helpers.Gen_utils
-open Big_int
 open Pp_ltype
 open Pp_lexpr
 
