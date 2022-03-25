@@ -1,20 +1,27 @@
 # Composed Types
 
+## Union types
+
+```ocaml
+type t = Int of int | Nat of nat | Nil of unit;
+```
+
 ## Option
 
 Options represents a value that could be defined _Some\(value\)_ or not _None_.
 
-```csharp
+```ocaml
 def a: nat option = None;
 def b: nat option = Some(12n);
 ```
 
 The option type offers some helpers:
 
-```csharp
-def c: bool = isNone(a); // returns true if a is None
-def d: bool = isSome(a); // returns true if a is Some(_)
-def e: nat = getSome(b): // extract the value (if any) or fail
+```ocaml
+def c: bool = Option.is_none a; // returns true if a is None
+def d: bool = Option.is_some a; // returns true if a is Some(_)
+
+def e: nat = match b with | Some(v) -> v | None -> 0
 ```
 
 ## List
@@ -23,19 +30,20 @@ List type represents list of same-type elements; a list can be declared as follo
 
 ```csharp
 let l: nat list = (List.empty(): nat list); // empty list
+let l: nat list = []; // empty list
 let l1: nat list = [12n, 13n]; // literal list
 ```
 
 ```csharp
-let ls: nat = l.size();
+let ls: nat = List.size l;
 ```
 
 ```csharp
-let lh: nat = l.head();
+let lh: nat = List.head l;
 ```
 
 ```csharp
-let lt: nat list = l.tail();
+let lt: nat list = List.tail l;
 ```
 
 ```csharp
@@ -43,24 +51,24 @@ let l2: nat list = l.prepend(14n);
 ```
 
 ```csharp
-let l3: nat list = l.mapWith((a: nat) => (a * 2n));
+let l3: nat list = List.map ((a: nat) => (a * 2n)) l;
 ```
 
 ```csharp
-let l4: nat list = l.filter((a: nat) => (a <= 13n));
+let l4: nat list = List.filter ((a: nat) => (a <= 13n)) l;
 ```
 
-{% hint style="info" %}
-_prepend_, _mapWith_ and _filter_ are applied in-place if used over storage fields. Their types are _unit_ instead of _nat list._ To apply as expression, surround the storage field with _copy\(\)_.
-{% endhint %}
 
 
 ## Tuple
 
 A tuple is a pair, triple, etc of different types; you can define a tuple as follow:
 
-```csharp
+```ocaml
 let atuple: (int, string) = (12, "hello");
+
+let ai: int = fst atuple;
+let as: string = snd atuple;
 ```
 
 ## Record
@@ -70,7 +78,7 @@ let atuple: (int, string) = (12, "hello");
 
 Lambda type represent anonymous functions.
 
-```csharp
+```ocaml
 def e_sum: int -> int = (a: int) => (0 + 1);
 def e_gt: int -> bool = (a: int) => (0 > 1);
 def e_gt2: int -> bool = (a: int) => (a > 1);

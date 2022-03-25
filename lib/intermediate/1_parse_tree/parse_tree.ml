@@ -102,9 +102,10 @@ type declaration =
     t: ptype; 
   }
 
-  | DExtern of {
+  | DExternal of {
     id: iden;
     t: ptype;
+    n: string;
   }
 [@@deriving show {with_path = false}]
 

@@ -2,7 +2,7 @@
 In f3l every file is a module; but a syntax for nested modules is present:
 
 ```ocaml
-module AnotherModule begin
+module Another_module = struct
     def i3 = 3;
 end
 ```

@@ -13,7 +13,7 @@
 		"list";
     "import";
     "module";
-    "begin";
+    "struct";
     "end";
     "open";
 		"option";
@@ -67,9 +67,9 @@ rule token = parse
   | nat as i 			  { NAT (int_of_string (String.sub i 0 ((String.length i) - 1))) }
 
   | "module"        { MODULE }
-  | "begin"         { BEGIN }
+  | "struct"        { STRUCT }
   | "end"           { END }
-  | "extern"        { EXTERN }
+  | "external"      { EXTERNAL }
   | "import"        { IMPORT }
   | "open"          { OPEN }
   | "type"          { TYPE }

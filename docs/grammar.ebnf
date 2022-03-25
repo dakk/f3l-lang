@@ -81,13 +81,13 @@
 <ddef> ::= DEF IDENT COLON <type_expr> EQ <expr> SEMICOLON
          | DEF IDENT EQ <expr> SEMICOLON
 
-<dext> ::= EXTERN IDENT COLON <type_expr> SEMICOLON
+<dexternal> ::= EXTERNAL IDENT COLON <type_expr> EQ STRING SEMICOLON
 
-<dmodule> ::= MODULE IDENT BEGIN <declaration>* END
+<dmodule> ::= MODULE IDENT EQ STRUCT <declaration>* END
 
 <declaration> ::= <dtype>
                 | <ddef>
-                | <dext>
+                | <dexternal>
                 | <dimport>
                 | <dopen>
                 | <dmodule>
