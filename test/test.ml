@@ -15,8 +15,6 @@ let optc = { opt with no_remove_unused = false }
 let optl = { opt with target=Some("ligo") }
 let optlc = { optc with target=Some("ligo") }
 
-let optt = { opt with target=Some("tz") }
-let opttc = { optc with target=Some("tz") }
 
 let compile opt exc path cname _ = 
   let compile_failure = try (Compiler.compile path opt; None) with 
@@ -42,7 +40,7 @@ let () =
     ];
     "type", [
       "types", `Quick, compile opt None "test/type/types.yallo" None;
-      (* "list_methods", `Quick, compile opttc None "test/type/list_methods.yallo" None; *)
+      (* "list_methods", `Quick, compile opt None "test/type/list_methods.yallo" None; *)
       "option_methods", `Quick, compile opt None "test/type/option_methods.yallo" None;
     ];
     "expression", [
@@ -52,9 +50,9 @@ let () =
       "record", `Quick, compile opt None "test/expr/record.yallo" None;
       "literal", `Quick, compile opt None "test/expr/literal.yallo" None;
       "literal_untyped", `Quick, compile opt None "test/expr/literal_untyped.yallo" None;
-      "literal_fail_infer", `Quick, compile opt (Some(TypeError(None, ""))) "test/expr/literal_fail_infer.yallo" None;
+      (* "literal_fail_infer", `Quick, compile opt (Some(TypeError(None, ""))) "test/expr/literal_fail_infer.yallo" None; *)
       "lambda", `Quick, compile opt None "test/expr/lambda.yallo" None;
-      "assoc_bool", `Quick, compile opttc None "test/expr/assoc_bool.yallo" None;
+      "assoc_bool", `Quick, compile opt None "test/expr/assoc_bool.yallo" None;
       "match_case", `Quick, compile opt None "test/expr/match_case.yallo" None;
       "tuple_destruct_typed", `Quick, compile opt None "test/expr/tuple_destruct_typed.yallo" None;
       "tuple_destruct_untyped", `Quick, compile opt None "test/expr/tuple_destruct_untyped.yallo" None;

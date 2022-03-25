@@ -112,7 +112,7 @@ rule token = parse
   | "true"				  { TRUE }
   | "false"				  { FALSE }
 
-  | "//"            { comment_line lexbuf; token lexbuf }
+  (* | "//"            { comment_line lexbuf; token lexbuf } *)
   | "(*"            { comment_multiline lexbuf; token lexbuf }
 
   | string as s     { STRING (String.sub s 1 ((String.length s) - 2)) }
@@ -123,10 +123,10 @@ rule token = parse
   | eof             { EOF }
   | _ as c          { raise (SyntaxError2 (Format.sprintf "Invalid string starting with %C" c)) }
 
-and comment_line = parse
+(* and comment_line = parse
   | "//"      			{ comment_line lexbuf }
   | newline   			{ () }
-  | _         			{ comment_line lexbuf }
+  | _         			{ comment_line lexbuf } *)
 
 and comment_multiline = parse
   | "*)"   					{ () }

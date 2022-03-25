@@ -149,6 +149,7 @@
     | DEF x=IDENT EQ v=expr SEMICOLON
       { Parse_tree.DDef ({ id=x; t=None; v=v }) }
 
+
   declaration:
     | t=dtype      { locd $startpos $endpos t }
     | d=ddef       { locd $startpos $endpos d }
