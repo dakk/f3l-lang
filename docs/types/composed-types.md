@@ -65,14 +65,6 @@ let atuple: (int, string) = (12, "hello");
 
 ## Record
 
-## Map & Big\_map
-
-\('a, 'b\) Map and \('a, 'b\) Big\_map are collections of _'b_ indexed by a key _'a_; _'a_ should be a comparable.
-
-{% hint style="info" %}
-_update, remove, mapWith, fold, filter_ are applied in-place if used over storage fields. Their types are _unit_ instead of _nat set._ To apply as expression, surround the storage field with _copy\(\)_.
-{% endhint %}
-
 
 ## Lambda
 

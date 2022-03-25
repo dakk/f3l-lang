@@ -54,6 +54,8 @@ let blank = [' ' '\t' '\r']
 let newline = '\n'
 let quote = '"'
 let string = quote (letter | digit | ' ' | '\'' | '=' | ':' | '_' | '.' | '/')* quote
+(* let squote = '\''
+let char = squote (letter | digit | ' ' | '\'' | '=' | ':' | '_' | '.' | '/') squote *)
 
 let bytes = 'b' string 
 

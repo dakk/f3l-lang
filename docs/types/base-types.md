@@ -1,6 +1,6 @@
 # Base Types
 
-## Numerical \(nat, int, \)
+## Numerical \(nat, int, float \)
 
 ### Nat
 
@@ -44,14 +44,12 @@ def d1: int = neg(12n);   // = -12
 def d2: int = neg(-12);   // = 12
 ```
 
-### Mutez
-
-Mutez type represents a tez amount. A mutez literal si preceeded by mtz or tz; 1000000mtz = 1tz.
+### Float
 
 ```c
-def a: mutez = 1tz;
-def b: mutez = 1mtz;
+def c: float = 12.;
 ```
+
 
 ## Bool
 
@@ -93,6 +91,12 @@ And get a _slice_:
 let c: string = a.slice(1, 5);
 ```
 
+And concat two strings:
+
+```cpp
+let c: string = a.concat(b);
+```
+
 ## Bytes
 
 Bytes are sequences of bytes. Like strings you can get the _length_ and a _slice_. 
@@ -103,7 +107,7 @@ let b: nat = a.size();
 let c: bytes = a.slice(1, 5);
 ```
 
-Bytes type is useful for encoding/decoding Michelson data using _pack_ and _unpack_:
+Bytes type is useful for encoding/decoding f3l expressions using _pack_ and _unpack_:
 
 ```cpp
 let n: nat = 12n;
@@ -111,6 +115,12 @@ let a: bytes = Bytes.pack (n); // pack a nat
 let b: nat option = (Bytes.unpack (a): nat option);
 
 let c: bool = n = (Option.getSome(b));
+```
+
+And concat two bytes:
+
+```cpp
+let c: bytes = a.concat(b);
 ```
 
 ## Unit

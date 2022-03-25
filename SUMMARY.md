@@ -5,11 +5,10 @@
 ## Documentation <a id="docs"></a>
 
 * [Types](docs/types/README.md)
-  * [Base Types](docs/types/untitled.md)
+  * [Base Types](docs/types/base-types.md)
   * [Composed Types](docs/types/composed-types.md)
-* [Tezos functions](docs/tezos-functions.md)
-* [Helper functions](docs/helper-functions.md)
-* [Import](docs/import.md)
-* [Globals: function and defant](docs/function-and-defant.md)
+* [Stdlib](docs/stdlib.md)
+* [Modules](docs/modules.md)
+* [Def](docs/def.md)
 * [Expressions](docs/expressions.md)
 * [Control flow](docs/control-flow.md)
