@@ -1,0 +1,11 @@
+(executable
+ (public_name f3l)
+ (name f3l)
+ (preprocess (pps ppx_jane ppx_deriving.show))
+ (libraries f3l core core_unix.command_unix ppx_deriving menhirLib)
+ (modules f3l))
+
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))

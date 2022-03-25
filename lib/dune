@@ -1,0 +1,21 @@
+(library
+ (public_name f3l)
+ (name f3l)
+ (libraries 
+  helpers
+  parse_tree
+  parsing  
+  parse_tree_postprocess
+  ast
+  ast_remove_unused
+  parse_tree_to_ast
+  ast_to_ligo 
+  ast_to_interface 
+  ast_to_coq
+ )
+ (modules intermediate passes compiler))
+
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))

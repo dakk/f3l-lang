@@ -1,0 +1,9 @@
+(library
+ (public_name f3l.helpers)
+ (name helpers)
+ (modules errors loc gen_utils))
+
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))

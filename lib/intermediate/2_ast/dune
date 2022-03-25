@@ -1,0 +1,10 @@
+(library
+ (name ast)
+ (public_name f3l.intermediate.ast)
+ (preprocess (pps ppx_jane ppx_deriving.show))
+ (libraries num ppx_deriving helpers)
+ (modules ast expr ttype expr_traversal))
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))

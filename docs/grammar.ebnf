@@ -1,0 +1,101 @@
+<program> ::= <dimport>* <declaration>* EOF
+
+<parameter> ::= IDENT COLON <type_sig>
+
+<param_opt_typed> ::= IDENT COLON <type_sig>
+                    | IDENT
+
+<ident> ::= IDENT
+
+<signature> ::= ENTRY IDENT LPAR [<parameter> (COMMA <parameter>)*] RPAR
+              | VIEW IDENT LPAR [<parameter> (COMMA <parameter>)*] RPAR COLON
+                <type_sig>
+
+<type_sig> ::= <ident>
+             | <type_expr> CONT
+             | LPAR <type_sig> COMMA <type_sig> (COMMA <type_sig>)* RPAR
+             | <type_expr> CONTRACT
+             | RECORD LBRACE <parameter> (COMMA <parameter>)* RBRACE
+             | ENUM LPAR [<ident> (PIPE <ident>)*] RPAR
+             | LPAR <type_sig> RPAR
+             | <type_sig> LAMBDA <type_sig>
+
+<type_expr> ::= <type_sig>
+
+<dimport> ::= IMPORT STRING SEMICOLON
+
+<erec_element> ::= IDENT EQ <expr>
+
+<match_case> ::= PIPE <expr> LAMBDA <expr>
+               | PIPE UNDERSCORE LAMBDA <expr>
+
+<left> ::= IDENT (DOT IDENT)*
+
+<expr> ::= UNIT
+         | NONE
+         | TRUE
+         | FALSE
+         | STRING
+         | BYTES
+         | INT
+         | NAT
+         | SOME LPAR <expr> RPAR
+         | LBRACE <erec_element> (COMMA <erec_element>)* RBRACE
+         | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
+         | LPAR <expr> COMMA <expr> (COMMA <expr>)* RPAR
+         | LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDAB LPAR <expr>
+           RPAR
+         | LET IDENT COLON <type_sig> EQ <expr> IN <expr>
+         | LET IDENT COLON <type_sig> EQ <expr>
+         | LET IDENT EQ <expr> IN <expr>
+         | LET IDENT EQ <expr>
+         | LET LPAR <param_opt_typed> (COMMA <param_opt_typed>)* RPAR EQ
+           <expr> IN <expr>
+         | LET LPAR <param_opt_typed> (COMMA <param_opt_typed>)* RPAR EQ
+           <expr>
+         | <left> EQ <expr>
+         | <expr> ADD <expr>
+         | <expr> SUB <expr>
+         | <expr> DIV <expr>
+         | <expr> MUL <expr>
+         | <expr> MOD <expr>
+         | <expr> AND <expr>
+         | <expr> OR <expr>
+         | NOT <expr>
+         | <expr> LT <expr>
+         | <expr> LTE <expr>
+         | <expr> GT <expr>
+         | <expr> GTE <expr>
+         | <expr> EQEQ <expr>
+         | <expr> NEQ <expr>
+         | IF <expr> THEN <expr> ELSE <expr>
+         | MATCH <expr> WITH <match_case>+
+         | IDENT
+         | <left> DOT IDENT
+         | <expr> DOT IDENT
+         | IDENT HT IDENT
+         | <left> LPAR [<expr> (COMMA <expr>)*] RPAR
+         | <expr> LPAR [<expr> (COMMA <expr>)*] RPAR
+         | LPAR <expr> RPAR
+         | LPAR <expr> COLON <type_sig> RPAR
+         | LPAR <expr> SEMICOLON <fun_body> RPAR
+
+<fun_body> ::= <expr> (SEMICOLON <expr>)*
+
+<dfunction> ::= FUNCTION IDENT LPAR [<parameter> (COMMA <parameter>)*] RPAR
+                COLON <type_sig> LBRACE <fun_body> RBRACE
+
+<dcontract_body> ::= (dcontract_field SEMICOLON)* dcontract_entry*
+                   | (dcontract_field SEMICOLON)* dcontract_entry*
+
+<dtype> ::= TYPE IDENT EQ <type_sig> SEMICOLON
+
+<dconst> ::= CONST IDENT COLON <type_expr> EQ <expr> SEMICOLON
+           | CONST IDENT EQ <expr> SEMICOLON
+
+<declaration> ::= <dfunction>
+                | <dtype>
+                | <dconst>
+                | dmodule
+
+

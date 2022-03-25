@@ -1,0 +1,8 @@
+(executable
+ (name test)
+ (libraries alcotest f3l)
+ (modules ("test")))
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))

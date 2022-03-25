@@ -1,0 +1,11 @@
+(library
+ (name parse_tree)
+ (public_name f3l.intermediate.parse_tree)
+ (preprocess (pps ppx_jane ppx_deriving.show))
+ (libraries num ppx_deriving helpers)
+ (modules parse_tree))
+
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))
