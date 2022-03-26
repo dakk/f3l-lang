@@ -1,4 +1,4 @@
-<program> ::= <declaration>* EOF
+<program> ::= <expr> EOF
 
 <parameter> ::= IDENT COLON <type_sig>
 
@@ -16,8 +16,6 @@
              | <type_sig> LAMBDA <type_sig>
 
 <type_expr> ::= <type_sig>
-
-<dopen> ::= OPEN <ident> SEMICOLON
 
 <erec_element> ::= IDENT EQ <expr>
 
@@ -73,20 +71,12 @@
          | <expr> LPAR [<expr> (COMMA <expr>)*] RPAR
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
-
-<dtype> ::= TYPE IDENT EQ <type_sig> SEMICOLON
-
-<ddef> ::= DEF IDENT COLON <type_expr> EQ <expr> SEMICOLON
-         | DEF IDENT EQ <expr> SEMICOLON
-
-<dexternal> ::= EXTERNAL IDENT COLON <type_expr> EQ STRING SEMICOLON
-
-<dmodule> ::= MODULE IDENT EQ STRUCT <declaration>* END
-
-<declaration> ::= <dtype>
-                | <ddef>
-                | <dexternal>
-                | <dopen>
-                | <dmodule>
+         | TYPE IDENT EQ <type_sig>
+         | DEF IDENT COLON <type_expr> EQ <expr>
+         | DEF IDENT EQ <expr>
+         | EXTERNAL IDENT COLON <type_expr> EQ STRING
+         | MODULE IDENT EQ STRUCT <expr> END
+         | OPEN <ident>
+         | <expr> SEMICOLON <expr>
 
 

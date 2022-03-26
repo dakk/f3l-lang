@@ -90,6 +90,11 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | StringSlice (a, b, c)
   | BytesSlice (a, b, c)
   | IfThenElse (a, b, c) -> jf (jf (traverse' a) (traverse' b)) (traverse' c)
+
+(* 
+  | Def 
+  | Module 
+  | Type  *)
   in traverse' te
 
 

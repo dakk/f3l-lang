@@ -91,6 +91,12 @@ type expr =
 
 | Seq of texpr * texpr
 
+
+(* 
+  | Def 
+  | Module 
+  | Type  *)
+
 [@@deriving show {with_path = false}]
 
 and texpr = (ttype * expr) [@@deriving show {with_path = false}]

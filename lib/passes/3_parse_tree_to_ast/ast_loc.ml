@@ -5,7 +5,7 @@ open Lexing
 open Printf
 
 module AstEmp = struct 
-  type t = | Def of iden * texpr | Expr of texpr
+  type t = Expr of texpr
 end 
 
 module LocationTable = Helpers.Loc.LocationTable (AstEmp)

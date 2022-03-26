@@ -32,7 +32,7 @@
 %start <Parse_tree.t> program
 
 %%
-  program: dl=list(declaration) EOF { dl }
+  program: dl=expr EOF { dl }
 
   parameter: | i=IDENT COLON t=type_sig { (i, t) }
 
@@ -55,8 +55,6 @@
     | p=type_sig LAMBDA pr=type_sig									{ Parse_tree.PTLambda (p, pr) }
 
   type_expr: | te=type_sig {te}
-
-  dopen: | OPEN p=ident SEMICOLON { Parse_tree.DOpen (p) }
 
   erec_element:
     | i=IDENT EQ b=expr { (i, b) }
@@ -139,30 +137,23 @@
     | LPAR e=expr RPAR 				  { loce $startpos $endpos @@ e }
     | LPAR v=expr COLON t=type_sig RPAR { loce $startpos $endpos @@ Parse_tree.PETyped (v, t) }
 
-  dtype:
-    | TYPE x=IDENT EQ tl=type_sig SEMICOLON
-      { Parse_tree.DType ({ id=x; t=tl }) }
+    | TYPE x=IDENT EQ tl=type_sig
+      { loce $startpos $endpos @@ Parse_tree.PEType ({ id=x; t=tl }) }
 
-  ddef:
-    | DEF x=IDENT COLON t=type_expr EQ v=expr SEMICOLON
-      { Parse_tree.DDef ({ id=x; t=Some(t); v=v }) }
-    | DEF x=IDENT EQ v=expr SEMICOLON
-      { Parse_tree.DDef ({ id=x; t=None; v=v }) }
+    | DEF x=IDENT COLON t=type_expr EQ v=expr
+      { loce $startpos $endpos @@ Parse_tree.PEDef ({ id=x; t=Some(t); v=v }) }
+    | DEF x=IDENT EQ v=expr
+      { loce $startpos $endpos @@ Parse_tree.PEDef ({ id=x; t=None; v=v }) }
 
-  dexternal:
-    | EXTERNAL x=IDENT COLON t=type_expr EQ n=STRING SEMICOLON
-      { Parse_tree.DExternal ({ id=x; t=t; n=n }) }
+    | EXTERNAL x=IDENT COLON t=type_expr EQ n=STRING
+      { loce $startpos $endpos @@ Parse_tree.PEExternal ({ id=x; t=t; n=n }) }
 
-  dmodule:
-    | MODULE x=IDENT EQ STRUCT dl=list(declaration) END
-      { Parse_tree.DModule ({ id=x; dl=dl }) }
+    | MODULE x=IDENT EQ STRUCT dl=expr END
+      { loce $startpos $endpos @@ Parse_tree.PEModule ({ id=x; dl=dl }) }
+  
+    | OPEN p=ident 
+      { loce $startpos $endpos @@ Parse_tree.PEOpen (p) }
 
-  declaration:
-    | t=dtype           { locd $startpos $endpos t }
-    | d=ddef            { locd $startpos $endpos d }
-    | e=dexternal       { locd $startpos $endpos e }
-    | o=dopen           { locd $startpos $endpos o }
-    | m=dmodule         { locd $startpos $endpos m }
+    | a=expr SEMICOLON b=expr
+      { loce $startpos $endpos @@ Parse_tree.PESeq (a, b) }
 
-  // braced (S):
-  // | LPAR s=S RPAR { s }

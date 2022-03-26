@@ -13,12 +13,16 @@ let rec find_file (ip: string list) (m: string) =
 
 (* replace all opens in a Parse_tree with the content of the file *)
 let rec inject_opens (ip: string list) (pt: Parse_tree.t): Parse_tree.t =
-  List.fold_left (fun ptl dec -> 
-    match dec with 
-    | Parse_tree.DOpen (m) -> (
-      let f = find_file ip m in
-      try ptl @ Parsing.parse_file f |> inject_opens ip
-      with | e -> raise e)
-    | _ -> ptl @ [dec]
-  ) [] pt
-
+  let inject m = 
+    let f = find_file ip m in
+    try Parsing.parse_file f |> inject_opens ip
+    with | e -> raise e
+  in
+  match pt with 
+  | Parse_tree.PESeq (Parse_tree.PEOpen (m), b) -> 
+    Parse_tree.PESeq (inject m, inject_opens ip b)
+  | Parse_tree.PESeq (b, Parse_tree.PEOpen (m)) -> 
+    Parse_tree.PESeq (inject_opens ip b, inject m) 
+  | Parse_tree.PESeq (Parse_tree.PEOpen (m), Parse_tree.PEOpen (m')) -> 
+    Parse_tree.PESeq (inject m, inject m')
+  | p -> p

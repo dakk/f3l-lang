@@ -9,13 +9,8 @@ type ptype =
   | PTLambda of ptype * ptype
   [@@deriving show {with_path = false}]
 
-type signature = {
-  id: iden;
-  arg: (iden * ptype) list;
-  ret: ptype option
-} [@@deriving show {with_path = false}]
 
-and pexpr =
+type pexpr =
   | PEUnit
   | PENone
   | PEBool of bool
@@ -74,42 +69,40 @@ and pexpr =
 
   | PESeq of pexpr * pexpr
 
-  [@@deriving show {with_path = false}]
 
+  | PEOpen of string
 
-
-
-(* a declaration could be a type alias *)
-type declaration = 
-  | DOpen of string
-
-  | DModule of {
+  | PEModule of {
     id: iden;
-    dl: declaration list;
+    dl: pexpr;
   }
 
   (* defant value *)
-  | DDef of { 
+  | PEDef of { 
     id: iden; 
     t: ptype option; 
     v: pexpr; 
   }
 
   (* type declaration *)
-  | DType of { 
+  | PEType of { 
     id: iden; 
     t: ptype; 
   }
 
-  | DExternal of {
+  | PEExternal of {
     id: iden;
     t: ptype;
     n: string;
   }
-[@@deriving show {with_path = false}]
 
-(* a parse tree is a list of declarations; opens are unrolled by the parser *)
-type t = declaration list [@@deriving show {with_path = false}]
+  [@@deriving show {with_path = false}]
+
+
+
+
+(* a parse tree is a list of expr; opens are unrolled by the parser *)
+type t = pexpr [@@deriving show {with_path = false}]
 
 
 (* https://stackoverflow.com/questions/45024211/menhir-associate-ast-nodes-with-token-locations-in-source-file *)

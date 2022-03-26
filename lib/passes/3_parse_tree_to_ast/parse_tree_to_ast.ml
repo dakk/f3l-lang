@@ -1,7 +1,5 @@
-open Translate_pdecl
+open Translate_pexpr
 
 let translate (p: Parse_tree.t): Ast.t = 
-  let e = transform p Env.start_env in {
-    defs = e.defs;
-  }
+  transform_expr p Env.start_env []
   

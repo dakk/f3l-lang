@@ -6,6 +6,4 @@ module Ast_expr = Expr
 module Ast_expr_traversal = Expr_traversal
 
 
-type t = {
-  defs:      (iden * texpr) list;
-} [@@deriving show {with_path = false}]
+type t = texpr [@@deriving show {with_path = false}]
