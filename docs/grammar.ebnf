@@ -9,7 +9,7 @@
 
 <type_sig> ::= <ident>
              | <type_expr> CONT
-             | LPAR <type_sig> COMMA <type_sig> (COMMA <type_sig>)* RPAR
+             | LPAR <type_sig> MUL <type_sig> (MUL <type_sig>)* RPAR
              | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
              | ENUM LPAR [<ident> (PIPE <ident>)*] RPAR
              | LPAR <type_sig> RPAR

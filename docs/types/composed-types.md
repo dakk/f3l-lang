@@ -65,7 +65,7 @@ let l4: nat list = List.filter ((a: nat) => (a <= 13n)) l;
 A tuple is a pair, triple, etc of different types; you can define a tuple as follow:
 
 ```ocaml
-let atuple: (int, string) = (12, "hello");
+let atuple: (int * string) = (12, "hello");
 
 let ai: int = fst atuple;
 let as: string = snd atuple;
@@ -82,8 +82,8 @@ Lambda type represent anonymous functions.
 def e_sum: int -> int = (a: int) => (0 + 1);
 def e_gt: int -> bool = (a: int) => (0 > 1);
 def e_gt2: int -> bool = (a: int) => (a > 1);
-def e_comp: (int, int) -> bool = (a: int, b: int) => ((a * 8) > (b - 12));
-def e_comp2: (int, int) -> bool = (a: int, b: int) => ((a * (b - 8)) > (b - 12));
+def e_comp: (int * int) -> bool = (a: int, b: int) => ((a * 8) > (b - 12));
+def e_comp2: (int * int) -> bool = (a: int, b: int) => ((a * (b - 8)) > (b - 12));
 def e_apply: int -> bool = (a: int) => (e_comp (12, 13));
 
 def e_apply2: int -> int = (a: int) => (((b: int) => (b))(12));

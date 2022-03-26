@@ -46,7 +46,7 @@
   type_sig:
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
     | bt=type_expr c=CONT                           { Parse_tree.PTCont (c, bt) }
-    | LPAR t1=type_sig COMMA tl=separated_nonempty_list(COMMA, type_sig) RPAR         
+    | LPAR t1=type_sig MUL tl=separated_nonempty_list(MUL, type_sig) RPAR         
                                                     { Parse_tree.PTTuple (t1::tl) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, parameter) RBRACE
                                                     { Parse_tree.PTRecord (tl)}

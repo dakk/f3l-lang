@@ -1,8 +1,8 @@
 def a: int -> int = (a: int) => (0 + 1);
 def b: int -> bool = (a: int) => (0 > 1);
 def c: int -> bool = (a: int) => (a > 1);
-def d: (int, int) -> bool = (a: int, b: int) => ((a * 8) > (b - 12));
-def e: (int, int) -> bool = (a: int, b: int) => ((a * (b - 8)) > (b - 12));
+def d: (int * int) -> bool = (a: int, b: int) => ((a * 8) > (b - 12));
+def e: (int * int) -> bool = (a: int, b: int) => ((a * (b - 8)) > (b - 12));
 def f: int -> bool = (a: int) => (d (12, 13));
 
 def g: int -> int = (a: int) => (((b: int) => (b))(12));
