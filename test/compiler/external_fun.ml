@@ -1,1 +1,1 @@
-external anumber: int = "anumber"
+external puts: (string -> unit) = "puts"

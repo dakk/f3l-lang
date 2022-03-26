@@ -1,1 +1,3 @@
-external puts: (string -> nat) = "puts"
+external anumber: int = "anumber"
+
+(* this should file on typecheck *)

@@ -4,17 +4,19 @@ open Ast_expr
 open Helpers.Errors
 
 
-type st = | Type | Def [@@deriving show {with_path = false}]
+type st = | Type | Def | External [@@deriving show {with_path = false}]
 
 
 type t = {
   types:       (iden * ttype) list;
   defs:      (iden * texpr) list;
-  symbols:     (iden * st) list
+  symbols:     (iden * st) list;
+  externals: (iden * ttype * string) list;
 } [@@deriving show {with_path = false}]
 
 let start_env = {
   defs=[];
+  externals=[];
   types=[
     "unit", TUnit;
     "int", TInt;
