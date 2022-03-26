@@ -83,11 +83,6 @@ and pexpr =
 type declaration = 
   | DOpen of string
 
-  | DModule of {
-    id: iden;
-    dl: declaration list;
-  }
-
   (* defant value *)
   | DDef of { 
     id: iden; 

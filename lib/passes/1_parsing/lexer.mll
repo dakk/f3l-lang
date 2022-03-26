@@ -23,6 +23,7 @@
 		"and";
 		"or";
 		"not";
+    "fun";
   ]
 
 
@@ -64,9 +65,6 @@ rule token = parse
   | int as i 			  { INT (int_of_string i) }
   | nat as i 			  { NAT (int_of_string (String.sub i 0 ((String.length i) - 1))) }
 
-  | "module"        { MODULE }
-  | "struct"        { STRUCT }
-  | "end"           { END }
   | "external"      { EXTERNAL }
   | "open"          { OPEN }
   | "type"          { TYPE }
@@ -88,10 +86,10 @@ rule token = parse
 	| "let"						{ LET }
 	| "in"						{ IN }
   | "enum"          { ENUM }
+  | "fun"           { FUN }
   
 	| "#"							{ HT }
   | "->"				 	 	{ LAMBDA }
-  | "=>"				  	{ LAMBDAB }
   | "{"             { LBRACE }
   | "}"             { RBRACE }
   | "["					  	{ LSQUARE }

@@ -4,6 +4,6 @@ def b: nat option = Bytes.unpack (a);
 def c = (Bytes.unpack (a) : nat option);
 def c2: nat option = Bytes.unpack (a);
 
-def lp: nat -> nat = (a1: nat) => (a1*2n);
+def lp: nat -> nat = fun (a1: nat) -> (a1*2n);
 def plp = Bytes.pack (lp);
 def lp2: (nat -> nat) option = Bytes.unpack (plp);

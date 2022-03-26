@@ -71,7 +71,6 @@ let () =
       "let_infer", `Quick, compile opt None "test/def/let_infer.yallo" None;
     ];
     "module", [
-      "t1", `Quick, compile opt None "test/module/t1.ml" None;
       "open", `Quick, compile opt None "test/module/open.ml" None;
     ];
   ]

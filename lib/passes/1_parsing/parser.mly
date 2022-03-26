@@ -9,9 +9,9 @@
 %token ENUM, TYPE, DEF, AND, OR, NOT, TRUE, FALSE
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
-%token LAMBDAB, NEQ, UNIT, UNDERSCORE
+%token NEQ, UNIT, UNDERSCORE
 %token OPEN, EXTERNAL, MODULE, STRUCT, END
-%token LAMBDA
+%token LAMBDA, FUN
 %token <string> STRING
 %token <string> BYTES
 %token <int> INT
@@ -86,7 +86,7 @@
                                 { loce $startpos $endpos @@ Parse_tree.PEList (tl) }
     | LPAR t=expr COMMA tl=separated_nonempty_list(COMMA, expr) RPAR
                                 { loce $startpos $endpos @@ Parse_tree.PETuple (t::tl) }
-    | LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDAB LPAR e=expr RPAR
+    | FUN LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDA LPAR e=expr RPAR
                                 { loce $startpos $endpos @@ Parse_tree.PELambda (tl, e) }
 
 		// bindings 
@@ -153,16 +153,11 @@
     | EXTERNAL x=IDENT COLON t=type_expr EQ n=STRING SEMICOLON
       { Parse_tree.DExternal ({ id=x; t=t; n=n }) }
 
-  dmodule:
-    | MODULE x=IDENT EQ STRUCT dl=list(declaration) END
-      { Parse_tree.DModule ({ id=x; dl=dl }) }
-
   declaration:
     | t=dtype           { locd $startpos $endpos t }
     | d=ddef            { locd $startpos $endpos d }
     | e=dexternal       { locd $startpos $endpos e }
     | o=dopen           { locd $startpos $endpos o }
-    | m=dmodule         { locd $startpos $endpos m }
 
   // braced (S):
   // | LPAR s=S RPAR { s }

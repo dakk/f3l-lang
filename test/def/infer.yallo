@@ -1,16 +1,16 @@
-def a = (a: int) => (0 + 1);
-def b = (a: int) => (0 > 1);
-def c = (a: int) => (a > 1);
-def d = (a: int, b: int) => ((a * 8) > (b - 12));
-def e = (a: int, b: int) => ((a * (b - 8)) > (b - 12));
-def f = (a: int) => (d (12, 13));
+def a = fun (a: int) -> (0 + 1);
+def b = fun (a: int) -> (0 > 1);
+def c = fun (a: int) -> (a > 1);
+def d = fun (a: int, b: int) -> ((a * 8) > (b - 12));
+def e = fun (a: int, b: int) -> ((a * (b - 8)) > (b - 12));
+def f = fun (a: int) -> (d (12, 13));
 
-def g = (a: int) => (((b: int) => (b))(12));
-def h = (a: int) => (g (12) * g (13));
+def g = fun (a: int) -> ((fun (b: int) -> (b))(12));
+def h = fun (a: int) -> (g (12) * g (13));
 
-def i = (a: int) => (if a > 12 then 12 else 14 + 15);
+def i = fun (a: int) -> (if a > 12 then 12 else 14 + 15);
 def l= true or false;
-def m = (a: int) => (match a with | 1 -> Some(12) | 2 -> (None: int option));
+def m = fun (a: int) -> (match a with | 1 -> Some(12) | 2 -> (None: int option));
 def u = Unit;
 
 def litString = "hola";
