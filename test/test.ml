@@ -46,12 +46,10 @@ let () =
     ];
     "expression", [
       "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml" None;
-      "list_bfun", `Quick, compile opt None "test/expr/list_bfun.ml" None;
       "neg_fail", `Quick, compile opt (Some(APIError(None, ""))) "test/expr/neg_fail.ml" None;
       "record", `Quick, compile opt None "test/expr/record.ml" None;
       "literal", `Quick, compile opt None "test/expr/literal.ml" None;
       "literal_untyped", `Quick, compile opt None "test/expr/literal_untyped.ml" None;
-      (* "literal_fail_infer", `Quick, compile opt (Some(TypeError(None, ""))) "test/expr/literal_fail_infer.ml" None; *)
       "lambda", `Quick, compile opt None "test/expr/lambda.ml" None;
       "assoc_bool", `Quick, compile opt None "test/expr/assoc_bool.ml" None;
       "match_case", `Quick, compile opt None "test/expr/match_case.ml" None;
