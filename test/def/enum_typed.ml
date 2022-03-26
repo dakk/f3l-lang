@@ -1,4 +1,4 @@
 type et = Hello | Ciao of int 
 
 let a: et = Hello
-let b: et = Ciao(1)
+let b: et = Ciao (1)

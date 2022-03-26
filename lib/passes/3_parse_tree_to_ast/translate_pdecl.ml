@@ -20,7 +20,9 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
       | [] -> d,s
       | ((x, xt) :: xs) ->
         Env.assert_symbol_absence e x;
-        consume xs ((x, (TUnion(el'), UnionValue(x, TUnion(el'), (TUnit, Unit))))::d) ((x, Env.Union)::s)
+        consume xs 
+          ((x, (TUnion(el'), UnionValue(x, TUnion(el'), (xt, Unit))))::d) 
+          ((x, Env.Union)::s)
       in 
       let (d,s) = consume el' [] [] in 
       transform p' { e with 

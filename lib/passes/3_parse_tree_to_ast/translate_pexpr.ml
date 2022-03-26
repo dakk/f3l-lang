@@ -324,13 +324,87 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     
   | PERef (i) -> 
     (match binding_find ic ILocal i with 
-    | None -> Env.get_ref i env', GlobalRef (i)
+    | None -> 
+      let ref = Env.get_ref i env' in 
+      let _ = (match ref with
+      | TUnion(u) -> 
+        let rec checki u' = match u' with
+          | [] -> () (* TODO: failwith "TODO: questo errore non esiste" *)
+          | (ii, t)::u'' -> 
+            if ii = i then
+              if t <> TUnit then 
+                raise @@ TypeError (pel, "Union '" ^ i ^ "' needs a value of different type; " ^ show_ttype_got_expect TUnit t)
+              else ()
+            else 
+              checki u''
+        in checki u
+      | _ -> ()
+      ) in      
+      ref, GlobalRef (i)
+
     | Some (Local(t)) -> t, LocalRef (i)
     | _ -> raise @@ SymbolNotFound (pel, "Symbol '" ^ i ^ "' is not a valid ref")
     )
 
+  (* Maybe be a union with param *)
+  | PEApply (PERef(i), el) -> 
+    let ref = Env.get_ref i env' in 
+    (match ref with
+    | TUnion(u) -> (
+      let (apt, apv) = el |> transform_expr_list |> List.hd in
+      let rec checki u' = match u' with
+        | [] -> failwith "TODO: questo errore non esiste"
+        | (ii, t)::u'' -> 
+          if ii = i then 
+            if t <> apt then 
+              raise @@ TypeError (pel, "Union '" ^ i ^ "' needs a value of different type; " ^ show_ttype_got_expect TUnit t)
+            else
+              TUnion(u), UnionValue(i, TUnion(u), (apt, apv))
+          else checki u''
+      in checki u
+    )
+    | TLambda (arv, rettype) -> (
+      let (tt,ee) = transform_expr (PERef(i)) env' ic in  
+      let argl = argv_to_list arv in 
+      let ap = el |> transform_expr_list in
+      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
+        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
+      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
+        raise @@ TypeError (pel, "Invalid argument types apply");
+      if List.length argl = 1 && List.hd argl = TUnit then 
+        rettype, Apply ((tt,ee), (TUnit, Unit))
+      else if List.length argl > 1 then 
+        rettype, Apply((tt, ee), (TTuple(argl), Tuple(ap)))
+      else if (List.length ap) = 0 && (List.length argl) = 0 then
+        rettype, Apply((tt, ee), (TUnit, Unit))
+      else
+        rettype, Apply((tt, ee), List.hd ap)
+    )
+  )
+
+  | PEApply (e, el) -> 
+    let (tt,ee) = transform_expr e env' ic in  
+    (match tt with
+
+    (* Apply on lambda  *)
+    | TLambda (arv, rettype) -> 
+      let argl = argv_to_list arv in 
+      let ap = el |> transform_expr_list in
+      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
+        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
+      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
+        raise @@ TypeError (pel, "Invalid argument types apply");
+      if List.length argl = 1 && List.hd argl = TUnit then 
+        rettype, Apply ((tt,ee), (TUnit, Unit))
+      else if List.length argl > 1 then 
+        rettype, Apply((tt, ee), (TTuple(argl), Tuple(ap)))
+      else if (List.length ap) = 0 && (List.length argl) = 0 then
+        rettype, Apply((tt, ee), (TUnit, Unit))
+      else
+        rettype, Apply((tt, ee), List.hd ap)
+
   (* apply *)
-  | PEApply (PERef("abs"), c) -> 
+  (* | PEApply (PERef("abs"), c) -> 
     if List.length c <> 1 then raise @@ APIError (pel, "abs needs only one argument");
     let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
     if tt1 <> TInt then raise @@ TypeError (pel, "Abs " ^ show_ttype_between_na tt1 TInt);
@@ -354,32 +428,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     if List.length c <> 1 then raise @@ APIError (pel, "isNat needs only one argument");
     let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
     if tt1 <> TInt then raise @@ TypeError (pel, "isNat " ^ show_ttype_between_na tt1 TNat);
-    TBool, ToInt ((tt1, ee1))
+    TBool, ToInt ((tt1, ee1)) *)
 
-
-  | PEApply (e, el) -> 
-    let (tt,ee) = transform_expr e env' ic in 
-    (match tt with 
-    | TUnion(e') -> 
-      let ap = transform_expr (List.hd el) env' ic in
-      tt, UnionValue ("Ciao", tt, ap) 
-
-    (* Apply on lambda  *)
-    | TLambda (arv, rettype) -> 
-      let argl = argv_to_list arv in 
-      let ap = el |> transform_expr_list in
-      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
-        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
-      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
-        raise @@ TypeError (pel, "Invalid argument types apply");
-      if List.length argl = 1 && List.hd argl = TUnit then 
-        rettype, Apply ((tt,ee), (TUnit, Unit))
-      else if List.length argl > 1 then 
-        rettype, Apply((tt, ee), (TTuple(argl), Tuple(ap)))
-      else if (List.length ap) = 0 && (List.length argl) = 0 then
-        rettype, Apply((tt, ee), (TUnit, Unit))
-      else
-        rettype, Apply((tt, ee), List.hd ap)
 
       
     | _ -> raise @@ TypeError (pel, "Applying on not a lambda: " ^ show_ttype tt)
