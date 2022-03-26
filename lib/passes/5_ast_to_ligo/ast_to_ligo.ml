@@ -13,7 +13,6 @@ open Pp_lexpr
 
 let generate_ligo_code (ast: t) = 
   reset_temp ();
-  (* dump def *)
   pp_lexpr sfmt ast;
   sget ()
 

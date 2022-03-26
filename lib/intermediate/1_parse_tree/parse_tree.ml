@@ -69,32 +69,10 @@ type pexpr =
 
   | PESeq of pexpr * pexpr
 
-
   | PEOpen of string
-
-  | PEModule of {
-    id: iden;
-    dl: pexpr;
-  }
-
-  (* defant value *)
-  | PEDef of { 
-    id: iden; 
-    t: ptype option; 
-    v: pexpr; 
-  }
-
-  (* type declaration *)
-  | PEType of { 
-    id: iden; 
-    t: ptype; 
-  }
-
-  | PEExternal of {
-    id: iden;
-    t: ptype;
-    n: string;
-  }
+  | PEModule of iden * pexpr
+  | PEType of iden * ptype
+  | PEExternal of iden * ptype * string
 
   [@@deriving show {with_path = false}]
 

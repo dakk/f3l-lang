@@ -10,7 +10,7 @@
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
 %token LAMBDAB, NEQ, UNIT, UNDERSCORE
-%token OPEN, EXTERNAL, MODULE, STRUCT, END
+%token OPEN, EXTERNAL, MODULE, STRUCT, END, RET
 %token LAMBDA
 %token <string> STRING
 %token <string> BYTES
@@ -138,22 +138,17 @@
     | LPAR v=expr COLON t=type_sig RPAR { loce $startpos $endpos @@ Parse_tree.PETyped (v, t) }
 
     | TYPE x=IDENT EQ tl=type_sig
-      { loce $startpos $endpos @@ Parse_tree.PEType ({ id=x; t=tl }) }
-
-    | DEF x=IDENT COLON t=type_expr EQ v=expr
-      { loce $startpos $endpos @@ Parse_tree.PEDef ({ id=x; t=Some(t); v=v }) }
-    | DEF x=IDENT EQ v=expr
-      { loce $startpos $endpos @@ Parse_tree.PEDef ({ id=x; t=None; v=v }) }
+      { loce $startpos $endpos @@ Parse_tree.PEType (x, tl) }
 
     | EXTERNAL x=IDENT COLON t=type_expr EQ n=STRING
-      { loce $startpos $endpos @@ Parse_tree.PEExternal ({ id=x; t=t; n=n }) }
+      { loce $startpos $endpos @@ Parse_tree.PEExternal (x, t, n) }
 
     | MODULE x=IDENT EQ STRUCT dl=expr END
-      { loce $startpos $endpos @@ Parse_tree.PEModule ({ id=x; dl=dl }) }
+      { loce $startpos $endpos @@ Parse_tree.PEModule (x, dl) }
   
     | OPEN p=ident 
       { loce $startpos $endpos @@ Parse_tree.PEOpen (p) }
 
-    | a=expr SEMICOLON b=expr
+    | a=expr RET b=expr
       { loce $startpos $endpos @@ Parse_tree.PESeq (a, b) }
 

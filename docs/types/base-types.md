@@ -7,13 +7,13 @@
 Nat type represents natural numbers \(positive integers U { 0 }\); a nat literal should be always followed by an _n._
 
 ```c
-def a: nat = 12n;
+let a: nat = 12n;
 ```
 
 A nat value can be converted to _int_ type using the _int\(nat\)_ builtin function:
 
 ```c
-def b: int = int(12n);
+let b: int = int(12n);
 ```
 
 ### Int
@@ -21,33 +21,33 @@ def b: int = int(12n);
 Int type represents integer numbers; we define an _int_:
 
 ```c
-def a: int = 12;
+let a: int = 12;
 ```
 
 We can check if the _int_ is a _nat_:
 
 ```c
-def b1: bool = isNat(12);  // true
-def b2: bool = isNat(-12); // false
+let b1: bool = isNat(12);  // true
+let b2: bool = isNat(-12); // false
 ```
 
 Transform an _int_ to a _nat_:
 
 ```c
-def c: nat = abs(-12);
+let c: nat = abs(-12);
 ```
 
 And negate a _nat_ or _int_ \(the result type is always an int\):
 
 ```c
-def d1: int = neg(12n);   // = -12
-def d2: int = neg(-12);   // = 12
+let d1: int = neg(12n);   // = -12
+let d2: int = neg(-12);   // = 12
 ```
 
 ### Float
 
 ```c
-def c: float = 12.;
+let c: float = 12.;
 ```
 
 
@@ -56,8 +56,8 @@ def c: float = 12.;
 Bool type represents a boolean, which has two possible values: _true_ and _false._
 
 ```cpp
-def aTrue: bool = true;
-def aFalse: bool = false;
+let aTrue: bool = true;
+let aFalse: bool = false;
 ```
 
 ## Enum
@@ -128,7 +128,7 @@ let c: bytes = a.concat(b);
 The unit type is a type which has only a value _Unit._
 
 ```cpp
-def a: unit = Unit;
+let a: unit = Unit;
 ```
 
 

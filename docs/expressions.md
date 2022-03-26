@@ -27,7 +27,7 @@ let a = 12 in a
 Let is also useful for tuple destructuring:
 
 ```text
-def a: (int, nat) = (12, 13n);
-def b: int = let (x, y) = a in x;
+let a: (int, nat) = (12, 13n);
+let b: int = let (x, y) = a in x;
 ```
 

@@ -93,7 +93,6 @@ type expr =
 
 
 (* 
-  | Def 
   | Module 
   | Type  *)
 

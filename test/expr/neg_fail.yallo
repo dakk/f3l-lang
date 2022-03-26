@@ -1,3 +1,0 @@
-def a: int = neg(1n);
-def b: int = neg(1);
-def c: int = neg(1, 1);

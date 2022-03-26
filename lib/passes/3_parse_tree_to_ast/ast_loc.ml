@@ -17,8 +17,6 @@ let locations = ref @@ LocationTable.create 10000
 let ladd = LocationTable.add !locations
 let pp_pos s = s, !filename, s.pos_lnum, (s.pos_cnum - s.pos_bol + 1)
 
-(* let locc s e i x = ladd (Def (i, x)) @@ pp_pos s e; x *)
 let loce s x = ladd (Expr (x)) @@ pp_pos s; x
 
-(* let cline p = try Some (LocationTable.find !locations @@ Def (List.hd p)) with | _ -> None *)
 let eline ee: l option = try Some (LocationTable.find !locations @@ Expr (ee)) with | _ -> None

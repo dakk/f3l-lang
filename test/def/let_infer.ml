@@ -1,6 +1,6 @@
-def b = let c = 12 in c;
+let b = let c = 12 in c;
 
-def f = 
+let f = 
 	let c = 12 in 
 	let d = 13 in 
 	c + d

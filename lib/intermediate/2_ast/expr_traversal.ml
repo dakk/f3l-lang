@@ -92,7 +92,6 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | IfThenElse (a, b, c) -> jf (jf (traverse' a) (traverse' b)) (traverse' c)
 
 (* 
-  | Def 
   | Module 
   | Type  *)
   in traverse' te

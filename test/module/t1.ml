@@ -1,3 +1,3 @@
 module Test = struct
-    def a: int = 12;
+    let a: int = 12
 end

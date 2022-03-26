@@ -41,34 +41,34 @@ let () =
     ];
     "type", [
       "types", `Quick, compile opt None "test/type/types.ml" None;
-      (* "list_methods", `Quick, compile opt None "test/type/list_methods.yallo" None; *)
-      "option_methods", `Quick, compile opt None "test/type/option_methods.yallo" None;
+      (* "list_methods", `Quick, compile opt None "test/type/list_methods.ml" None; *)
+      "option_methods", `Quick, compile opt None "test/type/option_methods.ml" None;
     ];
     "expression", [
-      "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.yallo" None;
-      "list_bfun", `Quick, compile opt None "test/expr/list_bfun.yallo" None;
-      "neg_fail", `Quick, compile opt (Some(APIError(None, ""))) "test/expr/neg_fail.yallo" None;
-      "record", `Quick, compile opt None "test/expr/record.yallo" None;
-      "literal", `Quick, compile opt None "test/expr/literal.yallo" None;
-      "literal_untyped", `Quick, compile opt None "test/expr/literal_untyped.yallo" None;
-      (* "literal_fail_infer", `Quick, compile opt (Some(TypeError(None, ""))) "test/expr/literal_fail_infer.yallo" None; *)
-      "lambda", `Quick, compile opt None "test/expr/lambda.yallo" None;
-      "assoc_bool", `Quick, compile opt None "test/expr/assoc_bool.yallo" None;
-      "match_case", `Quick, compile opt None "test/expr/match_case.yallo" None;
-      "tuple_destruct_typed", `Quick, compile opt None "test/expr/tuple_destruct_typed.yallo" None;
-      "tuple_destruct_untyped", `Quick, compile opt None "test/expr/tuple_destruct_untyped.yallo" None;
+      "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml" None;
+      "list_bfun", `Quick, compile opt None "test/expr/list_bfun.ml" None;
+      "neg_fail", `Quick, compile opt (Some(APIError(None, ""))) "test/expr/neg_fail.ml" None;
+      "record", `Quick, compile opt None "test/expr/record.ml" None;
+      "literal", `Quick, compile opt None "test/expr/literal.ml" None;
+      "literal_untyped", `Quick, compile opt None "test/expr/literal_untyped.ml" None;
+      (* "literal_fail_infer", `Quick, compile opt (Some(TypeError(None, ""))) "test/expr/literal_fail_infer.ml" None; *)
+      "lambda", `Quick, compile opt None "test/expr/lambda.ml" None;
+      "assoc_bool", `Quick, compile opt None "test/expr/assoc_bool.ml" None;
+      "match_case", `Quick, compile opt None "test/expr/match_case.ml" None;
+      "tuple_destruct_typed", `Quick, compile opt None "test/expr/tuple_destruct_typed.ml" None;
+      "tuple_destruct_untyped", `Quick, compile opt None "test/expr/tuple_destruct_untyped.ml" None;
     ];
     "define", [
-      "def", `Quick, compile opt None "test/def/def.yallo" None;
-      "numeric", `Quick, compile opt None "test/def/numeric.yallo" None;
-      "string", `Quick, compile opt None "test/def/string.yallo" None;
-      "lambda", `Quick, compile opt None "test/def/lambda.yallo" None;
-      "lambda_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/lambda_fail.yallo" None;
-      "expr", `Quick, compile opt None "test/def/expr.yallo" None;
-      "let_expr", `Quick, compile opt None "test/def/let_expr.yallo" None;
-      "enum", `Quick, compile opt None "test/def/enum.yallo" None;
-      "infer", `Quick, compile opt None "test/def/infer.yallo" None;
-      "let_infer", `Quick, compile opt None "test/def/let_infer.yallo" None;
+      "def", `Quick, compile opt None "test/def/def.ml" None;
+      "numeric", `Quick, compile opt None "test/def/numeric.ml" None;
+      "string", `Quick, compile opt None "test/def/string.ml" None;
+      "lambda", `Quick, compile opt None "test/def/lambda.ml" None;
+      "lambda_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/lambda_fail.ml" None;
+      "expr", `Quick, compile opt None "test/def/expr.ml" None;
+      "let_expr", `Quick, compile opt None "test/def/let_expr.ml" None;
+      "enum", `Quick, compile opt None "test/def/enum.ml" None;
+      "infer", `Quick, compile opt None "test/def/infer.ml" None;
+      "let_infer", `Quick, compile opt None "test/def/let_infer.ml" None;
     ];
     "module", [
       "t1", `Quick, compile opt None "test/module/t1.ml" None;

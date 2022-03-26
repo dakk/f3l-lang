@@ -493,32 +493,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       symbols=(dt.id, Type)::e.symbols;
       types=(dt.id, transform_type dt.t e)::e.types;
     }
-
-  (* global def *)
-  | Parse_tree.PEDef (dc) -> 
-    Env.assert_symbol_absence e dc.id;
-
-    let (t, exp) = (match dc.t with
-    | None -> 
-      let (t, exp) = transform_expr dc.v e [] in 
-      (match (t) with
-        | TList (TAny)
-        | TOption (TAny) -> raise @@ TypeError(Pt_loc.dline p, "Unable to infer type of def '" ^ dc.id ^ "'")
-        | _ -> (t, exp))
-    | Some(ptt) ->
-      let et = transform_type ptt e in
-      let (t, exp) = transform_expr dc.v e [] in 
-
-      let t = match (t, et) with
-        | TList (TAny), TList (_) -> et
-        | TOption (TAny), TOption (_) -> et
-        | a, b when a = b -> t
-        | _, _ -> raise @@ TypeError (Pt_loc.dline p, "Def '" ^ dc.id ^ "' expect to have type '" ^ show_ttype et ^ "', but type '" ^ show_ttype t ^ "' found")
-      in t, exp)
-    in transform p' { e with 
-      symbols=(dc.id, Def)::e.symbols;
-      defs=(dc.id, (t, exp))::e.defs;
-    } *)
+    *)
 
 
 
