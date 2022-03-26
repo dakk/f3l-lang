@@ -9,13 +9,7 @@ type ptype =
   | PTLambda of ptype * ptype
   [@@deriving show {with_path = false}]
 
-type signature = {
-  id: iden;
-  arg: (iden * ptype) list;
-  ret: ptype option
-} [@@deriving show {with_path = false}]
-
-and pexpr =
+type pexpr =
   | PEUnit
   | PENone
   | PEBool of bool
@@ -67,19 +61,12 @@ and pexpr =
   | PELet of iden * ptype option * pexpr 
   | PELetTuple of (iden * ptype option) list * pexpr 
   | PELetTupleIn of (iden * ptype option) list * pexpr * pexpr
-  | PEAssign of pexpr * pexpr
-  | PESRecAssign of iden * iden * pexpr 
-  | PECallBultin of iden * pexpr list
-  (* | PECall of left_op * iden * pexpr list  *)
 
   | PESeq of pexpr * pexpr
 
   [@@deriving show {with_path = false}]
 
 
-
-
-(* a declaration could be a type alias *)
 type declaration = 
   | DOpen of string
   | DDef of iden * ptype option * pexpr
@@ -87,7 +74,7 @@ type declaration =
   | DExternal of iden * ptype * string
 [@@deriving show {with_path = false}]
 
-(* a parse tree is a list of declarations; opens are unrolled by the parser *)
+
 type t = declaration list [@@deriving show {with_path = false}]
 
 
