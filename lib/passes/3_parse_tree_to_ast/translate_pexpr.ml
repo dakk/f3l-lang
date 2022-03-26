@@ -484,6 +484,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     if tt1 <> TUnit then raise @@ InvalidExpression (pel, "Cannot ignore non unit expression in sequence");
     (tt2, Seq((tt1, ee1), (tt2, ee2)))
 
+
+    (* TODO *)
+  | PEType (i, t) -> (TUnit, Unit)
+  | PEExternal (i, t, n) -> (TUnit, Unit)
 (* 
     
   | Parse_tree.PEType (dt) :: p' -> 
@@ -494,7 +498,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       types=(dt.id, transform_type dt.t e)::e.types;
     }
     *)
-  | _ -> (TUnit, Unit)
 
 
   

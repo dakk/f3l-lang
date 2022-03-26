@@ -37,6 +37,8 @@
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
          | LPAR <expr> COMMA <expr> (COMMA <expr>)* RPAR
+         | FUN LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDA LPAR
+           <expr> RPAR
          | LET IDENT COLON <type_sig> EQ <expr> IN <expr>
          | LET IDENT COLON <type_sig> EQ <expr>
          | LET IDENT EQ <expr> IN <expr>

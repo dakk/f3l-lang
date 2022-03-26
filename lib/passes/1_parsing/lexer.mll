@@ -23,6 +23,7 @@
 		"and";
 		"or";
 		"not";
+    "fun";
   ]
 
 
@@ -86,10 +87,10 @@ rule token = parse
 	| "let"						{ LET }
 	| "in"						{ IN }
   | "enum"          { ENUM }
+  | "fun"           { FUN }
   
 	| "#"							{ HT }
   | "->"				 	 	{ LAMBDA }
-  | "=>"				  	{ LAMBDAB }
   | "{"             { LBRACE }
   | "}"             { RBRACE }
   | "["					  	{ LSQUARE }
