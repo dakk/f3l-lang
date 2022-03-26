@@ -49,6 +49,7 @@ let () =
       "list_bfun", `Quick, compile opt None "test/expr/list_bfun.ml" None;
       "neg_fail", `Quick, compile opt (Some(APIError(None, ""))) "test/expr/neg_fail.ml" None;
       "record", `Quick, compile opt None "test/expr/record.ml" None;
+      "record_nest", `Quick, compile opt None "test/expr/record_nest.ml" None;
       "literal", `Quick, compile opt None "test/expr/literal.ml" None;
       "literal_untyped", `Quick, compile opt None "test/expr/literal_untyped.ml" None;
       (* "literal_fail_infer", `Quick, compile opt (Some(TypeError(None, ""))) "test/expr/literal_fail_infer.ml" None; *)

@@ -1,4 +1,5 @@
-type r = { a: int; b: { c: int }}
+type r = { a: int; b: int }
 
-let a: r = { a=12; b={ c=13 } }
-let c: int = a.b.c
+let a: r = { a=12; b=13 }
+(* let c: int = a.b *)
+
