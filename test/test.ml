@@ -3,7 +3,7 @@ open Helpers.Errors
 
 let opt = Compiler.{
   target = None;
-  print_pt = false;
+  print_pt = true;
   print_ast = false;
   verbose = false;
   no_remove_unused = true;

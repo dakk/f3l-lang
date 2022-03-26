@@ -19,6 +19,7 @@
 %token <float> FLOAT
 %token <string> CONT
 %token <string> IDENT
+%token <string> MIDENT
 
 %left NOT
 %left OR
@@ -41,7 +42,6 @@
 	| i=IDENT  									{ (i, None) }
 
   ident: | i=IDENT { i }
-
 
   type_sig:
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
@@ -126,6 +126,7 @@
 		| MATCH c=expr WITH cl=nonempty_list(match_case) 
 																{ loce $startpos $endpos @@ Parse_tree.PEMatchWith (c, cl) }
 
+    // | i=MIDENT DOT i2=IDENT     { loce $startpos $endpos @@ Parse_tree.PEModRef (i, i2) }
     | i=IDENT 						      { loce $startpos $endpos @@ Parse_tree.PERef (i) }
     | e=left DOT i=IDENT 				{ loce $startpos $endpos @@ Parse_tree.PEDot (e, i) }
     | e=expr DOT i=IDENT 				{ loce $startpos $endpos @@ Parse_tree.PEDot (e, i) }

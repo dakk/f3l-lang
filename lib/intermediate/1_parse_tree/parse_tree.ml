@@ -33,6 +33,7 @@ and pexpr =
   | PERecord of (iden * pexpr) list
 
   | PERef of iden
+  | PEModRef of iden * iden
 
   (* aritmetic *)
   | PEAdd of pexpr * pexpr

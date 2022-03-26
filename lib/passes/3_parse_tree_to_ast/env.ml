@@ -4,7 +4,7 @@ open Ast_expr
 open Helpers.Errors
 
 
-type st = | Type | Def | External [@@deriving show {with_path = false}]
+type st = | Type | Def | External | Module [@@deriving show {with_path = false}]
 
 
 type t = {
@@ -12,11 +12,13 @@ type t = {
   defs:      (iden * texpr) list;
   symbols:     (iden * st) list;
   externals: (iden * ttype * string) list;
+  modules: (iden * t) list;
 } [@@deriving show {with_path = false}]
 
 let start_env = {
   defs=[];
   externals=[];
+  modules=[];
   types=[
     "unit", TUnit;
     "int", TInt;
