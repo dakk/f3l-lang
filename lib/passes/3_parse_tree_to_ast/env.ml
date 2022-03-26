@@ -8,11 +8,11 @@ type st = | Type | Def | External | Module [@@deriving show {with_path = false}]
 
 
 type t = {
-  types:       (iden * ttype) list;
-  defs:      (iden * texpr) list;
-  symbols:     (iden * st) list;
-  externals: (iden * ttype * string) list;
-  modules: (iden * t) list;
+  types:      (iden * ttype) list;
+  defs:       (iden * texpr) list;
+  symbols:    (iden * st) list;
+  externals:  (iden * ttype * string) list;
+  modules:    (iden * t) list;
 } [@@deriving show {with_path = false}]
 
 let start_env = {

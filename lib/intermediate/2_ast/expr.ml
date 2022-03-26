@@ -4,6 +4,7 @@ open Ttype
 type expr = 
 | LocalRef of iden 
 | GlobalRef of iden
+| External of iden * ttype
 
 | None
 | Unit 
@@ -87,7 +88,6 @@ type expr =
 | LetTupleIn of (iden * ttype) list * texpr * texpr
 | SAssign of iden * texpr
 | SRecAssign of iden * iden * texpr 
-| External of iden * ttype
 
 | Seq of texpr * texpr
 

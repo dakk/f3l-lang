@@ -33,7 +33,6 @@ and pexpr =
   | PERecord of (iden * pexpr) list
 
   | PERef of iden
-  | PEModRef of iden * iden
 
   (* aritmetic *)
   | PEAdd of pexpr * pexpr
@@ -83,25 +82,9 @@ and pexpr =
 (* a declaration could be a type alias *)
 type declaration = 
   | DOpen of string
-
-  (* defant value *)
-  | DDef of { 
-    id: iden; 
-    t: ptype option; 
-    v: pexpr; 
-  }
-
-  (* type declaration *)
-  | DType of { 
-    id: iden; 
-    t: ptype; 
-  }
-
-  | DExternal of {
-    id: iden;
-    t: ptype;
-    n: string;
-  }
+  | DDef of iden * ptype option * pexpr
+  | DType of iden * ptype
+  | DExternal of iden * ptype * string
 [@@deriving show {with_path = false}]
 
 (* a parse tree is a list of declarations; opens are unrolled by the parser *)

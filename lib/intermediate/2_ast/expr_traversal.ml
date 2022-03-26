@@ -35,6 +35,7 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Unit 
   | ListEmpty
   | GlobalRef (_)
+  | External (_, _)
   | CaseDefault -> empty
 
   | Lambda (_, a)

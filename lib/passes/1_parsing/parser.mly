@@ -141,17 +141,17 @@
 
   dtype:
     | TYPE x=IDENT EQ tl=type_sig
-      { Parse_tree.DType ({ id=x; t=tl }) }
+      { Parse_tree.DType (x, tl) }
 
   ddef:
     | LET x=IDENT COLON t=type_expr EQ v=expr
-      { Parse_tree.DDef ({ id=x; t=Some(t); v=v }) }
+      { Parse_tree.DDef (x, Some(t), v) }
     | LET x=IDENT EQ v=expr
-      { Parse_tree.DDef ({ id=x; t=None; v=v }) }
+      { Parse_tree.DDef (x, None, v) }
 
   dexternal:
     | EXTERNAL x=IDENT COLON t=type_expr EQ n=STRING
-      { Parse_tree.DExternal ({ id=x; t=t; n=n }) }
+      { Parse_tree.DExternal (x, t, n) }
 
   dopen: | OPEN p=ident { Parse_tree.DOpen (p) }
 
