@@ -61,8 +61,8 @@ match e with
 | Bytes (s) -> 
   fprintf fmt "(\"%s\": bytes)" (Bytes.to_string s)
 
-| EnumValue (i) -> 
-  (match te with | TEnum(e) -> fprintf fmt "%dn" @@ enum_index e i 0)
+| UnionValue (i, tu) -> 
+  (match te with | TUnion(e) -> fprintf fmt "%dn" @@ enum_index e i 0)
 
 | Typed (e, t) -> 
   fprintf fmt "(%a: %a)" 

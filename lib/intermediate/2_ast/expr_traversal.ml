@@ -30,7 +30,7 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Bytes (_)
   | Typed (_)
   | LocalRef (_)
-  | EnumValue (_)
+  | UnionValue (_, _)
   | None
   | Unit 
   | ListEmpty

@@ -20,7 +20,7 @@ type expr =
 | Tuple of texpr list
 | Lambda of (iden * ttype) list * texpr
 | Record of (iden * texpr) list
-| EnumValue of (iden)
+| UnionValue of (iden * ttype)
 | RecordAccess of texpr * iden
 
 (* option *)

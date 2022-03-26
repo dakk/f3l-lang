@@ -33,7 +33,7 @@ let rec pp_ltype fmt (a: ttype) = match a with
     pp_ltype p
     pp_ltype r
 
-| TEnum (el) -> 
+| TUnion (el) -> 
   fprintf fmt "nat"
 
 | TList (t) -> 

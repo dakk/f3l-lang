@@ -23,6 +23,6 @@ let rec transform_type (pt: Parse_tree.ptype) (e: Env.t): ttype = match pt with
   | c -> raise @@ TypeError (None, "Invalid container type '" ^ c ^ "'")
 )
 | Parse_tree.PTRecord (el) -> TRecord (List.map (fun (n, tt) -> n, transform_type tt e) el)
-| Parse_tree.PTEnum (e) -> TEnum (e)
+| Parse_tree.PTUnion (e) -> TUnion (e)
 | Parse_tree.PTLambda (p, r) -> TLambda (transform_type p e, transform_type r e)
 

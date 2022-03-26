@@ -15,14 +15,14 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
 
     let tt = transform_type t e in 
     match tt with 
-    | TEnum (el) -> 
+    | TUnion (el') -> 
       let rec consume el d s = match el with
       | [] -> d,s
       | (x :: xs) ->
         Env.assert_symbol_absence e x;
-        consume xs ((x, (TEnum(el), EnumValue(x)))::d) ((x, Env.Union)::s)
+        consume xs ((x, (TUnion(el'), UnionValue(x, TUnion(el'))))::d) ((x, Env.Union)::s)
       in 
-      let (d,s) = consume el [] [] in 
+      let (d,s) = consume el' [] [] in 
       transform p' { e with 
         symbols=(id, Type)::(s @ e.symbols);
         defs=d @ e.defs;

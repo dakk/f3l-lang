@@ -60,15 +60,15 @@ let aTrue: bool = true;
 let aFalse: bool = false;
 ```
 
-## Enum
+## Union
 
 Enum type are unit variants; low level are represented as nat, so they are comparable \(only for equality\).
 
 ```cpp
-type anEnum = enum (Started | Stopped);
+type anEnum = Started | Stopped;
 
-let av: anEnum = anEnum#Started;
-let b: bool = av = anEnum#Stopped; // false
+let av: anEnum = Started;
+let b: bool = av = Stopped; // false
 ```
 
 ## String

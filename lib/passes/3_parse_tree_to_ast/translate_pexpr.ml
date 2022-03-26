@@ -403,7 +403,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       let (tcex, ecex) = transform_expr cex env' ic in
       if (tt <> te) && (tt <> TAny) then
         raise @@ TypeError (pel, "Match case has an invalid value type; " ^ show_ttype_got_expect tt te)
-      else ((tt, ee), tcex, (tcex, ecex)) 
+      else 
+        ((tt, ee), tcex, (tcex, ecex)) 
     ) bl in
     (* assert that every branch as the same type *)
     let rett: ttype = List.fold_left (fun acc (_, tcex, _) -> 

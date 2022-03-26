@@ -5,7 +5,7 @@ type ptype =
   | PTTuple of ptype list             (* tuple of other types *)
   | PTRecord of (string * ptype) list (* record is (iden * type) list *)
   | PTCont of string * ptype          (* container type * inner_type *)
-  | PTEnum of string list
+  | PTUnion of string list
   | PTLambda of ptype * ptype
   [@@deriving show {with_path = false}]
 
