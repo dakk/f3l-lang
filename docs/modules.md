@@ -7,12 +7,12 @@ module Another_module = struct
 end
 ```
 
-# Import
+# Include
 
-Inside a f3l file, you can import another f3l file containing useful declarations. This will copy all the declarations to the current file.
+Inside a f3l file, you can include another f3l module containing useful declarations. This will copy all the declarations to the current file.
 
 ```kotlin
-import "anotherFile.f3l";
+include Anotherfile;
 ```
 
 
@@ -21,7 +21,7 @@ import "anotherFile.f3l";
 Otherwise, if you want to open a file as a module, you can use the open keyword instead.
 
 ```kotlin
-open "amodule.f3l";
+open Amodule;
 ```
 
 And then, you can use a definition from the opened file like this:

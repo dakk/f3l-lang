@@ -7,6 +7,7 @@ type options = {
   print_ast: bool;
   verbose: bool;
   no_remove_unused: bool;
+  include_paths: string list;
 }
 
 let default_options = {
@@ -15,6 +16,7 @@ let default_options = {
   print_ast = true;
   verbose = true;
   no_remove_unused = false;
+  include_paths = ["."];
 }
 
 (* dump the parse tree, debug only *)
@@ -45,10 +47,11 @@ let build_ast (filename: string) opt =
   (* parse the starting file *)
   let pt = filename |> Passes.Parsing.parse_file in
 
-  (* parse and inject imports *)
+  (* parse and inject includes *)
   pt
-  |> app opt.verbose @@ print_str "===> Injecting imports";
-  |> Passes.Parse_tree_postprocess.inject_import
+  |> app opt.verbose @@ print_str "===> Injecting includes";
+  |> Passes.Parse_tree_postprocess.inject_include opt.include_paths
+
 
   (* parse and inject opens *)
 

@@ -17,9 +17,9 @@
 
 <type_expr> ::= <type_sig>
 
-<dimport> ::= IMPORT STRING SEMICOLON
+<dinclude> ::= INCLUDE <ident> SEMICOLON
 
-<dopen> ::= OPEN STRING SEMICOLON
+<dopen> ::= OPEN <ident> SEMICOLON
 
 <erec_element> ::= IDENT EQ <expr>
 
@@ -88,7 +88,7 @@
 <declaration> ::= <dtype>
                 | <ddef>
                 | <dexternal>
-                | <dimport>
+                | <dinclude>
                 | <dopen>
                 | <dmodule>
 

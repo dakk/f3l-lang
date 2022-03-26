@@ -38,6 +38,7 @@ let command =
           print_ast = past;
           verbose = verbose;
           no_remove_unused = noremoveunused;
+          include_paths = ["."]; (* TODO: read from parameters *)
         } in (
           let pp_err p cc m = pp_message p cc m true in 
           try run action filename opt with 

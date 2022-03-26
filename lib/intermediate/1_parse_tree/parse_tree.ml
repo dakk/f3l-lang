@@ -81,7 +81,7 @@ and pexpr =
 
 (* a declaration could be a type alias *)
 type declaration = 
-  | DImport of string
+  | DInclude of string
   | DOpen of string
 
   | DModule of {
