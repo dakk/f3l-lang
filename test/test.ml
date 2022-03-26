@@ -72,6 +72,6 @@ let () =
     ];
     "module", [
       "t1", `Quick, compile opt None "test/module/t1.ml" None;
-      "open_type", `Quick, compile opt None "test/module/open_type.ml" None;
+      "open", `Quick, compile opt None "test/module/open.ml" None;
     ];
   ]
