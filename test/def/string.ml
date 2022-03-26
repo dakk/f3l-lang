@@ -1,3 +1,3 @@
-def a : string = ("ciao": string)
-def b : string = "ciao"
-def d : bytes = b"ciao"
+let a : string = ("ciao": string)
+let b : string = "ciao"
+let d : bytes = b"ciao"

@@ -1,1 +1,1 @@
-def a : int -> int = fun (a: int) -> (a)
+let a : int -> int = fun (a: int) -> (a)

@@ -17,7 +17,7 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
       types=(dt.id, transform_type dt.t e)::e.types;
     }
 
-  (* global def *)
+  (* global let *)
   | Parse_tree.DDef (dc) :: p' -> 
     Env.assert_symbol_absence e dc.id;
 

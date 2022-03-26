@@ -1,6 +1,6 @@
-def a: nat lazy = Lazy.of(() => 12n + 43n)
+let a: nat lazy = Lazy.of(() => 12n + 43n)
 
-def b: nat = Lazy.force(a)
+let b: nat = Lazy.force(a)
 
 contract ALazyContract {
 	field z: string lazy

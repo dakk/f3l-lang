@@ -11,17 +11,17 @@ type t = Int of int | Nat of nat | Nil of unit;
 Options represents a value that could be defined _Some\(value\)_ or not _None_.
 
 ```ocaml
-def a: nat option = None;
-def b: nat option = Some(12n);
+let a: nat option = None;
+let b: nat option = Some(12n);
 ```
 
 The option type offers some helpers:
 
 ```ocaml
-def c: bool = Option.is_none a; // returns true if a is None
-def d: bool = Option.is_some a; // returns true if a is Some(_)
+let c: bool = Option.is_none a; // returns true if a is None
+let d: bool = Option.is_some a; // returns true if a is Some(_)
 
-def e: nat = match b with | Some(v) -> v | None -> 0
+let e: nat = match b with | Some(v) -> v | None -> 0
 ```
 
 ## List
@@ -79,13 +79,13 @@ let as: string = snd atuple;
 Lambda type represent anonymous functions.
 
 ```ocaml
-def e_sum: int -> int = (a: int) => (0 + 1);
-def e_gt: int -> bool = (a: int) => (0 > 1);
-def e_gt2: int -> bool = (a: int) => (a > 1);
-def e_comp: (int * int) -> bool = (a: int, b: int) => ((a * 8) > (b - 12));
-def e_comp2: (int * int) -> bool = (a: int, b: int) => ((a * (b - 8)) > (b - 12));
-def e_apply: int -> bool = (a: int) => (e_comp (12, 13));
+let e_sum: int -> int = (a: int) => (0 + 1);
+let e_gt: int -> bool = (a: int) => (0 > 1);
+let e_gt2: int -> bool = (a: int) => (a > 1);
+let e_comp: (int * int) -> bool = (a: int, b: int) => ((a * 8) > (b - 12));
+let e_comp2: (int * int) -> bool = (a: int, b: int) => ((a * (b - 8)) > (b - 12));
+let e_apply: int -> bool = (a: int) => (e_comp (12, 13));
 
-def e_apply2: int -> int = (a: int) => (((b: int) => (b))(12));
-def e_apply3: int -> int = (a: int) => (e_apply2 (12));
+let e_apply2: int -> int = (a: int) => (((b: int) => (b))(12));
+let e_apply3: int -> int = (a: int) => (e_apply2 (12));
 ```

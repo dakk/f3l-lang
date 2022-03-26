@@ -1,1 +1,1 @@
-def a : int -> nat = fun (a: int) -> (a)
+let a : int -> nat = fun (a: int) -> (a)

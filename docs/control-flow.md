@@ -14,10 +14,10 @@ match a with | 12 -> true | _ -> false
 
 ```ocaml
 type a = enum (Hello | World | No);
-def b = match a#Hello with | a#Hello -> true | a#World -> false;
-def c = match 2 with | 1 -> a#Hello | 2 -> a#World | _ -> a#No;
+let b = match a#Hello with | a#Hello -> true | a#World -> false;
+let c = match 2 with | 1 -> a#Hello | 2 -> a#World | _ -> a#No;
 
-def as = Some(12);
-def d = match as.isSome() with | true -> as.getSome() | false -> 13;
+let as = Some(12);
+let d = match as.isSome() with | true -> as.getSome() | false -> 13;
 ```
 

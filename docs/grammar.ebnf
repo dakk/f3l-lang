@@ -74,8 +74,8 @@
 
 <dtype> ::= TYPE IDENT EQ <type_sig>
 
-<ddef> ::= DEF IDENT COLON <type_expr> EQ <expr>
-         | DEF IDENT EQ <expr>
+<ddef> ::= LET IDENT COLON <type_expr> EQ <expr>
+         | LET IDENT EQ <expr>
 
 <dexternal> ::= EXTERNAL IDENT COLON <type_expr> EQ STRING
 

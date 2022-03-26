@@ -1,3 +1,3 @@
-def litString : string = "hola"
-def litNat : nat = 1n
-def litInt : int = 12
+let litString : string = "hola"
+let litNat : nat = 1n
+let litInt : int = 12

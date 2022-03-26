@@ -1,18 +1,18 @@
-def a = fun (a: int) -> (0 + 1)
-def b = fun (a: int) -> (0 > 1)
-def c = fun (a: int) -> (a > 1)
-def d = fun (a: int, b: int) -> ((a * 8) > (b - 12))
-def e = fun (a: int, b: int) -> ((a * (b - 8)) > (b - 12))
-def f = fun (a: int) -> (d (12, 13))
+let a = fun (a: int) -> (0 + 1)
+let b = fun (a: int) -> (0 > 1)
+let c = fun (a: int) -> (a > 1)
+let d = fun (a: int, b: int) -> ((a * 8) > (b - 12))
+let e = fun (a: int, b: int) -> ((a * (b - 8)) > (b - 12))
+let f = fun (a: int) -> (d (12, 13))
 
-def g = fun (a: int) -> ((fun (b: int) -> (b))(12))
-def h = fun (a: int) -> (g (12) * g (13))
+let g = fun (a: int) -> ((fun (b: int) -> (b))(12))
+let h = fun (a: int) -> (g (12) * g (13))
 
-def i = fun (a: int) -> (if a > 12 then 12 else 14 + 15)
-def l= true or false
-def m = fun (a: int) -> (match a with | 1 -> Some(12) | 2 -> (None: int option))
-def u = Unit
+let i = fun (a: int) -> (if a > 12 then 12 else 14 + 15)
+let l= true or false
+let m = fun (a: int) -> (match a with | 1 -> Some(12) | 2 -> (None: int option))
+let u = Unit
 
-def litString = "hola"
-def litNat = 1n
-def litInt = 12
+let litString = "hola"
+let litNat = 1n
+let litInt = 12

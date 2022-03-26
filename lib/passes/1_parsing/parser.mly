@@ -143,9 +143,9 @@
       { Parse_tree.DType ({ id=x; t=tl }) }
 
   ddef:
-    | DEF x=IDENT COLON t=type_expr EQ v=expr
+    | LET x=IDENT COLON t=type_expr EQ v=expr
       { Parse_tree.DDef ({ id=x; t=Some(t); v=v }) }
-    | DEF x=IDENT EQ v=expr
+    | LET x=IDENT EQ v=expr
       { Parse_tree.DDef ({ id=x; t=None; v=v }) }
 
   dexternal:

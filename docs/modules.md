@@ -3,7 +3,7 @@ In f3l every file is a module; but a syntax for nested modules is present:
 
 ```ocaml
 module Another_module = struct
-    def i3 = 3;
+    let i3 = 3;
 end
 ```
 
