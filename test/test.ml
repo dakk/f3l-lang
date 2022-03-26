@@ -44,7 +44,7 @@ let () =
       (* "list_methods", `Quick, compile opt None "test/type/list_methods.ml" None; *)
       "option_methods", `Quick, compile opt None "test/type/option_methods.ml" None;
     ];
-    "expression", [
+    (* "expression", [
       "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml" None;
       "list_bfun", `Quick, compile opt None "test/expr/list_bfun.ml" None;
       "neg_fail", `Quick, compile opt (Some(APIError(None, ""))) "test/expr/neg_fail.ml" None;
@@ -52,7 +52,6 @@ let () =
       "record_nest", `Quick, compile opt None "test/expr/record_nest.ml" None;
       "literal", `Quick, compile opt None "test/expr/literal.ml" None;
       "literal_untyped", `Quick, compile opt None "test/expr/literal_untyped.ml" None;
-      (* "literal_fail_infer", `Quick, compile opt (Some(TypeError(None, ""))) "test/expr/literal_fail_infer.ml" None; *)
       "lambda", `Quick, compile opt None "test/expr/lambda.ml" None;
       "assoc_bool", `Quick, compile opt None "test/expr/assoc_bool.ml" None;
       "match_case", `Quick, compile opt None "test/expr/match_case.ml" None;
@@ -70,7 +69,7 @@ let () =
       "enum", `Quick, compile opt None "test/def/enum.ml" None;
       "infer", `Quick, compile opt None "test/def/infer.ml" None;
       "let_infer", `Quick, compile opt None "test/def/let_infer.ml" None;
-    ];
+    ]; *)
     "module", [
       "t1", `Quick, compile opt None "test/module/t1.ml" None;
       "open", `Quick, compile opt None "test/module/open.ml" None;

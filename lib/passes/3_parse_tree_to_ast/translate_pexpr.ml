@@ -478,6 +478,14 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | _ -> raise @@ TypeError (pel, "Expected a tuple")
     )
 
+  | PESeq(PEType(i,t), n) -> 
+    Env.assert_symbol_absence env' i;
+    transform_expr n { env' with 
+      symbols=(i, Type)::env'.symbols;
+      types=(i, transform_type t env')::env'.types;
+    } ic
+
+
   | PESeq (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
@@ -486,8 +494,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
 
     (* TODO *)
-  | PEType (i, t) -> (TUnit, Unit)
+  (* | PEType (i, t) -> (TUnit, Unit) *)
   | PEExternal (i, t, n) -> (TUnit, Unit)
+  | PEModule (i, t) -> (TUnit, Unit)
 (* 
     
   | Parse_tree.PEType (dt) :: p' -> 
