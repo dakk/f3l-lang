@@ -34,14 +34,13 @@
 %%
   program: dl=expr EOF { dl }
 
+  ident: | i=IDENT { i }
+
   parameter: | i=IDENT COLON t=type_sig { (i, t) }
 
   param_opt_typed: 
 	| i=IDENT COLON t=type_sig 	{ (i, Some(t)) }
 	| i=IDENT  									{ (i, None) }
-
-  ident: | i=IDENT { i }
-
 
   type_sig:
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
@@ -58,10 +57,10 @@
 
   erec_element:
     | i=IDENT EQ b=expr { (i, b) }
+    
 	match_case:
 		| PIPE e=expr LAMBDA v=expr { (e, v) }
 		| PIPE UNDERSCORE LAMBDA v=expr { (loce $startpos $endpos @@ Parse_tree.PECaseDefault, v) }
-
 
 	left:
 		| l=left DOT i=IDENT				{ loce $startpos $endpos @@ Parse_tree.PEDot (l, i) }
@@ -152,3 +151,5 @@
     | a=expr RET b=expr
       { loce $startpos $endpos @@ Parse_tree.PESeq (a, b) }
 
+    | a=expr SEMICOLON SEMICOLON b=expr
+      { loce $startpos $endpos @@ Parse_tree.PESeq (a, b) }
