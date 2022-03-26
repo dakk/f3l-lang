@@ -10,6 +10,6 @@ let litList: int list = [13, 12, 11]
 let litLambda: int -> int = fun (a: int) -> (2)
 let litRec2: { a: string; b: int } = { a="ciao"; b=12 }
 
-type a = enum (Ciao | Mondo)
+type a = Ciao | Mondo
 let b: a = Ciao
 

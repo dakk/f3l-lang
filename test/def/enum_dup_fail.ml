@@ -1,2 +1,2 @@
-type a = enum (Padre | Madre)
-type b = enum (Zio | Madre)
+type a = Padre | Madre
+type b = Zio | Madre

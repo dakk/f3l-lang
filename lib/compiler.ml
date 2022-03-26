@@ -75,9 +75,9 @@ let write_file (filename: string) data =
 let compile (filename: string) opt =
   build_ast filename opt
     (* remove unused *)
-    |> app opt.verbose @@ print_str "===> Dropping unused code" 
+    (* |> app opt.verbose @@ print_str "===> Dropping unused code"  *)
     (* |> ap (not opt.no_remove_unused) @@ Passes.Ast_remove_unused.remove_unused opt.contract *)
-    |> app opt.print_ast print_ast 
+    (* |> app opt.print_ast print_ast  *)
 
     (* output to a final language - first pass *)
     |> (fun ast -> 

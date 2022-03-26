@@ -30,7 +30,6 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Bytes (_)
   | Typed (_)
   | LocalRef (_)
-  | UnionValue (_, _)
   | None
   | Unit 
   | ListEmpty
@@ -38,6 +37,7 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | External (_, _)
   | CaseDefault -> empty
 
+  | UnionValue (_, _, a)
   | Lambda (_, a)
   | Some (a)
   | RecordAccess (a, _)

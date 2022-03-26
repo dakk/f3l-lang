@@ -7,5 +7,5 @@ let litList = [13, 14, 15]
 let litLambda	= fun (a: int) -> (2)
 let litRec2 = { a="ciao"; b=12 }
 
-type a = enum (Ciao | Mondo)
+type a = Ciao | Mondo
 let b = Ciao

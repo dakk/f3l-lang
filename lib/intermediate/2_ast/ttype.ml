@@ -11,7 +11,7 @@ type ttype =
   | TString
   | TBytes
   | TLambda of ttype * ttype
-  | TUnion of string list
+  | TUnion of (string * ttype) list
   | TList of ttype
   | TOption of ttype
   | TRecord of (iden * ttype) list
@@ -60,7 +60,7 @@ let rec show_ttype (at: ttype) = match at with
 | TString -> "string"
 | TBytes -> "bytes"
 | TLambda (p, r) -> "(" ^ show_ttype p ^ " -> " ^ show_ttype r ^ ")"
-| TUnion (el) -> List.fold_left (fun acc x -> acc ^ (if acc = "" then "" else " | ") ^ x) "" el
+| TUnion (el) -> List.fold_left (fun acc (x, _) -> acc ^ (if acc = "" then "" else " | ") ^ x) "" el
 | TList (t) -> show_ttype t ^ " list"
 | TOption (t) -> show_ttype t ^ " option"
 | TRecord (l) -> "record { " ^ List.fold_left (fun acc (x, xt) -> acc ^ (if acc = "" then "" else ", ") ^ x ^ ": " ^ show_ttype xt) "" l ^ " }"

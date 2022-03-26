@@ -7,11 +7,14 @@
 
 <ident> ::= IDENT
 
+<union_v> ::= IDENT
+            | IDENT OF <ident>
+
 <type_sig> ::= <ident>
              | <type_expr> CONT
              | LPAR <type_sig> MUL <type_sig> (MUL <type_sig>)* RPAR
              | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
-             | ENUM LPAR [<ident> (PIPE <ident>)*] RPAR
+             | <union_v> PIPE <union_v> (PIPE <union_v>)*
              | LPAR <type_sig> RPAR
              | <type_sig> LAMBDA <type_sig>
 

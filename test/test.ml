@@ -4,7 +4,7 @@ open Helpers.Errors
 let opt = Compiler.{
   target = None;
   print_pt = true;
-  print_ast = false;
+  print_ast = true;
   verbose = false;
   no_remove_unused = true;
   include_paths = ["."; "./test/module"];
@@ -65,6 +65,9 @@ let () =
       "expr", `Quick, compile opt None "test/def/expr.ml" None;
       "let_expr", `Quick, compile opt None "test/def/let_expr.ml" None;
       "enum", `Quick, compile opt None "test/def/enum.ml" None;
+      "enum_typed", `Quick, compile opt None "test/def/enum_typed.ml" None;
+      "enum_typed_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/enum_typed_fail.ml" None;
+      "enum_typed_fail2", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/enum_typed_fail2.ml" None;
       "enum_dup_fail", `Quick, compile opt (Some(DuplicateSymbolError(None, ""))) "test/def/enum_dup_fail.ml" None;
       "infer", `Quick, compile opt None "test/def/infer.ml" None;
       "let_infer", `Quick, compile opt None "test/def/let_infer.ml" None;

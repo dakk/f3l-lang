@@ -1,4 +1,4 @@
-type a = enum (Hello | World | No)
+type a = Hello | World | No
 
 let z = Hello
 let b = match z with 

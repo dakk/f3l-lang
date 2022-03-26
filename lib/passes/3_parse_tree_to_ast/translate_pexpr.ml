@@ -360,6 +360,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEApply (e, el) -> 
     let (tt,ee) = transform_expr e env' ic in 
     (match tt with 
+    | TUnion(e') -> 
+      let ap = transform_expr (List.hd el) env' ic in
+      tt, UnionValue ("Ciao", tt, ap) 
+
     (* Apply on lambda  *)
     | TLambda (arv, rettype) -> 
       let argl = argv_to_list arv in 

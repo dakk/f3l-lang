@@ -6,7 +6,7 @@
 %token EOF
 // QUOTE SIZE HT ASTERISK AT GET HAS QUESTION ASSERT
 %token LBRACE, RBRACE, LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ, DOT, LSQUARE, RSQUARE
-%token ENUM, TYPE, DEF, AND, OR, NOT, TRUE, FALSE
+%token TYPE, DEF, AND, OR, NOT, TRUE, FALSE, OF
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
 %token NEQ, UNIT, UNDERSCORE
@@ -43,6 +43,10 @@
 
   ident: | i=IDENT { i }
 
+  union_v:
+  | i=IDENT               { (i, PTBuiltin("unit")) } 
+  | i=IDENT OF t=ident    { (i, PTBuiltin(t)) }
+
   type_sig:
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
     | bt=type_expr c=CONT                           { Parse_tree.PTCont (c, bt) }
@@ -50,7 +54,7 @@
                                                     { Parse_tree.PTTuple (t1::tl) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, parameter) RBRACE
                                                     { Parse_tree.PTRecord (tl)}
-    | ENUM LPAR el=separated_list(PIPE, ident) RPAR { Parse_tree.PTUnion (el) }
+    | x=union_v PIPE el=separated_nonempty_list(PIPE, union_v)  { Parse_tree.PTUnion (x::el) }
     | LPAR t=type_sig RPAR											    { t }
     | p=type_sig LAMBDA pr=type_sig									{ Parse_tree.PTLambda (p, pr) }
 

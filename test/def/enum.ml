@@ -1,5 +1,5 @@
-type a = enum (Padre | Madre)
-type b = enum (Zio | Zia)
+type a = Padre | Madre
+type b = Zio | Zia
 let c: a = Padre
 let d: a = Madre
 let e: b = Zio
