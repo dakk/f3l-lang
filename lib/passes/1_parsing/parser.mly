@@ -10,7 +10,7 @@
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
 %token NEQ, UNIT, UNDERSCORE
-%token OPEN, EXTERNAL, MODULE, STRUCT, END
+%token OPEN, EXTERNAL
 %token LAMBDA, FUN
 %token <string> STRING
 %token <string> BYTES
@@ -56,7 +56,6 @@
 
   type_expr: | te=type_sig {te}
 
-  dopen: | OPEN p=ident SEMICOLON { Parse_tree.DOpen (p) }
 
   erec_element:
     | i=IDENT EQ b=expr { (i, b) }
@@ -140,18 +139,20 @@
     | LPAR v=expr COLON t=type_sig RPAR { loce $startpos $endpos @@ Parse_tree.PETyped (v, t) }
 
   dtype:
-    | TYPE x=IDENT EQ tl=type_sig SEMICOLON
+    | TYPE x=IDENT EQ tl=type_sig
       { Parse_tree.DType ({ id=x; t=tl }) }
 
   ddef:
-    | DEF x=IDENT COLON t=type_expr EQ v=expr SEMICOLON
+    | DEF x=IDENT COLON t=type_expr EQ v=expr
       { Parse_tree.DDef ({ id=x; t=Some(t); v=v }) }
-    | DEF x=IDENT EQ v=expr SEMICOLON
+    | DEF x=IDENT EQ v=expr
       { Parse_tree.DDef ({ id=x; t=None; v=v }) }
 
   dexternal:
-    | EXTERNAL x=IDENT COLON t=type_expr EQ n=STRING SEMICOLON
+    | EXTERNAL x=IDENT COLON t=type_expr EQ n=STRING
       { Parse_tree.DExternal ({ id=x; t=t; n=n }) }
+
+  dopen: | OPEN p=ident { Parse_tree.DOpen (p) }
 
   declaration:
     | t=dtype           { locd $startpos $endpos t }

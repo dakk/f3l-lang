@@ -10,9 +10,6 @@
 		"def";
 		"var";
 		"list";
-    "module";
-    "struct";
-    "end";
     "open";
 		"option";
     "extern";

@@ -1,3 +1,3 @@
-type t = (int * string);
+type t = (int * string)
 
-def hello: t = (1, "hello");
+def hello: t = (1, "hello")

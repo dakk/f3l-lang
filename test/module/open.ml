@@ -1,5 +1,5 @@
-open Open_a;
+open Open_a
 
-def a: t = (12, "ciao");
+def a: t = (12, "ciao")
 
-def ht = hello;
+def ht = hello

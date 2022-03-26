@@ -1,9 +1,0 @@
-(*contract AC {
-	entry acc () {
-		let a = Some (12n);
-		let b: bool = a.isSome();
-		let c: bool = a.isNone();
-		let d: nat = a.getSome();
-		[]
-	}
-}*)

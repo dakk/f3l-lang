@@ -1,3 +1,3 @@
-external puts: (string -> nat) = "puts";
+external puts: (string -> nat) = "puts"
 
-external anumber: int = "anumber";
+external anumber: int = "anumber"

@@ -17,8 +17,6 @@
 
 <type_expr> ::= <type_sig>
 
-<dopen> ::= OPEN <ident> SEMICOLON
-
 <erec_element> ::= IDENT EQ <expr>
 
 <match_case> ::= PIPE <expr> LAMBDA <expr>
@@ -74,14 +72,14 @@
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
 
-<dtype> ::= TYPE IDENT EQ <type_sig> SEMICOLON
+<dtype> ::= TYPE IDENT EQ <type_sig>
 
-<ddef> ::= DEF IDENT COLON <type_expr> EQ <expr> SEMICOLON
-         | DEF IDENT EQ <expr> SEMICOLON
+<ddef> ::= DEF IDENT COLON <type_expr> EQ <expr>
+         | DEF IDENT EQ <expr>
 
-<dexternal> ::= EXTERNAL IDENT COLON <type_expr> EQ STRING SEMICOLON
+<dexternal> ::= EXTERNAL IDENT COLON <type_expr> EQ STRING
 
-<dmodule> ::= MODULE IDENT EQ STRUCT <declaration>* END
+<dopen> ::= OPEN <ident>
 
 <declaration> ::= <dtype>
                 | <ddef>
