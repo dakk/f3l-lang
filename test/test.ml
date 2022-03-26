@@ -36,13 +36,13 @@ let compile opt exc path cname _ =
 let () =
   Alcotest.run "yallo" [
     "compiler", [
-      "comments", `Quick, compile opt None "test/compiler/comments.ml" None;
-      "external", `Quick, compile opt None "test/compiler/external.ml" None;
+      "comment", `Quick, compile opt None "test/compiler/comment.ml" None;
+      "comment_multiline", `Quick, compile opt None "test/compiler/comment_multiline.ml" None;
+      "external_def", `Quick, compile opt None "test/compiler/external_def.ml" None;
+      "external_fun", `Quick, compile opt None "test/compiler/external_fun.ml" None;
     ];
     "type", [
       "types", `Quick, compile opt None "test/type/types.ml" None;
-      (* "list_methods", `Quick, compile opt None "test/type/list_methods.ml" None; *)
-      "option_methods", `Quick, compile opt None "test/type/option_methods.ml" None;
     ];
     "expression", [
       "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml" None;

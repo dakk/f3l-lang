@@ -62,6 +62,7 @@ rule token = parse
   | int as i 			  { INT (int_of_string i) }
   | nat as i 			  { NAT (int_of_string (String.sub i 0 ((String.length i) - 1))) }
 
+	| "()"					  { UNIT }
   | "external"      { EXTERNAL }
   | "open"          { OPEN }
   | "type"          { TYPE }
@@ -79,7 +80,6 @@ rule token = parse
   | "None"				  { NONE }
 	| "match"					{ MATCH }
 	| "with"					{ WITH }
-	| "Unit"					{ UNIT }
 	| "let"						{ LET }
 	| "in"						{ IN }
   | "enum"          { ENUM }

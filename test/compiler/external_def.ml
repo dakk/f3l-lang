@@ -1,0 +1,1 @@
+external puts: (string -> nat) = "puts"

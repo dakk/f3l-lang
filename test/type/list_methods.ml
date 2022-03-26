@@ -1,5 +1,0 @@
-(* let l: int list = [1,2,3]
-let a: int list = l.mapWith((i: int) => (i * 2))
-let b: string list = l.mapWith((i: int) => ("ciao"))
-*)
-	
