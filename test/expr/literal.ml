@@ -11,5 +11,5 @@ let litLambda: int -> int = fun (a: int) -> (2)
 let litRec2: { a: string; b: int } = { a="ciao"; b=12 }
 
 type a = enum (Ciao | Mondo)
-let b: a = a#Ciao
+let b: a = Ciao
 

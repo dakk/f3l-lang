@@ -19,8 +19,8 @@
 
 <erec_element> ::= IDENT EQ <expr>
 
-<match_case> ::= PIPE <expr> LAMBDA <expr>
-               | PIPE UNDERSCORE LAMBDA <expr>
+<match_case> ::= <expr> LAMBDA <expr>
+               | UNDERSCORE LAMBDA <expr>
 
 <left> ::= IDENT (DOT IDENT)*
 
@@ -62,11 +62,11 @@
          | <expr> EQEQ <expr>
          | <expr> NEQ <expr>
          | IF <expr> THEN <expr> ELSE <expr>
-         | MATCH <expr> WITH <match_case>+
+         | MATCH <expr> WITH PIPE <match_case> (PIPE <match_case>)*
+         | MATCH <expr> WITH <match_case> (PIPE <match_case>)*
          | IDENT
          | <left> DOT IDENT
          | <expr> DOT IDENT
-         | IDENT HT IDENT
          | <left> LPAR [<expr> (COMMA <expr>)*] RPAR
          | <expr> LPAR [<expr> (COMMA <expr>)*] RPAR
          | LPAR <expr> RPAR

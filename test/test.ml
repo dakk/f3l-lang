@@ -65,6 +65,7 @@ let () =
       "expr", `Quick, compile opt None "test/def/expr.ml" None;
       "let_expr", `Quick, compile opt None "test/def/let_expr.ml" None;
       "enum", `Quick, compile opt None "test/def/enum.ml" None;
+      "enum_dup_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/enum_dup_fail.ml" None;
       "infer", `Quick, compile opt None "test/def/infer.ml" None;
       "let_infer", `Quick, compile opt None "test/def/let_infer.ml" None;
     ];

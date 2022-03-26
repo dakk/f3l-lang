@@ -58,9 +58,6 @@ let build_ast (filename: string) opt =
   (* print pt *)
   |> app opt.print_pt print_pt
 
-  (* print pt *)
-  |> app opt.print_pt print_pt
-
   (* transform pt to ast *)
   |> app opt.verbose @@ print_str "===> Translating Parse_tree to Ast"
   |> Passes.Parse_tree_to_ast.translate 

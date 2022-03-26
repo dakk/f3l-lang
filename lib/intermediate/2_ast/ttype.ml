@@ -21,46 +21,34 @@ type ttype =
 
 
 type tattr = {
-  push  : bool;
   cmp   : bool;
-  pass  : bool;
-  store : bool;
   pack  : bool;
-  bm_val: bool;
 } [@@deriving show {with_path = false}]
 
 (* 
   Comparable
       Comparable values can be stored in sets, can be passed as argument to COMPARE, etc.
-  Passable
-      Passable types are those that can be taken as a parameter in contracts.
-  Storable
-      Storable types can be used as a storage in contracts.
-  Pushable
-      Literal values of pushable types can be given as parameter to the PUSH primitive.
   Packable
       Values of packable types can be given as serialized using the PACK primitive.
-  big_map value
-      These are types that be used in the domain of big_maps. 
 *)
 
 let attributes (t: ttype) = match t with 
-  | TUnit ->          { cmp=false; pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TInt ->           { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TNat ->           { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TFloat ->         { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TBool ->          { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TString ->        { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TBytes ->         { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TLambda (_, _) -> { cmp=false; pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TEnum (_) ->      { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  } 
-  | TList (_) ->      { cmp=false; pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TOption (_) ->    { cmp=false; pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
-  | TRecord (_) ->    { cmp=false; pass=true;  store=true;  push=true;  pack=true;  bm_val=true  } 
-  | TTuple (_) ->     { cmp=true;  pass=true;  store=true;  push=true;  pack=true;  bm_val=true  }
+  | TUnit ->          { cmp=false; pack=true  }
+  | TInt ->           { cmp=true;  pack=true  }
+  | TNat ->           { cmp=true;  pack=true  }
+  | TFloat ->         { cmp=true;  pack=true  }
+  | TBool ->          { cmp=true;  pack=true  }
+  | TString ->        { cmp=true;  pack=true  }
+  | TBytes ->         { cmp=true;  pack=true  }
+  | TLambda (_, _) -> { cmp=false; pack=true  }
+  | TEnum (_) ->      { cmp=true;  pack=true  } 
+  | TList (_) ->      { cmp=false; pack=true  }
+  | TOption (_) ->    { cmp=false; pack=true  }
+  | TRecord (_) ->    { cmp=false; pack=true  } 
+  | TTuple (_) ->     { cmp=true;  pack=true  }
  
   (* internal types *)
-  | TAny ->           { cmp=false; pass=false; store=false; push=false; pack=false; bm_val=false }
+  | TAny ->           { cmp=false; pack=false }
   
 let rec show_ttype (at: ttype) = match at with 
 | TAny -> "'a"

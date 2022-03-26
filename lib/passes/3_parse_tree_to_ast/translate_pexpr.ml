@@ -107,20 +107,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (idtt, idee) = List.map (fun (i, (tt, ee)) -> (i, tt), (i, ee)) l' |> List.split in
     TRecord (idtt), Record (l')
 
-    
-  (* Enum value *)
-  | PEHt (ii, i) -> 
-    (match Env.get_type_opt ii env' with 
-    | Some(TEnum (el)) -> 
-      if List.find_opt (fun x -> x=i) el <> None then
-        TEnum(el), EnumValue(i)
-      else 
-        raise @@ TypeError (pel, "Enum value '" ^ i ^ "' not found in enum: " ^ show_ttype (TEnum(el)))
-    | None -> raise @@ TypeError (pel, "Unknown enum type '" ^ ii ^ "'")
-    | _ -> raise @@ TypeError (pel, "Accessor # is only usable on enum type"))
-
-
-
   (* PEDot on base *)
   | PEApply (PEDot (PERef("List"), "empty"), []) -> TList(TAny), ListEmpty
     

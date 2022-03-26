@@ -59,9 +59,10 @@
 
   erec_element:
     | i=IDENT EQ b=expr { (i, b) }
-	match_case:
-		| PIPE e=expr LAMBDA v=expr { (e, v) }
-		| PIPE UNDERSCORE LAMBDA v=expr { (loce $startpos $endpos @@ Parse_tree.PECaseDefault, v) }
+
+  match_case:
+		| e=expr LAMBDA v=expr     { (e, v) }
+		| UNDERSCORE LAMBDA v=expr { (loce $startpos $endpos @@ Parse_tree.PECaseDefault, v) }
 
 
 	left:
@@ -123,14 +124,14 @@
                                 { loce $startpos $endpos @@ Parse_tree.PEIfThenElse (c,e1,e2) }
 
 		// match with
-		| MATCH c=expr WITH cl=nonempty_list(match_case) 
+		| MATCH c=expr WITH PIPE cl=separated_nonempty_list(PIPE, match_case) 
+		| MATCH c=expr WITH cl=separated_nonempty_list(PIPE, match_case) 
 																{ loce $startpos $endpos @@ Parse_tree.PEMatchWith (c, cl) }
 
     // | i=MIDENT DOT i2=IDENT     { loce $startpos $endpos @@ Parse_tree.PEModRef (i, i2) }
     | i=IDENT 						      { loce $startpos $endpos @@ Parse_tree.PERef (i) }
     | e=left DOT i=IDENT 				{ loce $startpos $endpos @@ Parse_tree.PEDot (e, i) }
     | e=expr DOT i=IDENT 				{ loce $startpos $endpos @@ Parse_tree.PEDot (e, i) }
-    | ii=IDENT HT i=IDENT 			{ loce $startpos $endpos @@ Parse_tree.PEHt (ii, i) }
 
     // apply a function
     | i=left LPAR p=separated_list(COMMA, expr) RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }

@@ -4,7 +4,7 @@ open Ast_expr
 open Helpers.Errors
 
 
-type st = | Type | Def | External | Module [@@deriving show {with_path = false}]
+type st = | Type | Union | Def | External [@@deriving show {with_path = false}]
 
 
 type t = {
@@ -12,13 +12,11 @@ type t = {
   defs:       (iden * texpr) list;
   symbols:    (iden * st) list;
   externals:  (iden * ttype * string) list;
-  modules:    (iden * t) list;
 } [@@deriving show {with_path = false}]
 
 let start_env = {
   defs=[];
   externals=[];
-  modules=[];
   types=[
     "unit", TUnit;
     "int", TInt;
@@ -51,5 +49,6 @@ let get_type_opt tn (e: t) = List.assoc_opt tn e.types
 let get_ref sn (e: t) = 
   match List.assoc_opt sn e.symbols with 
   | None -> raise @@ SymbolNotFound(None, "Unknown reference to symbol '" ^ sn ^ "'")
-  | Some (Def) -> let (tt, _) = List.assoc sn e.defs in tt     
+  | Some (Def) -> let (tt, _) = List.assoc sn e.defs in tt  
+  | Some (Union) -> let (tt, _) = List.assoc sn e.defs in tt  
   | _ -> raise @@ SymbolNotFound(None, "Symbol '" ^ sn ^ "' not found in env")

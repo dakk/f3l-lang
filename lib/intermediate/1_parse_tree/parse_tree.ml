@@ -19,7 +19,6 @@ type pexpr =
   | PEString of string
   | PEBytes of string
   | PESome of pexpr
-  | PEEnum of iden * string
   | PETyped of pexpr * ptype
   | PEList of pexpr list 
   | PETuple of pexpr list
@@ -53,7 +52,6 @@ type pexpr =
   | PECaseDefault
 
   (* function apply *)
-  | PEHt of iden * iden
   | PEDot of pexpr * iden
   | PEApply of pexpr * pexpr list
 
