@@ -10,7 +10,7 @@
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
 %token LAMBDAB, NEQ, UNIT, UNDERSCORE
-%token INCLUDE, OPEN, EXTERNAL, MODULE, STRUCT, END
+%token OPEN, EXTERNAL, MODULE, STRUCT, END
 %token LAMBDA
 %token <string> STRING
 %token <string> BYTES
@@ -56,7 +56,6 @@
 
   type_expr: | te=type_sig {te}
 
-  dinclude: | INCLUDE p=ident SEMICOLON { Parse_tree.DInclude (p) }
   dopen: | OPEN p=ident SEMICOLON { Parse_tree.DOpen (p) }
 
   erec_element:
@@ -162,7 +161,6 @@
     | t=dtype           { locd $startpos $endpos t }
     | d=ddef            { locd $startpos $endpos d }
     | e=dexternal       { locd $startpos $endpos e }
-    | i=dinclude        { locd $startpos $endpos i }
     | o=dopen           { locd $startpos $endpos o }
     | m=dmodule         { locd $startpos $endpos m }
 

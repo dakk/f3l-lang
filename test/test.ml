@@ -7,7 +7,7 @@ let opt = Compiler.{
   print_ast = false;
   verbose = false;
   no_remove_unused = true;
-  include_paths = ["."; "./test/include"];
+  include_paths = ["."; "./test/module"];
 }
 
 let optc = { opt with no_remove_unused = false }
@@ -70,10 +70,8 @@ let () =
       "infer", `Quick, compile opt None "test/def/infer.yallo" None;
       "let_infer", `Quick, compile opt None "test/def/let_infer.yallo" None;
     ];
-    "include", [
-      "type", `Quick, compile opt None "test/include/type.ml" None;
-    ];
     "module", [
       "t1", `Quick, compile opt None "test/module/t1.ml" None;
+      "open_type", `Quick, compile opt None "test/module/open_type.ml" None;
     ];
   ]

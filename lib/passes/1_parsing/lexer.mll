@@ -10,7 +10,6 @@
 		"def";
 		"var";
 		"list";
-    "include";
     "module";
     "struct";
     "end";
@@ -69,7 +68,6 @@ rule token = parse
   | "struct"        { STRUCT }
   | "end"           { END }
   | "external"      { EXTERNAL }
-  | "include"       { INCLUDE }
   | "open"          { OPEN }
   | "type"          { TYPE }
   | "list"          { CONT "list" }

@@ -17,8 +17,6 @@
 
 <type_expr> ::= <type_sig>
 
-<dinclude> ::= INCLUDE <ident> SEMICOLON
-
 <dopen> ::= OPEN <ident> SEMICOLON
 
 <erec_element> ::= IDENT EQ <expr>
@@ -88,7 +86,6 @@
 <declaration> ::= <dtype>
                 | <ddef>
                 | <dexternal>
-                | <dinclude>
                 | <dopen>
                 | <dmodule>
 

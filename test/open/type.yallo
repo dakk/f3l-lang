@@ -1,5 +1,0 @@
-open "test/open/a.yallo";
-open A;
-
-def a: A.t = (12, "ciao");
-

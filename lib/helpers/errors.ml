@@ -8,7 +8,7 @@ exception InvalidExpression of Loc.l option * string
 exception APIError of Loc.l option * string
 exception GenerateError of Loc.l option * string
 exception CompilerError of string
-exception ImportedModuleNotFound of string
+exception ModuleNotFound of string
 
 let red s = Printf.sprintf "\x1b[31m%s\x1b[0m" s
 let yellow s = Printf.sprintf "\x1b[33m%s\x1b[0m" s

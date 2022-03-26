@@ -7,12 +7,10 @@ module Another_module = struct
 end
 ```
 
-# Include
+You can directly access a module in the current include_path, referencing by name:
 
-Inside a f3l file, you can include another f3l module containing useful declarations. This will copy all the declarations to the current file.
-
-```kotlin
-include Anotherfile;
+```ocaml
+Another_module_in_the_same_directory.hello ();
 ```
 
 
@@ -24,8 +22,8 @@ Otherwise, if you want to open a file as a module, you can use the open keyword 
 open Amodule;
 ```
 
-And then, you can use a definition from the opened file like this:
+And then, you can use a definition from the opened module file without referencing the module name like this:
 
 ```
-Amodule.hello ();
+hello ();
 ```

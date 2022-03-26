@@ -81,7 +81,6 @@ and pexpr =
 
 (* a declaration could be a type alias *)
 type declaration = 
-  | DInclude of string
   | DOpen of string
 
   | DModule of {
@@ -109,7 +108,7 @@ type declaration =
   }
 [@@deriving show {with_path = false}]
 
-(* a parse tree is a list of declarations; includes are unrolled by the parser *)
+(* a parse tree is a list of declarations; opens are unrolled by the parser *)
 type t = declaration list [@@deriving show {with_path = false}]
 
 

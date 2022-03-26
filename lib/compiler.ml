@@ -47,10 +47,10 @@ let build_ast (filename: string) opt =
   (* parse the starting file *)
   let pt = filename |> Passes.Parsing.parse_file in
 
-  (* parse and inject includes *)
+  (* parse and inject opens *)
   pt
-  |> app opt.verbose @@ print_str "===> Injecting includes";
-  |> Passes.Parse_tree_postprocess.inject_include opt.include_paths
+  |> app opt.verbose @@ print_str "===> Injecting opens";
+  |> Passes.Parse_tree_postprocess.inject_opens opt.include_paths
 
 
   (* parse and inject opens *)
