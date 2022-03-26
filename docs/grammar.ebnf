@@ -1,4 +1,4 @@
-<program> ::= <expr> EOF
+<program> ::= <expr>* EOF
 
 <ident> ::= IDENT
 
@@ -37,8 +37,6 @@
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
          | LPAR <expr> COMMA <expr> (COMMA <expr>)* RPAR
-         | LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDAB LPAR <expr>
-           RPAR
          | LET IDENT COLON <type_sig> EQ <expr> IN <expr>
          | LET IDENT COLON <type_sig> EQ <expr>
          | LET IDENT EQ <expr> IN <expr>
@@ -75,7 +73,6 @@
          | EXTERNAL IDENT COLON <type_expr> EQ STRING
          | MODULE IDENT EQ STRUCT <expr> END
          | OPEN <ident>
-         | <expr> RET <expr>
          | <expr> SEMICOLON SEMICOLON <expr>
 
 

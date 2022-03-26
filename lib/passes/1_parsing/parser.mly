@@ -10,7 +10,7 @@
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
 %token LAMBDAB, NEQ, UNIT, UNDERSCORE
-%token OPEN, EXTERNAL, MODULE, STRUCT, END, RET
+%token OPEN, EXTERNAL, MODULE, STRUCT, END
 %token LAMBDA
 %token <string> STRING
 %token <string> BYTES
@@ -32,7 +32,7 @@
 %start <Parse_tree.t> program
 
 %%
-  program: dl=expr EOF { dl }
+  program: dl=list(expr) EOF { Parse_tree.reduce_list dl }
 
   ident: | i=IDENT { i }
 
@@ -83,8 +83,8 @@
                                 { loce $startpos $endpos @@ Parse_tree.PEList (tl) }
     | LPAR t=expr COMMA tl=separated_nonempty_list(COMMA, expr) RPAR
                                 { loce $startpos $endpos @@ Parse_tree.PETuple (t::tl) }
-    | LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDAB LPAR e=expr RPAR
-                                { loce $startpos $endpos @@ Parse_tree.PELambda (tl, e) }
+    // | LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDAB LPAR e=expr RPAR
+    //                             { loce $startpos $endpos @@ Parse_tree.PELambda (tl, e) }
 
 		// bindings 
 		| LET i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, Some(t), e, ee) }
@@ -147,9 +147,6 @@
   
     | OPEN p=ident 
       { loce $startpos $endpos @@ Parse_tree.PEOpen (p) }
-
-    | a=expr RET b=expr
-      { loce $startpos $endpos @@ Parse_tree.PESeq (a, b) }
 
     | a=expr SEMICOLON SEMICOLON b=expr
       { loce $startpos $endpos @@ Parse_tree.PESeq (a, b) }

@@ -1,5 +1,5 @@
-open Open_a;
+open Open_a
 
-let a: t = (12, "ciao");
+let a: t = (12, "ciao")
 
 let ht = hello

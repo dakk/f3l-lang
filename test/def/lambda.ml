@@ -1,1 +1,1 @@
-let a : int -> int = (a: int) => (a);
+let a : int -> int = (a: int) => (a)

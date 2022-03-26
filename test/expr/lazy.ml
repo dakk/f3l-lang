@@ -1,17 +1,17 @@
-let a: nat lazy = Lazy.of(() => 12n + 43n);
+let a: nat lazy = Lazy.of(() => 12n + 43n)
 
-let b: nat = Lazy.force(a);
+let b: nat = Lazy.force(a)
 
 contract ALazyContract {
-	field z: string lazy;
-	field s: string;
+	field z: string lazy
+	field s: string
 
 	entry setLazy() {
-		this.z = Lazy.of(() => "ciao" + " " + "mondo");
+		this.z = Lazy.of(() => "ciao" + " " + "mondo")
 		[]
 	}
 
 	entry forceLazy() {
-		this.s = Lazy.force(this.z);
+		this.s = Lazy.force(this.z)
 	}
 }

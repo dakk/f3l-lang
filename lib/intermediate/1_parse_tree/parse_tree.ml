@@ -77,9 +77,12 @@ type pexpr =
   [@@deriving show {with_path = false}]
 
 
-
+let rec reduce_list p = match p with 
+| [] -> PEUnit
+| x::p' -> PESeq(x, reduce_list p')
 
 (* a parse tree is a list of expr; opens are unrolled by the parser *)
+type t_ = pexpr list [@@deriving show {with_path = false}]
 type t = pexpr [@@deriving show {with_path = false}]
 
 

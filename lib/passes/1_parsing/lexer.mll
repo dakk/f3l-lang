@@ -132,7 +132,7 @@ rule token = parse
   | eof             { EOF }
   | _ as c          { raise (SyntaxError2 (Format.sprintf "Invalid string starting with %C" c)) }
 
-  | newline         { RET }
+
 (* and comment_line = parse
   | "//"      			{ comment_line lexbuf }
   | newline   			{ () }

@@ -494,10 +494,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       types=(dt.id, transform_type dt.t e)::e.types;
     }
     *)
+  | _ -> (TUnit, Unit)
 
 
-
-
+  
   | ex -> raise @@ InvalidExpression (pel, "Expression not handled yet: " ^ Parse_tree.show_pexpr ex)
   ) in 
 match pel with 
