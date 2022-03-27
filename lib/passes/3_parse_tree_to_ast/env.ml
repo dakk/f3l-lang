@@ -53,4 +53,5 @@ let get_ref sn (e: t) =
   | None -> raise @@ SymbolNotFound(None, "Unknown reference to symbol '" ^ sn ^ "'")
   | Some (Def) -> let (tt, _) = List.assoc sn e.defs in tt  
   | Some (Union) -> let (tt, _) = List.assoc sn e.defs in tt  
+  | Some (External) -> (let rec rr l = match l with | (n,tt,_)::l' -> if n = sn then tt else rr l' in rr e.externals)
   | _ -> raise @@ SymbolNotFound(None, "Symbol '" ^ sn ^ "' not found in env")

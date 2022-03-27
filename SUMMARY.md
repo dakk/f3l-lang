@@ -4,9 +4,7 @@
 
 ## Documentation <a id="docs"></a>
 
-* [Types](docs/types/README.md)
-  * [Base Types](docs/types/base-types.md)
-  * [Composed Types](docs/types/composed-types.md)
+* [Types](docs/types/types.md)
 * [Stdlib](docs/stdlib.md)
 * [Modules](docs/modules.md)
 * [Def](docs/def.md)

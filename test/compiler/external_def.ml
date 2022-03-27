@@ -1,3 +1,4 @@
 external anumber: int = "anumber"
 
-(* this should file on typecheck *)
+
+let c = anumber

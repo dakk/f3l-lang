@@ -1,3 +1,17 @@
+# Types
+
+We can declare a new type alias as follow:
+
+```ocaml
+type aNewType = int option;
+```
+
+Cast from an any type to a specific one:
+
+```ocaml
+([]: int list)
+```
+
 # Base Types
 
 ## Numerical \(nat, int, float \)
@@ -133,3 +147,38 @@ let a: unit = ()
 
 
 
+
+
+# Composed Types
+
+
+## Pair
+
+You can define a pair as follow:
+
+```ocaml
+let apair: (int * string) = (12, "hello")
+
+let ai: int = fst apair
+let as: string = snd apair
+```
+
+
+## Record
+
+
+## Lambda
+
+Lambda type represent anonymous functions.
+
+```ocaml
+let e_sum: int -> int = fun (a: int) -> (0 + 1)
+let e_gt: int -> bool = fun (a: int) -> (0 > 1)
+let e_gt2: int -> bool = fun (a: int) -> (a > 1)
+let e_comp: (int * int) -> bool = fun (a: int, b: int) -> ((a * 8) > (b - 12))
+let e_comp2: (int * int) -> bool = fun (a: int, b: int) -> ((a * (b - 8)) > (b - 12))
+let e_apply: int -> bool = fun (a: int) -> (e_comp (12, 13))
+
+let e_apply2: int -> int = fun (a: int) -> ((fun (b: int) -> (b))(12))
+let e_apply3: int -> int = fun (a: int) -> (e_apply2 (12))
+```
