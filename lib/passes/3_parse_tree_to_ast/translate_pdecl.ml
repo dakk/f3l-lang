@@ -44,7 +44,7 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
       let (t, exp) = transform_expr v e [] in 
       (match (t) with
         | TList (TAny)
-        | TOption (TAny) -> raise @@ TypeError(Pt_loc.dline p, "Unable to infer type of def '" ^ id ^ "'")
+        | TOption (TAny) -> raise @@ TypeError(Pt_loc.dline p, "Unable to infer type of '" ^ id ^ "'")
         | _ -> (t, exp))
     | Some(ptt) ->
       let et = transform_type ptt e in

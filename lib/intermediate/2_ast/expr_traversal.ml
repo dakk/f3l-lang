@@ -32,7 +32,6 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | LocalRef (_)
   | None
   | Unit 
-  | ListEmpty
   | GlobalRef (_)
   | External (_, _)
   | UnionValue (_) -> empty

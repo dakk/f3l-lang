@@ -107,10 +107,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (idtt, idee) = List.map (fun (i, (tt, ee)) -> (i, tt), (i, ee)) l' |> List.split in
     TRecord (idtt), Record (l')
 
-  (* PEDot on base *)
-  | PEApply (PEDot (PERef("List"), "empty"), []) -> TList(TAny), ListEmpty
-    
-
+  (* PEDot on base *) 
   | PEApply (PEDot (PERef("Bytes"), "pack"), c) -> 
     if List.length c <> 1 then raise @@ APIError (pel, "Bytes.pack needs only one argument");
     let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
@@ -320,7 +317,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     
 
   (* symbol reference *)
-
     
   | PERef (i) -> 
     (match binding_find ic ILocal i with 

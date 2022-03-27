@@ -108,9 +108,6 @@ match e with
 
 
 (* list *)
-| ListEmpty -> 
-  fprintf fmt "[]"
-
 | ListMapWith (le, ll) -> 
   fprintf fmt "List.map (%a) (%a)" 
     pp_lexpr ll

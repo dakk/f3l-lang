@@ -60,7 +60,6 @@
   erec_element:
     | i=IDENT EQ b=expr { (i, b) }
 
-
 	left:
 		| l=left DOT i=IDENT				{ loce $startpos $endpos @@ Parse_tree.PEDot (l, i) }
     | i=IDENT 						      { loce $startpos $endpos @@ Parse_tree.PERef (i) }
@@ -157,6 +156,3 @@
     | d=ddef            { locd $startpos $endpos d }
     | e=dexternal       { locd $startpos $endpos e }
     | o=dopen           { locd $startpos $endpos o }
-
-  // braced (S):
-  // | LPAR s=S RPAR { s }

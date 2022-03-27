@@ -29,7 +29,6 @@ type expr =
 | OptionIsSome of texpr
 
 (* list *)
-| ListEmpty
 | ListSize of texpr
 | ListPrepend of texpr * texpr
 | ListMapWith of texpr * texpr
