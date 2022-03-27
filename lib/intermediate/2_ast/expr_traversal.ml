@@ -82,8 +82,7 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Neq (a, b)
   | Apply (a, b)
   | LetIn (_, _, a, b)
-  | LetTupleIn(_, a, b)
-  | Seq (a, b) -> jf (traverse' a) (traverse' b)
+  | LetTupleIn(_, a, b) -> jf (traverse' a) (traverse' b)
 
   | ListFold (a, b, c)
   | StringSlice (a, b, c)

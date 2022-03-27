@@ -60,9 +60,10 @@ type expr =
 | Mul of texpr * texpr
 | Div of texpr * texpr
 | Mod of texpr * texpr
+| EDiv of texpr * texpr
+
 | Abs of texpr
 | ToInt of texpr
-| EDiv of texpr * texpr
 | Neg of texpr
 | IsNat of texpr
 
@@ -87,7 +88,6 @@ type expr =
 | LetTuple of (iden * ttype) list * texpr 
 | LetTupleIn of (iden * ttype) list * texpr * texpr
 
-| Seq of texpr * texpr
 
 [@@deriving show {with_path = false}]
 

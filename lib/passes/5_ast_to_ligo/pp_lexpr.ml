@@ -296,22 +296,3 @@ match e with
     (pp_list ", " pp_str) (fst @@ List.split il)
     pp_lexpr e 
     pp_lexpr e2
-
-| Seq(a, b) -> 
-  fprintf fmt "@,%a@,%a"
-
-  (match a with 
-  | (TUnit, LetTuple(_, _)) 
-  | (TUnit, LetTupleIn(_, _, _))
-  | (TUnit, LetIn(_, _, _, _))
-  | (TUnit, Let(_, _, _)) -> pp_lexpr
-  | (TUnit, _) -> let_surround
-  | _ -> pp_lexpr)
-  a
-  
-  (match b with 
-  | (tl, List(e)) -> (fun fmt un -> fprintf fmt "(%a: operation list)" pp_lexpr (tl, List(e)))
-  | _ -> (fun fmt un -> fprintf fmt "%a" pp_lexpr b))
-  ()
-
-  | _ -> show_expr e |> print_endline
