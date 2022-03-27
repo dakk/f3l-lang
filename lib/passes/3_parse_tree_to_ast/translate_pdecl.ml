@@ -43,7 +43,7 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
   | Parse_tree.DDef (id, tv, v, r) :: p' -> 
     Env.assert_symbol_absence e id;
 
-    let temp_env = if r then transform p' { e with 
+    let temp_env = if r then { e with 
       symbols=(id, Def)::e.symbols;
       defs=(id, (TLambda(TAny, TAny), Unit))::e.defs;
     } else e in
