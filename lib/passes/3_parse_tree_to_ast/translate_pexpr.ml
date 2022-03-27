@@ -70,19 +70,11 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let te2 = transform_expr e2 env' ic in
     TPair(fst te1, fst te2), Pair(te1, te2)
 
-  | PEList (el) -> 
-    let ttres = el |> transform_expr_list in
-    let (ttl, tel) = ttres |> List.split in
-    if List.length ttl > 0 then 
-      let lt = fold_container_type "List elements" ttl in TList(lt), List(ttres)
-    else 
-      TList(TAny), List([])
 
   | PETyped (e, et) -> 
     let (tt, ee) = transform_expr e env' ic in 
     let tt' = transform_type et env' in
     (match tt, tt', ee with 
-    | TList (TAny), TList(t), ee -> TList(t), ee
     | a, b, _ when a=b -> a, ee
     | a, b, c -> raise @@ TypeError (pel, "Invalid cast from '" ^ show_ttype a ^ "' to '" ^ show_ttype b ^ "' for value: " ^ show_expr c))
 
@@ -301,8 +293,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (te1, ee1) = transform_expr e1 env' ic in 
     let (te2, ee2) = transform_expr e2 env' ic in 
     (match tc, te1, te2 with 
-    | TBool, TList(t), TList(t') when t <> t' && (t <> TAny || t' <> TAny) ->
-      (if t <> TAny then TList(t) else TList(t')), IfThenElse ((tc, ec), (te1, ee1), (te2, ee2))
     | TBool, t, t' when t = t' -> t, IfThenElse ((tc, ec), (te1, ee1), (te2, ee2))
     | TBool, t, t' when t <> t' -> 
       raise @@ TypeError (pel, "If branches should have same type, got: '" ^ show_ttype t ^ "' and '" ^ show_ttype t' ^ "'")

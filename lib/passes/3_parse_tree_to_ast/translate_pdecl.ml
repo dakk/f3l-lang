@@ -48,14 +48,12 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
     | None -> 
       let (t, exp) = transform_expr v temp_env [] in 
       (match (t) with
-        | TList (TAny)
         | _ -> (t, exp))
     | Some(ptt) ->
       let et = transform_type ptt temp_env in
       let (t, exp) = transform_expr v temp_env [] in 
 
       let t = match (t, et) with
-        | TList (TAny), TList (_) -> et
         | a, b when a = b -> t
         | _, _ -> raise @@ TypeError (Pt_loc.dline p, "Def '" ^ id ^ "' expect to have type '" ^ show_ttype et ^ "', but type '" ^ show_ttype t ^ "' found")
       in t, exp)

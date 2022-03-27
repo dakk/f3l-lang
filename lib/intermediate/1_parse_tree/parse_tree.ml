@@ -18,7 +18,6 @@ type pexpr =
   | PEString of string
   | PEBytes of string
   | PETyped of pexpr * ptype
-  | PEList of pexpr list 
   | PEPair of pexpr * pexpr
   | PELambda of (iden * ptype) list * pexpr
   | PERecord of (iden * pexpr) list

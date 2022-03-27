@@ -36,10 +36,6 @@ let rec pp_ltype fmt (a: ttype) = match a with
 | TUnion (el) -> 
   fprintf fmt "nat"
 
-| TList (t) -> 
-  fprintf fmt "%a list" pp_ltype t
-
-
 
 | TRecord (l) -> 
   let pp_rec_field fmt (x, xt) = fprintf fmt "%s: %a" x pp_ltype xt in

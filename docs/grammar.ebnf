@@ -31,7 +31,6 @@
          | INT
          | NAT
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
-         | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
          | LPAR <expr> COMMA <expr> RPAR
          | FUN LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDA <expr>
          | FUN <param_opt_typed> LAMBDA <expr>

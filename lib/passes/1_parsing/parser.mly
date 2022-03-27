@@ -73,8 +73,6 @@
     | x=NAT 					{ loce $startpos $endpos @@ Parse_tree.PENat (x) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, erec_element) RBRACE
                                 { loce $startpos $endpos @@ Parse_tree.PERecord (tl) }
-    | LSQUARE tl=separated_list(COMMA, expr) RSQUARE
-                                { loce $startpos $endpos @@ Parse_tree.PEList (tl) }
     | LPAR t1=expr COMMA t2=expr RPAR
                                 { loce $startpos $endpos @@ Parse_tree.PEPair (t1, t2) }
     | FUN LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDA e=expr

@@ -12,7 +12,6 @@ type ttype =
   | TBytes
   | TLambda of ttype * ttype
   | TUnion of string list
-  | TList of ttype
   | TRecord of (iden * ttype) list
   | TPair of ttype * ttype
 
@@ -39,7 +38,6 @@ let attributes (t: ttype) = match t with
   | TBytes ->         { cmp=true;  pack=true  }
   | TLambda (_, _) -> { cmp=false; pack=true  }
   | TUnion (_) ->     { cmp=true;  pack=true  } 
-  | TList (_) ->      { cmp=false; pack=true  }
   | TRecord (_) ->    { cmp=false; pack=true  } 
   | TPair (_, _) ->   { cmp=true;  pack=true  }
  
@@ -57,7 +55,6 @@ let rec show_ttype (at: ttype) = match at with
 | TBytes -> "bytes"
 | TLambda (p, r) -> "(" ^ show_ttype p ^ " -> " ^ show_ttype r ^ ")"
 | TUnion (el) -> List.fold_left (fun acc x -> acc ^ (if acc = "" then "" else " | ") ^ x) "" el
-| TList (t) -> show_ttype t ^ " list"
 | TRecord (l) -> "record { " ^ List.fold_left (fun acc (x, xt) -> acc ^ (if acc = "" then "" else ", ") ^ x ^ ": " ^ show_ttype xt) "" l ^ " }"
 | TPair (t1, t2) -> "(" ^ show_ttype t1 ^ " * " ^ show_ttype t2 ^ ")"
 
@@ -66,7 +63,6 @@ let pp_ttype fmt (t: ttype) = Format.pp_print_string fmt (show_ttype t); ()
 let compare t1 t2 = t1 = t2
 
 let compare_lazy t t' = match t', t with 
-  | TList(_), TList(TAny) -> true 
   | TPair(a, TAny), TPair (c, b) -> a = c
   | TPair(a, b), TPair (c, TAny) -> a = c
   | TAny, _ -> true
