@@ -118,6 +118,7 @@
     | e=expr DOT i=IDENT 				{ loce $startpos $endpos @@ Parse_tree.PEDot (e, i) }
 
     // apply a function
+    // | i=left p=expr  			                                { loce $startpos $endpos @@ PEApply(i, [p]) }
     | i=left LPAR p=separated_list(COMMA, expr) RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
     | i=expr LPAR p=separated_list(COMMA, expr) RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
 		

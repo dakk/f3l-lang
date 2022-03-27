@@ -124,7 +124,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
 
   (* PEApply(PEDot) base type apis *)
-  | PEApply (PEDot(e,i), el) -> 
+  (* | PEApply (PEDot(e,i), el) -> 
     let (te, ee) = transform_expr e env' ic in
     let el' = el |> transform_expr_list in 
     (match ee, te, i, el' with 
@@ -157,14 +157,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | _, TBytes, "slice", [(TInt, i1); (TInt, i2)] -> TBytes, BytesSlice ((te, ee), (TNat, i1), (TNat, i2))
       | _, TBytes, "size", [] -> TNat, BytesSize(te, ee)
 
-      (* Pair *)
-      | _, TPair (a, _), "fst", [] -> a, PairFst (te, ee)
-      | _, TPair (_, b), "snd", [] -> b, PairSnd (te, ee)
-
-
       | _, _, i, _-> 
         raise @@ TypeError (pel, "Invalid apply of " ^ i ^ " over '" ^ show_ttype te ^ "'")
-    )
+    ) *)
 
   (* PEDot *)
   | PEDot (e, i) -> 
@@ -328,28 +323,23 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     | _ -> raise @@ SymbolNotFound (pel, "Symbol '" ^ i ^ "' is not a valid ref")
     )
 
-  | PEApply (e, el) -> 
-    let (tt,ee) = transform_expr e env' ic in  
-    (match tt with
-
-    (* Apply on lambda  *)
-    | TLambda (arv, rettype) -> 
-      let argl = argv_to_list arv in 
-      let ap = el |> transform_expr_list in
-      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
-        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
-      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
-        raise @@ TypeError (pel, "Invalid argument types apply");
-      if List.length argl = 1 && List.hd argl = TUnit then 
-        rettype, Apply ((tt,ee), (TUnit, Unit))
-      else if List.length argl == 2 then 
-        rettype, Apply((tt, ee), (TPair(List.hd argl, List.hd (List.tl argl)), Pair(List.hd ap, List.hd (List.tl ap))))
-      else if (List.length ap) = 0 && (List.length argl) = 0 then
-        rettype, Apply((tt, ee), (TUnit, Unit))
-      else
-        rettype, Apply((tt, ee), List.hd ap)
-
   (* apply *)
+  | PEApply (PERef("fst"), c) -> 
+    if List.length c <> 1 then raise @@ APIError (pel, "fst needs only one argument");
+    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
+    (match tt1 with 
+    | TPair(a, b) -> a, PairFst ((tt1, ee1))
+    | _ -> raise @@ TypeError (pel, "fst needs a TPair " ^ show_ttype_between_na tt1 @@ TPair(TAny, TAny)))
+    
+
+  | PEApply (PERef("snd"), c) -> 
+    if List.length c <> 1 then raise @@ APIError (pel, "snd needs only one argument");
+    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
+    (match tt1 with 
+    | TPair(a, b) -> b, PairSnd ((tt1, ee1))
+    | _ -> raise @@ TypeError (pel, "snd needs a TPair " ^ show_ttype_between_na tt1 @@ TPair(TAny, TAny)))
+    
+
   (* | PEApply (PERef("abs"), c) -> 
     if List.length c <> 1 then raise @@ APIError (pel, "abs needs only one argument");
     let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
@@ -377,6 +367,28 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     TBool, ToInt ((tt1, ee1)) *)
 
       
+
+  | PEApply (e, el) -> 
+    let (tt,ee) = transform_expr e env' ic in  
+    (match tt with
+
+    (* Apply on lambda  *)
+    | TLambda (arv, rettype) -> 
+      let argl = argv_to_list arv in 
+      let ap = el |> transform_expr_list in
+      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
+        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
+      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
+        raise @@ TypeError (pel, "Invalid argument types apply");
+      if List.length argl = 1 && List.hd argl = TUnit then 
+        rettype, Apply ((tt,ee), (TUnit, Unit))
+      else if List.length argl == 2 then 
+        rettype, Apply((tt, ee), (TPair(List.hd argl, List.hd (List.tl argl)), Pair(List.hd ap, List.hd (List.tl ap))))
+      else if (List.length ap) = 0 && (List.length argl) = 0 then
+        rettype, Apply((tt, ee), (TUnit, Unit))
+      else
+        rettype, Apply((tt, ee), List.hd ap)
+
     | _ -> raise @@ TypeError (pel, "Applying on not a lambda: " ^ show_ttype tt)
     
     (* (Parse_tree.show_pexpr (PEApply(e, el)))) *)
