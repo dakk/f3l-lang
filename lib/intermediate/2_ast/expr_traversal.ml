@@ -58,10 +58,8 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | IsNat (a)
   | Let (_, _, a)
   | LetTuple (_, a)
-  | SAssign (_, a)
   | Not (a)
-  | ToInt (a)
-  | SRecAssign (_, _, a) -> traverse' a
+  | ToInt (a) -> traverse' a
 
   | ListPrepend (a, b)
   | ListMapWith (a, b)

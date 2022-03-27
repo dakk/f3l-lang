@@ -297,15 +297,6 @@ match e with
     pp_lexpr e 
     pp_lexpr e2
 
-| SAssign (i, e) -> 
-  fprintf fmt "let s = { s with %s=%a } in " 
-    i 
-    pp_lexpr e
-
-| SRecAssign (i, ii, expr) -> 
-  fprintf fmt "let s = { s with %s= {s.%s with %s=%a} } in " 
-    i i ii pp_lexpr expr
-
 | Seq(a, b) -> 
   fprintf fmt "@,%a@,%a"
 
@@ -313,9 +304,7 @@ match e with
   | (TUnit, LetTuple(_, _)) 
   | (TUnit, LetTupleIn(_, _, _))
   | (TUnit, LetIn(_, _, _, _))
-  | (TUnit, Let(_, _, _)) 
-  | (TUnit, SAssign(_, _)) 
-  | (TUnit, SRecAssign(_, _, _)) -> pp_lexpr
+  | (TUnit, Let(_, _, _)) -> pp_lexpr
   | (TUnit, _) -> let_surround
   | _ -> pp_lexpr)
   a

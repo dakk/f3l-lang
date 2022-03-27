@@ -86,8 +86,6 @@ type expr =
 | Let of iden * ttype * texpr 
 | LetTuple of (iden * ttype) list * texpr 
 | LetTupleIn of (iden * ttype) list * texpr * texpr
-| SAssign of iden * texpr
-| SRecAssign of iden * iden * texpr 
 
 | Seq of texpr * texpr
 
