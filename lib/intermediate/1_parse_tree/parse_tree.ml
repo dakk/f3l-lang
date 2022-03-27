@@ -60,8 +60,6 @@ type pexpr =
   | PELetTuple of (iden * ptype option) list * pexpr 
   | PELetTupleIn of (iden * ptype option) list * pexpr * pexpr
 
-  | PESeq of pexpr * pexpr
-
   [@@deriving show {with_path = false}]
 
 

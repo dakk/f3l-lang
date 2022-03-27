@@ -479,13 +479,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr e1 env' @@ push_ic i (Local(t')) ic in 
     tt1, LetIn (i, t', (tt, ee), (tt1, ee1))
 
-  | PESeq(PELet(i, top, e), en) -> 
-    let (tt, ee) = transform_expr e env' ic in 
-    let t' = match top with | None -> tt | Some(t) -> transform_type t env' in
-    if not @@ compare_type_lazy tt t' then raise @@ TypeError (pel, "Let type mismatch; " ^ show_ttype_got_expect tt t'); 
-    let (tnt, ene) = transform_expr en env' @@ push_ic i (Local(t')) ic in
-    tnt, Seq((TUnit, Let(i, t', (tt, ee))), (tnt, ene))
-
   | PELetTuple(tl, e) -> 
     let (tt, ee) = transform_expr e env' ic in 
     (* TODO optional types of tl are ignored! *)
@@ -506,26 +499,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
         tt1, LetTupleIn(tl', (tt, ee), (tt1, ee1))
       | _ -> raise @@ TypeError (pel, "Expected a tuple")
     )
-
-  | PESeq(PELetTuple(tl, e), en) -> 
-    let (tt, ee) = transform_expr e env' ic in 
-    (* TODO optional types of tl are ignored! *)
-    let ti = fst @@ List.split tl in
-    (match tt with 
-      | TTuple(tl') -> 
-        let tl' = List.combine ti tl' in 
-        let (tnt, ene) = transform_expr en env' @@ push_local_many tl' ic in
-        tnt, Seq((TUnit, LetTuple(tl', (tt, ee))), (tnt, ene))
-      | _ -> raise @@ TypeError (pel, "Expected a tuple")
-    )
-
-  | PESeq (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    if tt1 <> TUnit then raise @@ InvalidExpression (pel, "Cannot ignore non unit expression in sequence");
-    (tt2, Seq((tt1, ee1), (tt2, ee2)))
-
-
 
 
   | ex -> raise @@ InvalidExpression (pel, "Expression not handled yet: " ^ Parse_tree.show_pexpr ex)
