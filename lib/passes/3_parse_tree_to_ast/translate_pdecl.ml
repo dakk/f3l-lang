@@ -36,19 +36,24 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
     }
   )
   (* toplevel let *)
-  | Parse_tree.DDef (id, tv, v) :: p' -> 
+  | Parse_tree.DDef (id, tv, v, r) :: p' -> 
     Env.assert_symbol_absence e id;
+
+    let temp_env = if r then transform p' { e with 
+      symbols=(id, Def)::e.symbols;
+      defs=(id, (TLambda(TAny, TAny), Unit))::e.defs;
+    } else e in
 
     let (t, exp) = (match tv with
     | None -> 
-      let (t, exp) = transform_expr v e [] in 
+      let (t, exp) = transform_expr v temp_env [] in 
       (match (t) with
         | TList (TAny)
         | TOption (TAny) -> raise @@ TypeError(Pt_loc.dline p, "Unable to infer type of '" ^ id ^ "'")
         | _ -> (t, exp))
     | Some(ptt) ->
-      let et = transform_type ptt e in
-      let (t, exp) = transform_expr v e [] in 
+      let et = transform_type ptt temp_env in
+      let (t, exp) = transform_expr v temp_env [] in 
 
       let t = match (t, et) with
         | TList (TAny), TList (_) -> et

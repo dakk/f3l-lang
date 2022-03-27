@@ -8,7 +8,7 @@
 %token TYPE, AND, OR, NOT, TRUE, FALSE
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE
 %token LTE, LT, GT, GTE, NONE, SOME, LET, IN
-%token NEQ, UNIT, TANY
+%token NEQ, UNIT, TANY, REC
 %token OPEN, EXTERNAL
 %token LAMBDA, FUN
 %token <string> STRING
@@ -85,8 +85,10 @@
                                 { loce $startpos $endpos @@ Parse_tree.PELambda ([p], e) }
 
 		// bindings 
-		| LET i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, Some(t), e, ee) }
-		| LET i=IDENT EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, None, e, ee) }
+		| LET i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, Some(t), e, ee, false) }
+		| LET i=IDENT EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, None, e, ee, false) }
+		| LET REC i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, Some(t), e, ee, true) }
+		| LET REC i=IDENT EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, None, e, ee, true) }
 
     // arithm
     | e1=expr ADD e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PEAdd (e1,e2) }
@@ -133,9 +135,13 @@
 
   ddef:
     | LET x=IDENT COLON t=type_expr EQ v=expr
-      { Parse_tree.DDef (x, Some(t), v) }
+      { Parse_tree.DDef (x, Some(t), v, false) }
     | LET x=IDENT EQ v=expr
-      { Parse_tree.DDef (x, None, v) }
+      { Parse_tree.DDef (x, None, v, false) }
+    | LET REC x=IDENT COLON t=type_expr EQ v=expr
+      { Parse_tree.DDef (x, Some(t), v, true) }
+    | LET REC x=IDENT EQ v=expr
+      { Parse_tree.DDef (x, None, v, true) }
 
   dexternal:
     | EXTERNAL x=IDENT COLON t=type_expr EQ n=STRING

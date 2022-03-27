@@ -375,14 +375,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       let argl = arv in 
       let ap = transform_expr c env' ic in
       if not @@ Ast_ttype.compare_lazy argl (fst ap) then 
-        raise @@ TypeError (pel, "Invalid argument types apply; " ^ show_ttype_got_expect argl (fst ap));
-      (* if List.length argl = 1 && List.hd argl = TUnit then 
-        rettype, Apply ((tt,ee), (TUnit, Unit))
-      else if List.length argl == 2 then 
-        rettype, Apply((tt, ee), (TPair(List.hd argl, List.hd (List.tl argl)), Pair(List.hd ap, List.hd (List.tl ap))))
-      else if (List.length ap) = 0 && (List.length argl) = 0 then
-        rettype, Apply((tt, ee), (TUnit, Unit))
-      else *)
+        raise @@ TypeError (pel, "Invalid argument types apply; " ^ show_ttype_got_expect argl (fst ap))
+      else
         rettype, Apply((tt, ee), ap)
 
     | _ -> raise @@ TypeError (pel, "Applying on not a lambda: " ^ show_ttype tt)
@@ -406,8 +400,12 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
 
   (* let-binding and sequences *)
-  | PELetIn(i, top, e, e1) -> 
-    let (tt, ee) = transform_expr e env' ic in 
+  | PELetIn(i, top, e, e1, recursive) -> 
+    let (tt, ee) = 
+      if recursive then 
+        transform_expr e env' ((i, Local (TLambda(TAny, TAny)))::ic)
+      else 
+        transform_expr e env' ic in 
     let t' = match top with | None -> tt | Some(t) -> transform_type t env' in
     if not @@ compare_lazy tt t' then raise @@ TypeError (pel, "LetIn type mismatch; " ^ show_ttype_got_expect tt t');
     let (tt1, ee1) = transform_expr e1 env' @@ push_ic i (Local(t')) ic in 

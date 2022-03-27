@@ -53,15 +53,14 @@ type pexpr =
   | PEDot of pexpr * iden
   | PEApply of pexpr * pexpr
 
-  | PELetIn of iden * ptype option * pexpr * pexpr
-  | PELetPairIn of ((iden * ptype option) * (iden * ptype option)) * pexpr * pexpr
+  | PELetIn of iden * ptype option * pexpr * pexpr * bool
 
   [@@deriving show {with_path = false}]
 
 
 type declaration = 
   | DOpen of string
-  | DDef of iden * ptype option * pexpr
+  | DDef of iden * ptype option * pexpr * bool
   | DType of iden * ptype * bool (* iden * typedef * polymorphic *)
   | DExternal of iden * ptype * string
 [@@deriving show {with_path = false}]

@@ -52,6 +52,9 @@ let () =
       "lambda", `Quick, compile opt None "test/expr/lambda.ml" None;
       "assoc_bool", `Quick, compile opt None "test/expr/assoc_bool.ml" None;
       "pair_fstsnd", `Quick, compile opt None "test/expr/pair_fstsnd.ml" None;
+      "pair_opt", `Quick, compile opt None "test/expr/pair_opt.ml" None;
+      "rec", `Quick, compile opt None "test/expr/rec.ml" None;
+      "pair_lst", `Quick, compile opt None "test/expr/pair_lst.ml" None;
       "pair_fstsnd_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/expr/pair_fstsnd_fail.ml" None;
       (* "match_case", `Quick, compile opt None "test/expr/match_case.ml" None; *)
       (* "pair_destruct_typed", `Quick, compile opt None "test/expr/pair_destruct_typed.ml" None;

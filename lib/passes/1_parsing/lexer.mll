@@ -6,12 +6,12 @@
 
   let reserved = [
     "type"; 
-		"var";
 		"list";
     "open";
 		"option";
     "extern";
 		"let";
+    "rec";
 		"in";
 		"true";
 		"false";
@@ -78,6 +78,7 @@ rule token = parse
 	| "let"						{ LET }
 	| "in"						{ IN }
   | "fun"           { FUN }
+  | "rec"           { REC }
   
   | "'a"            { TANY }  
   | "->"				 	 	{ LAMBDA }

@@ -39,6 +39,8 @@
          | FUN <param_opt_typed> LAMBDA <expr>
          | LET IDENT COLON <type_sig> EQ <expr> IN <expr>
          | LET IDENT EQ <expr> IN <expr>
+         | LET REC IDENT COLON <type_sig> EQ <expr> IN <expr>
+         | LET REC IDENT EQ <expr> IN <expr>
          | <expr> ADD <expr>
          | <expr> SUB <expr>
          | <expr> DIV <expr>
@@ -67,6 +69,8 @@
 
 <ddef> ::= LET IDENT COLON <type_expr> EQ <expr>
          | LET IDENT EQ <expr>
+         | LET REC IDENT COLON <type_expr> EQ <expr>
+         | LET REC IDENT EQ <expr>
 
 <dexternal> ::= EXTERNAL IDENT COLON <type_expr> EQ STRING
 
