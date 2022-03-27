@@ -7,9 +7,6 @@
 
 <ident> ::= IDENT
 
-<type_sig_min> ::= TANY
-                 | <ident>
-
 <type_sig> ::= TANY
              | <ident>
              | <type_expr> CONT
@@ -26,7 +23,6 @@
 <left> ::= IDENT (DOT IDENT)*
 
 <expr> ::= UNIT
-         | NONE
          | TRUE
          | FALSE
          | STRING
@@ -34,6 +30,7 @@
          | FLOAT
          | INT
          | NAT
+         | NONE
          | SOME LPAR <expr> RPAR
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
@@ -60,7 +57,7 @@
          | <expr> LTE <expr>
          | <expr> GT <expr>
          | <expr> GTE <expr>
-         | <expr> EQEQ <expr>
+         | <expr> EQ <expr>
          | <expr> NEQ <expr>
          | IF <expr> THEN <expr> ELSE <expr>
          | IDENT

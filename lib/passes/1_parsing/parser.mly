@@ -43,10 +43,6 @@
 
   ident: | i=IDENT { i }
 
-  type_sig_min:
-    | TANY                                          { Parse_tree.PTBuiltin ("'a") }
-    | t=ident                                       { Parse_tree.PTBuiltin (t) }
-
   type_sig:
     | TANY                                          { Parse_tree.PTBuiltin ("'a") }
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
@@ -61,7 +57,6 @@
 
   type_expr: | te=type_sig {te}
 
-
   erec_element:
     | i=IDENT EQ b=expr { (i, b) }
 
@@ -72,7 +67,6 @@
 
   expr:
 		| UNIT						{ loce $startpos $endpos @@ Parse_tree.PEUnit }
-    | NONE  					{ loce $startpos $endpos @@ Parse_tree.PENone }
     | TRUE            { loce $startpos $endpos @@ Parse_tree.PEBool (true) }
     | FALSE           { loce $startpos $endpos @@ Parse_tree.PEBool (false) }
     | x=STRING 				{ loce $startpos $endpos @@ Parse_tree.PEString (x) }
@@ -80,6 +74,7 @@
     | x=FLOAT					{ loce $startpos $endpos @@ Parse_tree.PEFloat (x) }
     | x=INT 					{ loce $startpos $endpos @@ Parse_tree.PEInt (x) }
     | x=NAT 					{ loce $startpos $endpos @@ Parse_tree.PENat (x) }
+    | NONE  					{ loce $startpos $endpos @@ Parse_tree.PENone }
     | SOME LPAR x=expr RPAR 	  { loce $startpos $endpos @@ Parse_tree.PESome (x) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, erec_element) RBRACE
                                 { loce $startpos $endpos @@ Parse_tree.PERecord (tl) }
@@ -101,7 +96,6 @@
 		| LET LPAR tl=separated_nonempty_list(COMMA, param_opt_typed) RPAR EQ e=expr 
 			{ loce $startpos $endpos @@ Parse_tree.PELetTuple (tl, e) }
 
-
     // arithm
     | e1=expr ADD e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PEAdd (e1,e2) }
     | e1=expr SUB e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PESub (e1,e2) }
@@ -117,7 +111,7 @@
     | e1=expr LTE e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PELte (e1,e2) }
     | e1=expr GT e2=expr 			  { loce $startpos $endpos @@ Parse_tree.PEGt (e1,e2) }
     | e1=expr GTE e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PEGte (e1,e2) }
-    | e1=expr EQEQ e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PEEq (e1,e2) }
+    | e1=expr EQ e2=expr 			  { loce $startpos $endpos @@ Parse_tree.PEEq (e1,e2) }
     | e1=expr NEQ e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PENeq (e1,e2) }
 
     // if then else

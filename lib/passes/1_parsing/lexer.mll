@@ -109,7 +109,7 @@ rule token = parse
   | "%"					  	{ MOD }
   | "="             { EQ }
   | "=="            { EQEQ }
-  | "!="				  	{ NEQ }
+  | "<>"				  	{ NEQ }
   | ">"					  	{ GT }
   | "<"					  	{ LT }
   | "<="			      { LTE }
