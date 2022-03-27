@@ -7,9 +7,6 @@
 
 <ident> ::= IDENT
 
-<union_v> ::= IDENT
-            | IDENT OF <type_sig_min>
-
 <type_sig_min> ::= TANY
                  | <ident>
 
@@ -18,16 +15,13 @@
              | <type_expr> CONT
              | LPAR <type_sig> MUL <type_sig> (MUL <type_sig>)* RPAR
              | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
-             | <union_v> PIPE <union_v> (PIPE <union_v>)*
+             | <ident> PIPE <ident> (PIPE <ident>)*
              | LPAR <type_sig> RPAR
              | <type_sig> LAMBDA <type_sig>
 
 <type_expr> ::= <type_sig>
 
 <erec_element> ::= IDENT EQ <expr>
-
-<match_case> ::= <expr> LAMBDA <expr>
-               | UNDERSCORE LAMBDA <expr>
 
 <left> ::= IDENT (DOT IDENT)*
 
@@ -69,8 +63,6 @@
          | <expr> EQEQ <expr>
          | <expr> NEQ <expr>
          | IF <expr> THEN <expr> ELSE <expr>
-         | MATCH <expr> WITH PIPE <match_case> (PIPE <match_case>)*
-         | MATCH <expr> WITH <match_case> (PIPE <match_case>)*
          | IDENT
          | <left> DOT IDENT
          | <expr> DOT IDENT

@@ -51,7 +51,7 @@ let () =
       "literal_untyped", `Quick, compile opt None "test/expr/literal_untyped.ml" None;
       "lambda", `Quick, compile opt None "test/expr/lambda.ml" None;
       "assoc_bool", `Quick, compile opt None "test/expr/assoc_bool.ml" None;
-      "match_case", `Quick, compile opt None "test/expr/match_case.ml" None;
+      (* "match_case", `Quick, compile opt None "test/expr/match_case.ml" None; *)
       "tuple_destruct_typed", `Quick, compile opt None "test/expr/tuple_destruct_typed.ml" None;
       "tuple_destruct_untyped", `Quick, compile opt None "test/expr/tuple_destruct_untyped.ml" None;
     ];
@@ -64,10 +64,10 @@ let () =
       "expr", `Quick, compile opt None "test/def/expr.ml" None;
       "let_expr", `Quick, compile opt None "test/def/let_expr.ml" None;
       "union", `Quick, compile opt None "test/def/union.ml" None;
-      "union_typed", `Quick, compile opt None "test/def/union_typed.ml" None;
-      "union_opt_typedef", `Quick, compile opt None "test/def/union_opt_typedef.ml" None;
-      "union_typed_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/union_typed_fail.ml" None;
-      "union_typed_fail2", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/union_typed_fail2.ml" None;
+      (* "union_typed", `Quick, compile opt None "test/def/union_typed.ml" None; *)
+      (* "union_opt_typedef", `Quick, compile opt None "test/def/union_opt_typedef.ml" None; *)
+      (* "union_typed_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/union_typed_fail.ml" None;
+      "union_typed_fail2", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/union_typed_fail2.ml" None; *)
       "union_dup_fail", `Quick, compile opt (Some(DuplicateSymbolError(None, ""))) "test/def/union_dup_fail.ml" None;
       "infer", `Quick, compile opt None "test/def/infer.ml" None;
       "let_infer", `Quick, compile opt None "test/def/let_infer.ml" None;

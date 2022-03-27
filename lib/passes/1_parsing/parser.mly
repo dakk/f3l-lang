@@ -43,10 +43,6 @@
 
   ident: | i=IDENT { i }
 
-  union_v:
-  | i=IDENT                    { (i, PTBuiltin ("unit")) } 
-  | i=IDENT OF t=type_sig_min  { (i, t) }
-
   type_sig_min:
     | TANY                                          { Parse_tree.PTBuiltin ("'a") }
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
@@ -59,7 +55,7 @@
                                                     { Parse_tree.PTTuple (t1::tl) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, parameter) RBRACE
                                                     { Parse_tree.PTRecord (tl)}
-    | x=union_v PIPE el=separated_nonempty_list(PIPE, union_v)  { Parse_tree.PTUnion (x::el) }
+    | x=ident PIPE el=separated_nonempty_list(PIPE, ident)  { Parse_tree.PTUnion (x::el) }
     | LPAR t=type_sig RPAR											    { t }
     | p=type_sig LAMBDA pr=type_sig									{ Parse_tree.PTLambda (p, pr) }
 
@@ -68,10 +64,6 @@
 
   erec_element:
     | i=IDENT EQ b=expr { (i, b) }
-
-  match_case:
-		| e=expr LAMBDA v=expr     { (e, v) }
-		| UNDERSCORE LAMBDA v=expr { (loce $startpos $endpos @@ Parse_tree.PECaseDefault, v) }
 
 
 	left:
@@ -132,10 +124,13 @@
     | IF c=expr THEN e1=expr ELSE e2=expr 
                                 { loce $startpos $endpos @@ Parse_tree.PEIfThenElse (c,e1,e2) }
 
+    // match_case:
+    // 	| e=expr LAMBDA v=expr     {  }
+    // 	| UNDERSCORE LAMBDA v=expr {  }
 		// match with
-		| MATCH c=expr WITH PIPE cl=separated_nonempty_list(PIPE, match_case) 
-		| MATCH c=expr WITH cl=separated_nonempty_list(PIPE, match_case) 
-																{ loce $startpos $endpos @@ Parse_tree.PEMatchWith (c, cl) }
+		// | MATCH c=expr WITH PIPE cl=separated_nonempty_list(PIPE, match_case) 
+		// | MATCH c=expr WITH cl=separated_nonempty_list(PIPE, match_case) 
+		// 														{ loce $startpos $endpos @@ Parse_tree.PEMatchWith (c, cl) }
 
     // | i=MIDENT DOT i2=IDENT     { loce $startpos $endpos @@ Parse_tree.PEModRef (i, i2) }
     | i=IDENT 						      { loce $startpos $endpos @@ Parse_tree.PERef (i) }

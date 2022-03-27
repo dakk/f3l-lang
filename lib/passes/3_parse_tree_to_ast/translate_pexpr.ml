@@ -324,63 +324,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     
   | PERef (i) -> 
     (match binding_find ic ILocal i with 
-    | None -> 
-      let ref = Env.get_ref i env' in 
-      let _ = (match ref with
-      | TUnion(u) -> 
-        let rec checki u' = match u' with
-          | [] -> () (* TODO: failwith "TODO: questo errore non esiste" *)
-          | (ii, t)::u'' -> 
-            if ii = i then
-              if t <> TUnit then 
-                raise @@ TypeError (pel, "Union '" ^ i ^ "' needs a value of different type; " ^ show_ttype_got_expect TUnit t)
-              else ()
-            else 
-              checki u''
-        in checki u
-      | _ -> ()
-      ) in      
-      ref, GlobalRef (i)
-
+    | None -> let ref = Env.get_ref i env' in ref, GlobalRef (i)
     | Some (Local(t)) -> t, LocalRef (i)
     | _ -> raise @@ SymbolNotFound (pel, "Symbol '" ^ i ^ "' is not a valid ref")
     )
-
-  (* Maybe be a union with param *)
-  | PEApply (PERef(i), el) -> 
-    let ref = Env.get_ref i env' in 
-    (match ref with
-    | TUnion(u) -> (
-      let (apt, apv) = transform_expr (List.hd el) env' ic in
-      let rec checki u' = match u' with
-        | [] -> failwith "TODO: questo errore non esiste"
-        | (ii, t)::u'' -> 
-          if ii = i then 
-            if t <> apt then 
-              raise @@ TypeError (pel, "Union '" ^ i ^ "' needs a value of different type; " ^ show_ttype_got_expect apt t)
-            else
-              TUnion(u), UnionValue(i, TUnion(u), (apt, apv))
-          else checki u''
-      in checki u
-    )
-    | TLambda (arv, rettype) -> (
-      let (tt,ee) = transform_expr (PERef(i)) env' ic in  
-      let argl = argv_to_list arv in 
-      let ap = el |> transform_expr_list in
-      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
-        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
-      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
-        raise @@ TypeError (pel, "Invalid argument types apply");
-      if List.length argl = 1 && List.hd argl = TUnit then 
-        rettype, Apply ((tt,ee), (TUnit, Unit))
-      else if List.length argl > 1 then 
-        rettype, Apply((tt, ee), (TTuple(argl), Tuple(ap)))
-      else if (List.length ap) = 0 && (List.length argl) = 0 then
-        rettype, Apply((tt, ee), (TUnit, Unit))
-      else
-        rettype, Apply((tt, ee), List.hd ap)
-    )
-  )
 
   | PEApply (e, el) -> 
     let (tt,ee) = transform_expr e env' ic in  
@@ -430,7 +377,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     if tt1 <> TInt then raise @@ TypeError (pel, "isNat " ^ show_ttype_between_na tt1 TNat);
     TBool, ToInt ((tt1, ee1)) *)
 
-
       
     | _ -> raise @@ TypeError (pel, "Applying on not a lambda: " ^ show_ttype tt)
     
@@ -450,25 +396,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       raise @@ TypeError (pel, "If branches should have same type, got: '" ^ show_ttype t ^ "' and '" ^ show_ttype t' ^ "'")
     | _, _, _ -> raise @@ TypeError (pel, "If condition should be a boolean expression, got '" ^ show_ttype tc ^ "'"))
 
-  | PEMatchWith (e, bl) -> 
-    let (te, ee) = transform_expr e env' ic in 
-    let bl' = List.map (fun (cv, cex)  -> 
-      let (tt, ee) = transform_expr cv env' ic in
-      let (tcex, ecex) = transform_expr cex env' ic in
-      if (tt <> te) && (tt <> TAny) then
-        raise @@ TypeError (pel, "Match case has an invalid value type; " ^ show_ttype_got_expect tt te)
-      else 
-        ((tt, ee), tcex, (tcex, ecex)) 
-    ) bl in
-    (* assert that every branch as the same type *)
-    let rett: ttype = List.fold_left (fun acc (_, tcex, _) -> 
-      if acc <> tcex && tcex <> TUnit then  (* TODO: tany is only allowed for fail *)
-        raise @@ TypeError (pel, "Match branches should have same type; " ^ show_ttype_got_expect tcex acc)
-      else if tcex = TUnit then acc else tcex
-    ) (let (_,b,_) = List.hd bl' in b) bl'
-    in rett, MatchWith ((te, ee), List.map (fun (a,_,c) -> (a,c)) bl')
-
-  | PECaseDefault -> TAny, CaseDefault
 
 
   (* let-binding and sequences *)
