@@ -1,7 +1,7 @@
 # Def
 
-In a yallo file, you can declare global function and defants that are available to all following contracts, defants and functions.
+In a f3l file, you can declare global function
 
 ```csharp
-let a: nat = 12n;
+let a: nat = 12n
 ```
