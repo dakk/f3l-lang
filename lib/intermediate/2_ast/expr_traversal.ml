@@ -54,8 +54,6 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Abs (a)
   | Neg (a)
   | IsNat (a)
-  | Let (_, _, a)
-  | LetTuple (_, a)
   | Not (a)
   | ToInt (a) -> traverse' a
 

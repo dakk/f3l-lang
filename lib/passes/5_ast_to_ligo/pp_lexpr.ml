@@ -270,11 +270,6 @@ match e with
     pp_lexpr e
     rr el
      
-| Let (id, tt, e) -> 
-  fprintf fmt "let %s: %a = %a in " 
-    id 
-    pp_ltype tt
-    pp_lexpr e
 
 | LetIn (id, tt, e, e2) -> 
   fprintf fmt "let %s: %a = @\n%a in @\n%a " 
@@ -283,10 +278,6 @@ match e with
     pp_lexpr e 
     pp_lexpr e2
 
-| LetTuple (il, e) -> 
-  fprintf fmt "let (%a) = %a in "
-    (pp_list ", " pp_str) (fst @@ List.split il)
-    pp_lexpr e 
 
 | LetTupleIn (il, e, e2) -> 
   fprintf fmt "let (%a) = %a in @,%a"

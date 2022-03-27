@@ -83,8 +83,6 @@ type expr =
 | Apply of texpr * texpr
      
 | LetIn of iden * ttype * texpr * texpr
-| Let of iden * ttype * texpr 
-| LetTuple of (iden * ttype) list * texpr 
 | LetTupleIn of (iden * ttype) list * texpr * texpr
 
 
