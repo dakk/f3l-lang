@@ -106,16 +106,24 @@ rule token = parse
 
   | "(*"            { comment_multiline lexbuf; token lexbuf }
 
-  | string as s     { STRING (String.sub s 1 ((String.length s) - 2)) }
+  | '"'             { read_string (Buffer.create 17) lexbuf }
+  (* | string as s     { STRING (String.sub s 1 ((String.length s) - 2)) } *)
   | bytes as s     	{ BYTES (String.sub s 2 ((String.length s) - 3)) }
 
-  | mident as i      { if List.exists (fun r -> r = i) reserved then raise (SyntaxError2 ("Using reserved word for identifier")) else IDENT i }
   | ident as i      { if List.exists (fun r -> r = i) reserved then raise (SyntaxError2 ("Using reserved word for identifier")) else IDENT i }
 
   | eof             { EOF }
   | _ as c          { raise (SyntaxError2 (Format.sprintf "Invalid string starting with %C" c)) }
 
-
+and read_string buf = parse
+  | '"'       { STRING (Buffer.contents buf) }
+  | '\\' 'n'  { Buffer.add_char buf '\n'; read_string buf lexbuf }
+  | [^ '"' '\\']+
+    { Buffer.add_string buf (Lexing.lexeme lexbuf);
+      read_string buf lexbuf
+    }
+  | _ { raise (SyntaxError2 ("Illegal string character: " ^ Lexing.lexeme lexbuf)) }
+  | eof { raise (SyntaxError2 ("String is not terminated")) }
 
 and comment_multiline = parse
   | "*)"   					{ () }
