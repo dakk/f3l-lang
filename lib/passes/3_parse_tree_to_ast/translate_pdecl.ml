@@ -66,6 +66,7 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
       defs=(id, (t, exp))::e.defs;
     }
 
+  (* external function *)
   | Parse_tree.DExternal (id, t, n) :: p' ->  
     Env.assert_symbol_absence e id;
     let tt = transform_type t e in
