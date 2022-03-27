@@ -17,7 +17,7 @@ type expr =
 | Some of texpr
 | Typed of texpr * ttype
 | List of texpr list 
-| Tuple of texpr list
+| Pair of texpr * texpr
 | Lambda of (iden * ttype) list * texpr
 | Record of (iden * texpr) list
 | UnionValue of iden
@@ -49,9 +49,9 @@ type expr =
 | BytesSize of texpr
 | BytesUnpack of texpr
 
-(* tuple *)
-| TupleFst of texpr
-| TupleSnd of texpr
+(* pair *)
+| PairFst of texpr
+| PairSnd of texpr
 
 (* aritmetic *)
 | Add of texpr * texpr
@@ -81,7 +81,6 @@ type expr =
 | Apply of texpr * texpr
      
 | LetIn of iden * ttype * texpr * texpr
-| LetTupleIn of (iden * ttype) list * texpr * texpr
 
 
 [@@deriving show {with_path = false}]

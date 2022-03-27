@@ -2,18 +2,15 @@
 
 <parameter> ::= IDENT COLON <type_sig>
 
-<param_opt_typed> ::= IDENT COLON <type_sig>
-                    | IDENT
-
-<param_opt_typed2> ::= IDENT
-                     | IDENT COLON IDENT
+<param_opt_typed> ::= IDENT
+                    | IDENT COLON IDENT
 
 <ident> ::= IDENT
 
 <type_sig> ::= TANY
              | <ident>
              | <type_expr> CONT
-             | LPAR <type_sig> MUL <type_sig> (MUL <type_sig>)* RPAR
+             | LPAR <type_sig> MUL <type_sig> RPAR
              | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
              | <ident> PIPE <ident> (PIPE <ident>)*
              | LPAR <type_sig> RPAR
@@ -37,13 +34,11 @@
          | SOME LPAR <expr> RPAR
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
-         | LPAR <expr> COMMA <expr> (COMMA <expr>)* RPAR
+         | LPAR <expr> COMMA <expr> RPAR
          | FUN LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDA <expr>
-         | FUN <param_opt_typed2> LAMBDA <expr>
+         | FUN <param_opt_typed> LAMBDA <expr>
          | LET IDENT COLON <type_sig> EQ <expr> IN <expr>
          | LET IDENT EQ <expr> IN <expr>
-         | LET LPAR <param_opt_typed> (COMMA <param_opt_typed>)* RPAR EQ
-           <expr> IN <expr>
          | <expr> ADD <expr>
          | <expr> SUB <expr>
          | <expr> DIV <expr>

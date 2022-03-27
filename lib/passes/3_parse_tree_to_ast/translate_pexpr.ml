@@ -33,7 +33,7 @@ let binding_find ic (st: ireft) i: iref option =
 
 (* transform an pexpr to (ttype * expr) *)
 let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : texpr = 
-  let argv_to_list pel = match pel with | TTuple(tl) -> tl | _ -> [pel] in
+  let argv_to_list pel = match pel with | TPair(t1, t2) -> [t1;t2] | _ -> [pel] in
   let transform_expr_list pel = List.map (fun p -> transform_expr p env' ic) pel in
   let transform_iexpr_list pel = List.map (fun (i, p) -> i, transform_expr p env' ic) pel in
   let transform_itype_list pel = List.map (fun (i, p) -> i, transform_type p env') pel in
@@ -70,9 +70,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEBool (b) -> TBool, Bool (b)
 
   (* Composed types *)
-  | PETuple (el) -> 
-    let tel = el |> transform_expr_list in
-    TTuple(fst @@ List.split tel), Tuple(tel)
+  | PEPair (e1, e2) -> 
+    let te1 = transform_expr e1 env' ic in
+    let te2 = transform_expr e2 env' ic in
+    TPair(fst te1, fst te2), Pair(te1, te2)
 
   | PEList (el) -> 
     let ttres = el |> transform_expr_list in
@@ -98,7 +99,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let arg = (match List.length rl with 
       | 0 -> TUnit
       | 1 -> snd @@ List.hd rl
-      | _ -> TTuple (snd @@ List.split rl)
+      | 2 -> 
+        let vv = snd @@ List.split rl in
+        TPair (List.hd vv, List.hd (List.tl vv))
     ) in
     TLambda (arg, tt), Lambda(rl, (tt, ee))
 
@@ -133,8 +136,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | _, TList (_), "size", [] -> TNat, ListSize (te, ee)
       | _, TList (l), "head", [] -> l, ListHead (te, ee)
       | _, TList (l), "tail", [] -> TList (l), ListTail (te, ee)
-      | _, TList (l), "fold", [(TLambda (TTuple([ll; rt']), rt), lame); (ft, ff)] when l=ll && rt=rt' && rt=ft -> 
-        ft, ListFold((te, ee), (TLambda (TTuple([ll; rt']), rt), lame), (ft, ff))
+      (* | _, TList (l), "fold", [(TLambda (TPair([ll; rt']), rt), lame); (ft, ff)] when l=ll && rt=rt' && rt=ft -> 
+        ft, ListFold((te, ee), (TLambda (TPair([ll; rt']), rt), lame), (ft, ff)) *)
 
       | _, TList (l), "prepend", [(ll, e)] when ll = l -> 
         TList (l), ListPrepend ((te, ee), (ll, e))
@@ -154,9 +157,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | _, TBytes, "slice", [(TInt, i1); (TInt, i2)] -> TBytes, BytesSlice ((te, ee), (TNat, i1), (TNat, i2))
       | _, TBytes, "size", [] -> TNat, BytesSize(te, ee)
 
-      (* Tuple *)
-      | _, TTuple ([a; _]), "fst", [] -> a, TupleFst (te, ee)
-      | _, TTuple ([_; b]), "snd", [] -> b, TupleSnd (te, ee)
+      (* Pair *)
+      | _, TPair (a, _), "fst", [] -> a, PairFst (te, ee)
+      | _, TPair (_, b), "snd", [] -> b, PairSnd (te, ee)
 
 
       | _, _, i, _-> 
@@ -212,10 +215,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
     let rt = (match tt1, tt2 with 
-      | TNat, TNat -> TOption(TTuple([TNat; TNat]))
-      | TNat, TInt -> TOption(TTuple([TInt; TNat])) 
-      | TInt, TNat -> TOption(TTuple([TInt; TNat])) 
-      | TInt, TInt -> TOption(TTuple([TInt; TNat])) 
+      | TNat, TNat -> TOption(TPair(TNat, TNat))
+      | TNat, TInt -> TOption(TPair(TInt, TNat)) 
+      | TInt, TNat -> TOption(TPair(TInt, TNat)) 
+      | TInt, TInt -> TOption(TPair(TInt, TNat)) 
       | _, _ -> raise @@ TypeError (pel, "EDiv " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, EDiv ((tt1, ee1), (tt2, ee2))
@@ -224,10 +227,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
     let rt = (match tt1, tt2 with 
-      | TNat, TNat -> TOption(TTuple([TNat; TNat]))
-      | TNat, TInt -> TOption(TTuple([TInt; TNat])) 
-      | TInt, TNat -> TOption(TTuple([TInt; TNat])) 
-      | TInt, TInt -> TOption(TTuple([TInt; TNat])) 
+      | TNat, TNat -> TOption(TPair(TNat, TNat))
+      | TNat, TInt -> TOption(TPair(TInt, TNat)) 
+      | TInt, TNat -> TOption(TPair(TInt, TNat)) 
+      | TInt, TInt -> TOption(TPair(TInt, TNat)) 
       | _, _ -> raise @@ TypeError (pel, "Div " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, Mod ((tt1, ee1), (tt2, ee2))
@@ -339,8 +342,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
         raise @@ TypeError (pel, "Invalid argument types apply");
       if List.length argl = 1 && List.hd argl = TUnit then 
         rettype, Apply ((tt,ee), (TUnit, Unit))
-      else if List.length argl > 1 then 
-        rettype, Apply((tt, ee), (TTuple(argl), Tuple(ap)))
+      else if List.length argl == 2 then 
+        rettype, Apply((tt, ee), (TPair(List.hd argl, List.hd (List.tl argl)), Pair(List.hd ap, List.hd (List.tl ap))))
       else if (List.length ap) = 0 && (List.length argl) = 0 then
         rettype, Apply((tt, ee), (TUnit, Unit))
       else
@@ -401,19 +404,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     if not @@ compare_type_lazy tt t' then raise @@ TypeError (pel, "LetIn type mismatch; " ^ show_ttype_got_expect tt t');
     let (tt1, ee1) = transform_expr e1 env' @@ push_ic i (Local(t')) ic in 
     tt1, LetIn (i, t', (tt, ee), (tt1, ee1))
-
-  | PELetTupleIn(tl, e, e1) -> 
-    let (tt, ee) = transform_expr e env' ic in 
-    (* TODO optional types of tl are ignored! *)
-    let ti = fst @@ List.split tl in
-    (match tt with 
-      | TTuple(tl') -> 
-        let tl' = List.combine ti tl' in 
-        let (tt1, ee1) = transform_expr e1 env' @@ push_local_many tl' ic in 
-        tt1, LetTupleIn(tl', (tt, ee), (tt1, ee1))
-      | _ -> raise @@ TypeError (pel, "Expected a tuple")
-    )
-
 
   | ex -> raise @@ InvalidExpression (pel, "Expression not handled yet: " ^ Parse_tree.show_pexpr ex)
   ) in 

@@ -48,9 +48,10 @@ let rec pp_ltype fmt (a: ttype) = match a with
   fprintf fmt "{ @[%a@] }" 
     (pp_list ";@." pp_rec_field) l
 
-| TTuple (tl) -> 
-  fprintf fmt "(%a)" 
-    (pp_list " * " pp_ltype) tl
+| TPair (t1, t2) -> 
+  fprintf fmt "(%a * %a)" 
+    pp_ltype t1 
+    pp_ltype t2
 
 | _ -> raise @@ TypeError (None, sprintf "Type '%s' is not translable to ligo" (show_ttype a))
 

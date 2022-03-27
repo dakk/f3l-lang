@@ -72,8 +72,10 @@ match e with
 | List (el) -> 
   fprintf fmt "[ %a ]" (pp_list "; " pp_lexpr) el
 
-| Tuple (el) -> 
-  fprintf fmt "( %a )" (pp_list ", " pp_lexpr) el
+| Pair (e1, e2) -> 
+  fprintf fmt "( %a, %a )" 
+    pp_lexpr e1
+    pp_lexpr e2
 
 | Lambda (il, e) -> 
   if List.length il = 0 then 
@@ -164,10 +166,10 @@ match e with
   pp_infix2 fmt "^" a b
 
 
-(* tuple *)
+(* pair *)
 (*
-| TupleFst of expr
-| TupleSnd of expr
+| PairFst of expr
+| PairSnd of expr
 *)
 
 (* aritmetic *) 
@@ -245,9 +247,3 @@ match e with
     pp_lexpr e 
     pp_lexpr e2
 
-
-| LetTupleIn (il, e, e2) -> 
-  fprintf fmt "let (%a) = %a in @,%a"
-    (pp_list ", " pp_str) (fst @@ List.split il)
-    pp_lexpr e 
-    pp_lexpr e2

@@ -52,8 +52,8 @@ let () =
       "lambda", `Quick, compile opt None "test/expr/lambda.ml" None;
       "assoc_bool", `Quick, compile opt None "test/expr/assoc_bool.ml" None;
       (* "match_case", `Quick, compile opt None "test/expr/match_case.ml" None; *)
-      "pair_destruct_typed", `Quick, compile opt None "test/expr/pair_destruct_typed.ml" None;
-      "pair_destruct_untyped", `Quick, compile opt None "test/expr/pair_destruct_untyped.ml" None;
+      (* "pair_destruct_typed", `Quick, compile opt None "test/expr/pair_destruct_typed.ml" None;
+      "pair_destruct_untyped", `Quick, compile opt None "test/expr/pair_destruct_untyped.ml" None; *)
     ];
     "define", [
       "def", `Quick, compile opt None "test/def/def.ml" None;

@@ -24,7 +24,7 @@ Which can be written also as:
 let a = 12 in a
 ```
 
-Let is also useful for tuple destructuring:
+Let is also useful for pair destructuring:
 
 ```text
 let a: (int, nat) = (12, 13n);

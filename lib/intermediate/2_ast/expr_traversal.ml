@@ -12,16 +12,8 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Record (a) -> 
     (List.fold_left (fun acc e -> jf (traverse' @@ snd e) acc) empty a)
 
-  | List (a)
-  | Tuple (a) -> 
+  | List (a) -> 
     (List.fold_left (fun acc e -> jf (traverse' e) acc) empty a)
-
-  | MatchWith (a, eel) -> 
-    jf (traverse' a)
-    (let a,b = List.split eel in 
-    jf
-      (List.fold_left (fun acc e -> jf (traverse' e) acc) empty a)
-      (List.fold_left (fun acc e -> jf (traverse' e) acc) empty b))
 
   | Bool (_)
   | Nat (_)
@@ -49,8 +41,8 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | BytesSize (a)
   | BytesPack (a)
   | BytesUnpack (a)
-  | TupleFst (a)
-  | TupleSnd (a)
+  | PairFst (a)
+  | PairSnd (a)
   | Abs (a)
   | Neg (a)
   | IsNat (a)
@@ -78,7 +70,7 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Neq (a, b)
   | Apply (a, b)
   | LetIn (_, _, a, b)
-  | LetTupleIn(_, a, b) -> jf (traverse' a) (traverse' b)
+  | Pair (a, b) -> jf (traverse' a) (traverse' b)
 
   | ListFold (a, b, c)
   | StringSlice (a, b, c)
