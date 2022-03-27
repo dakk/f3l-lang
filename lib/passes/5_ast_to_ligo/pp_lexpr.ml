@@ -61,7 +61,7 @@ match e with
 | Bytes (s) -> 
   fprintf fmt "(\"%s\": bytes)" (Bytes.to_string s)
 
-(* | UnionValue (i, tu) -> 
+(* | UnionValue (i) -> 
   (match te with | TUnion(e) -> fprintf fmt "%dn" @@ enum_index e i 0) *)
 
 | Typed (e, t) -> 
@@ -72,8 +72,10 @@ match e with
 | List (el) -> 
   fprintf fmt "[ %a ]" (pp_list "; " pp_lexpr) el
 
-| Tuple (el) -> 
-  fprintf fmt "( %a )" (pp_list ", " pp_lexpr) el
+| Pair (e1, e2) -> 
+  fprintf fmt "( %a, %a )" 
+    pp_lexpr e1
+    pp_lexpr e2
 
 | Lambda (il, e) -> 
   if List.length il = 0 then 
@@ -108,9 +110,6 @@ match e with
 
 
 (* list *)
-| ListEmpty -> 
-  fprintf fmt "[]"
-
 | ListMapWith (le, ll) -> 
   fprintf fmt "List.map (%a) (%a)" 
     pp_lexpr ll
@@ -167,10 +166,10 @@ match e with
   pp_infix2 fmt "^" a b
 
 
-(* tuple *)
+(* pair *)
 (*
-| TupleFst of expr
-| TupleSnd of expr
+| PairFst of expr
+| PairSnd of expr
 *)
 
 (* aritmetic *) 
@@ -239,45 +238,7 @@ match e with
 | Apply(lam, par) -> 
   fprintf fmt "%a (%a)" 
     pp_lexpr lam 
-    pp_lexpr par
-
-| MatchWith (e, el) -> 
-  let rec rr fmt el = (match el with 
-  | [] -> fprintf fmt ""
-  | (e', te')::((_, CaseDefault), tee')::el' -> 
-    fprintf fmt "if %s = (%a) then @[(%a: %a)@]@\nelse (%a: %a)"
-      "tmatchwithtemp"
-      pp_lexpr e'
-      pp_lexpr te'
-      pp_ltype te
-      pp_lexpr tee'
-      pp_ltype te
-
-  | (e', te')::elle::el' -> 
-    fprintf fmt "if %s = (%a) then @[(%a: %a)@]@\nelse %a" 
-      "tmatchwithtemp"
-      pp_lexpr e'
-      pp_lexpr te'
-      pp_ltype te
-      rr (elle::el')
-
-  | (e', te')::[] -> 
-    fprintf fmt "if %s = (%a) then @[(%a: %a)@] " 
-      "tmatchwithtemp"
-      pp_lexpr e'
-      pp_lexpr te'
-      pp_ltype te
-  ) in 
-  fprintf fmt "let %s = %a in @\n%a" 
-    "tmatchwithtemp"
-    pp_lexpr e
-    rr el
-     
-| Let (id, tt, e) -> 
-  fprintf fmt "let %s: %a = %a in " 
-    id 
-    pp_ltype tt
-    pp_lexpr e
+    pp_lexpr par     
 
 | LetIn (id, tt, e, e2) -> 
   fprintf fmt "let %s: %a = @\n%a in @\n%a " 
@@ -286,13 +247,3 @@ match e with
     pp_lexpr e 
     pp_lexpr e2
 
-| LetTuple (il, e) -> 
-  fprintf fmt "let (%a) = %a in "
-    (pp_list ", " pp_str) (fst @@ List.split il)
-    pp_lexpr e 
-
-| LetTupleIn (il, e, e2) -> 
-  fprintf fmt "let (%a) = %a in @,%a"
-    (pp_list ", " pp_str) (fst @@ List.split il)
-    pp_lexpr e 
-    pp_lexpr e2

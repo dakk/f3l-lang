@@ -33,7 +33,7 @@ let binding_find ic (st: ireft) i: iref option =
 
 (* transform an pexpr to (ttype * expr) *)
 let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : texpr = 
-  let argv_to_list pel = match pel with | TTuple(tl) -> tl | _ -> [pel] in
+  let argv_to_list pel = match pel with | TPair(t1, t2) -> [t1;t2] | _ -> [pel] in
   let transform_expr_list pel = List.map (fun p -> transform_expr p env' ic) pel in
   let transform_iexpr_list pel = List.map (fun (i, p) -> i, transform_expr p env' ic) pel in
   let transform_itype_list pel = List.map (fun (i, p) -> i, transform_type p env') pel in
@@ -70,9 +70,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEBool (b) -> TBool, Bool (b)
 
   (* Composed types *)
-  | PETuple (el) -> 
-    let tel = el |> transform_expr_list in
-    TTuple(fst @@ List.split tel), Tuple(tel)
+  | PEPair (e1, e2) -> 
+    let te1 = transform_expr e1 env' ic in
+    let te2 = transform_expr e2 env' ic in
+    TPair(fst te1, fst te2), Pair(te1, te2)
 
   | PEList (el) -> 
     let ttres = el |> transform_expr_list in
@@ -98,7 +99,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let arg = (match List.length rl with 
       | 0 -> TUnit
       | 1 -> snd @@ List.hd rl
-      | _ -> TTuple (snd @@ List.split rl)
+      | 2 -> 
+        let vv = snd @@ List.split rl in
+        TPair (List.hd vv, List.hd (List.tl vv))
     ) in
     TLambda (arg, tt), Lambda(rl, (tt, ee))
 
@@ -107,10 +110,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (idtt, idee) = List.map (fun (i, (tt, ee)) -> (i, tt), (i, ee)) l' |> List.split in
     TRecord (idtt), Record (l')
 
-  (* PEDot on base *)
-  | PEApply (PEDot (PERef("List"), "empty"), []) -> TList(TAny), ListEmpty
-    
-
+  (* PEDot on base *) 
   | PEApply (PEDot (PERef("Bytes"), "pack"), c) -> 
     if List.length c <> 1 then raise @@ APIError (pel, "Bytes.pack needs only one argument");
     let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
@@ -124,7 +124,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
 
   (* PEApply(PEDot) base type apis *)
-  | PEApply (PEDot(e,i), el) -> 
+  (* | PEApply (PEDot(e,i), el) -> 
     let (te, ee) = transform_expr e env' ic in
     let el' = el |> transform_expr_list in 
     (match ee, te, i, el' with 
@@ -136,8 +136,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | _, TList (_), "size", [] -> TNat, ListSize (te, ee)
       | _, TList (l), "head", [] -> l, ListHead (te, ee)
       | _, TList (l), "tail", [] -> TList (l), ListTail (te, ee)
-      | _, TList (l), "fold", [(TLambda (TTuple([ll; rt']), rt), lame); (ft, ff)] when l=ll && rt=rt' && rt=ft -> 
-        ft, ListFold((te, ee), (TLambda (TTuple([ll; rt']), rt), lame), (ft, ff))
+      (* | _, TList (l), "fold", [(TLambda (TPair([ll; rt']), rt), lame); (ft, ff)] when l=ll && rt=rt' && rt=ft -> 
+        ft, ListFold((te, ee), (TLambda (TPair([ll; rt']), rt), lame), (ft, ff)) *)
 
       | _, TList (l), "prepend", [(ll, e)] when ll = l -> 
         TList (l), ListPrepend ((te, ee), (ll, e))
@@ -157,14 +157,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | _, TBytes, "slice", [(TInt, i1); (TInt, i2)] -> TBytes, BytesSlice ((te, ee), (TNat, i1), (TNat, i2))
       | _, TBytes, "size", [] -> TNat, BytesSize(te, ee)
 
-      (* Tuple *)
-      | _, TTuple ([a; _]), "fst", [] -> a, TupleFst (te, ee)
-      | _, TTuple ([_; b]), "snd", [] -> b, TupleSnd (te, ee)
-
-
       | _, _, i, _-> 
         raise @@ TypeError (pel, "Invalid apply of " ^ i ^ " over '" ^ show_ttype te ^ "'")
-    )
+    ) *)
 
   (* PEDot *)
   | PEDot (e, i) -> 
@@ -215,10 +210,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
     let rt = (match tt1, tt2 with 
-      | TNat, TNat -> TOption(TTuple([TNat; TNat]))
-      | TNat, TInt -> TOption(TTuple([TInt; TNat])) 
-      | TInt, TNat -> TOption(TTuple([TInt; TNat])) 
-      | TInt, TInt -> TOption(TTuple([TInt; TNat])) 
+      | TNat, TNat -> TOption(TPair(TNat, TNat))
+      | TNat, TInt -> TOption(TPair(TInt, TNat)) 
+      | TInt, TNat -> TOption(TPair(TInt, TNat)) 
+      | TInt, TInt -> TOption(TPair(TInt, TNat)) 
       | _, _ -> raise @@ TypeError (pel, "EDiv " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, EDiv ((tt1, ee1), (tt2, ee2))
@@ -227,10 +222,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
     let rt = (match tt1, tt2 with 
-      | TNat, TNat -> TOption(TTuple([TNat; TNat]))
-      | TNat, TInt -> TOption(TTuple([TInt; TNat])) 
-      | TInt, TNat -> TOption(TTuple([TInt; TNat])) 
-      | TInt, TInt -> TOption(TTuple([TInt; TNat])) 
+      | TNat, TNat -> TOption(TPair(TNat, TNat))
+      | TNat, TInt -> TOption(TPair(TInt, TNat)) 
+      | TInt, TNat -> TOption(TPair(TInt, TNat)) 
+      | TInt, TInt -> TOption(TPair(TInt, TNat)) 
       | _, _ -> raise @@ TypeError (pel, "Div " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, Mod ((tt1, ee1), (tt2, ee2))
@@ -320,90 +315,31 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     
 
   (* symbol reference *)
-
     
   | PERef (i) -> 
     (match binding_find ic ILocal i with 
-    | None -> 
-      let ref = Env.get_ref i env' in 
-      let _ = (match ref with
-      | TUnion(u) -> 
-        let rec checki u' = match u' with
-          | [] -> () (* TODO: failwith "TODO: questo errore non esiste" *)
-          | (ii, t)::u'' -> 
-            if ii = i then
-              if t <> TUnit then 
-                raise @@ TypeError (pel, "Union '" ^ i ^ "' needs a value of different type; " ^ show_ttype_got_expect TUnit t)
-              else ()
-            else 
-              checki u''
-        in checki u
-      | _ -> ()
-      ) in      
-      ref, GlobalRef (i)
-
+    | None -> let ref = Env.get_ref i env' in ref, GlobalRef (i)
     | Some (Local(t)) -> t, LocalRef (i)
     | _ -> raise @@ SymbolNotFound (pel, "Symbol '" ^ i ^ "' is not a valid ref")
     )
 
-  (* Maybe be a union with param *)
-  | PEApply (PERef(i), el) -> 
-    let ref = Env.get_ref i env' in 
-    (match ref with
-    | TUnion(u) -> (
-      let (apt, apv) = transform_expr (List.hd el) env' ic in
-      let rec checki u' = match u' with
-        | [] -> failwith "TODO: questo errore non esiste"
-        | (ii, t)::u'' -> 
-          if ii = i then 
-            if t <> apt then 
-              raise @@ TypeError (pel, "Union '" ^ i ^ "' needs a value of different type; " ^ show_ttype_got_expect apt t)
-            else
-              TUnion(u), UnionValue(i, TUnion(u), (apt, apv))
-          else checki u''
-      in checki u
-    )
-    | TLambda (arv, rettype) -> (
-      let (tt,ee) = transform_expr (PERef(i)) env' ic in  
-      let argl = argv_to_list arv in 
-      let ap = el |> transform_expr_list in
-      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
-        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
-      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
-        raise @@ TypeError (pel, "Invalid argument types apply");
-      if List.length argl = 1 && List.hd argl = TUnit then 
-        rettype, Apply ((tt,ee), (TUnit, Unit))
-      else if List.length argl > 1 then 
-        rettype, Apply((tt, ee), (TTuple(argl), Tuple(ap)))
-      else if (List.length ap) = 0 && (List.length argl) = 0 then
-        rettype, Apply((tt, ee), (TUnit, Unit))
-      else
-        rettype, Apply((tt, ee), List.hd ap)
-    )
-  )
-
-  | PEApply (e, el) -> 
-    let (tt,ee) = transform_expr e env' ic in  
-    (match tt with
-
-    (* Apply on lambda  *)
-    | TLambda (arv, rettype) -> 
-      let argl = argv_to_list arv in 
-      let ap = el |> transform_expr_list in
-      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
-        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
-      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
-        raise @@ TypeError (pel, "Invalid argument types apply");
-      if List.length argl = 1 && List.hd argl = TUnit then 
-        rettype, Apply ((tt,ee), (TUnit, Unit))
-      else if List.length argl > 1 then 
-        rettype, Apply((tt, ee), (TTuple(argl), Tuple(ap)))
-      else if (List.length ap) = 0 && (List.length argl) = 0 then
-        rettype, Apply((tt, ee), (TUnit, Unit))
-      else
-        rettype, Apply((tt, ee), List.hd ap)
-
   (* apply *)
+  | PEApply (PERef("fst"), c) -> 
+    if List.length c <> 1 then raise @@ APIError (pel, "fst needs only one argument");
+    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
+    (match tt1 with 
+    | TPair(a, b) -> a, PairFst ((tt1, ee1))
+    | _ -> raise @@ TypeError (pel, "fst needs a TPair " ^ show_ttype_between_na tt1 @@ TPair(TAny, TAny)))
+    
+
+  | PEApply (PERef("snd"), c) -> 
+    if List.length c <> 1 then raise @@ APIError (pel, "snd needs only one argument");
+    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
+    (match tt1 with 
+    | TPair(a, b) -> b, PairSnd ((tt1, ee1))
+    | _ -> raise @@ TypeError (pel, "snd needs a TPair " ^ show_ttype_between_na tt1 @@ TPair(TAny, TAny)))
+    
+
   (* | PEApply (PERef("abs"), c) -> 
     if List.length c <> 1 then raise @@ APIError (pel, "abs needs only one argument");
     let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
@@ -430,8 +366,29 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     if tt1 <> TInt then raise @@ TypeError (pel, "isNat " ^ show_ttype_between_na tt1 TNat);
     TBool, ToInt ((tt1, ee1)) *)
 
-
       
+
+  | PEApply (e, el) -> 
+    let (tt,ee) = transform_expr e env' ic in  
+    (match tt with
+
+    (* Apply on lambda  *)
+    | TLambda (arv, rettype) -> 
+      let argl = argv_to_list arv in 
+      let ap = el |> transform_expr_list in
+      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
+        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
+      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
+        raise @@ TypeError (pel, "Invalid argument types apply");
+      if List.length argl = 1 && List.hd argl = TUnit then 
+        rettype, Apply ((tt,ee), (TUnit, Unit))
+      else if List.length argl == 2 then 
+        rettype, Apply((tt, ee), (TPair(List.hd argl, List.hd (List.tl argl)), Pair(List.hd ap, List.hd (List.tl ap))))
+      else if (List.length ap) = 0 && (List.length argl) = 0 then
+        rettype, Apply((tt, ee), (TUnit, Unit))
+      else
+        rettype, Apply((tt, ee), List.hd ap)
+
     | _ -> raise @@ TypeError (pel, "Applying on not a lambda: " ^ show_ttype tt)
     
     (* (Parse_tree.show_pexpr (PEApply(e, el)))) *)
@@ -450,25 +407,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       raise @@ TypeError (pel, "If branches should have same type, got: '" ^ show_ttype t ^ "' and '" ^ show_ttype t' ^ "'")
     | _, _, _ -> raise @@ TypeError (pel, "If condition should be a boolean expression, got '" ^ show_ttype tc ^ "'"))
 
-  | PEMatchWith (e, bl) -> 
-    let (te, ee) = transform_expr e env' ic in 
-    let bl' = List.map (fun (cv, cex)  -> 
-      let (tt, ee) = transform_expr cv env' ic in
-      let (tcex, ecex) = transform_expr cex env' ic in
-      if (tt <> te) && (tt <> TAny) then
-        raise @@ TypeError (pel, "Match case has an invalid value type; " ^ show_ttype_got_expect tt te)
-      else 
-        ((tt, ee), tcex, (tcex, ecex)) 
-    ) bl in
-    (* assert that every branch as the same type *)
-    let rett: ttype = List.fold_left (fun acc (_, tcex, _) -> 
-      if acc <> tcex && tcex <> TUnit then  (* TODO: tany is only allowed for fail *)
-        raise @@ TypeError (pel, "Match branches should have same type; " ^ show_ttype_got_expect tcex acc)
-      else if tcex = TUnit then acc else tcex
-    ) (let (_,b,_) = List.hd bl' in b) bl'
-    in rett, MatchWith ((te, ee), List.map (fun (a,_,c) -> (a,c)) bl')
-
-  | PECaseDefault -> TAny, CaseDefault
 
 
   (* let-binding and sequences *)
@@ -478,28 +416,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     if not @@ compare_type_lazy tt t' then raise @@ TypeError (pel, "LetIn type mismatch; " ^ show_ttype_got_expect tt t');
     let (tt1, ee1) = transform_expr e1 env' @@ push_ic i (Local(t')) ic in 
     tt1, LetIn (i, t', (tt, ee), (tt1, ee1))
-
-  | PELetTuple(tl, e) -> 
-    let (tt, ee) = transform_expr e env' ic in 
-    (* TODO optional types of tl are ignored! *)
-    let ti = fst @@ List.split tl in
-    (match tt with 
-      | TTuple(tl') -> tt, LetTuple(List.combine ti tl', (tt, ee))
-      | _ -> raise @@ TypeError (pel, "Expected a tuple")
-    )
-
-  | PELetTupleIn(tl, e, e1) -> 
-    let (tt, ee) = transform_expr e env' ic in 
-    (* TODO optional types of tl are ignored! *)
-    let ti = fst @@ List.split tl in
-    (match tt with 
-      | TTuple(tl') -> 
-        let tl' = List.combine ti tl' in 
-        let (tt1, ee1) = transform_expr e1 env' @@ push_local_many tl' ic in 
-        tt1, LetTupleIn(tl', (tt, ee), (tt1, ee1))
-      | _ -> raise @@ TypeError (pel, "Expected a tuple")
-    )
-
 
   | ex -> raise @@ InvalidExpression (pel, "Expression not handled yet: " ^ Parse_tree.show_pexpr ex)
   ) in 

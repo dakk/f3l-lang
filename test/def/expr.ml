@@ -10,5 +10,5 @@ let h: int -> int = fun (a: int) -> (g (12) * g (13))
 
 let i: int -> int = fun (a: int) -> (if a > 12 then 12 else 14 + 15)
 let l: bool = true or false
-let m: int -> (int option) = fun (a: int) -> (match a with | 1 -> Some(12) | 2 -> (None: int option))
+(* let m: int -> (int option) = fun (a: int) -> (match a with | 1 -> Some(12) | 2 -> (None: int option)) *)
 let u: unit = ()

@@ -10,7 +10,7 @@ let h = fun (a: int) -> (g (12) * g (13))
 
 let i = fun (a: int) -> (if a > 12 then 12 else 14 + 15)
 let l= true or false
-let m = fun (a: int) -> (match a with | 1 -> Some(12) | 2 -> (None: int option))
+(* let m = fun (a: int) -> (match a with | 1 -> Some(12) | 2 -> (None: int option)) *)
 let u = ()
 
 let litString = "hola"

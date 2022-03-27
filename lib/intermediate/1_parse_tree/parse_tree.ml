@@ -3,10 +3,10 @@ type iden = string [@@deriving show {with_path = false}]
 type ptype = 
   | PTAny 
   | PTBuiltin of string               (* type name *)
-  | PTTuple of ptype list             (* tuple of other types *)
+  | PTPair of ptype * ptype           (* pair of other types *)
   | PTRecord of (string * ptype) list (* record is (iden * type) list *)
   | PTCont of string * ptype          (* container type * inner_type *)
-  | PTUnion of (string * ptype) list
+  | PTUnion of string list
   | PTLambda of ptype * ptype
   [@@deriving show {with_path = false}]
 
@@ -22,7 +22,7 @@ type pexpr =
   | PESome of pexpr
   | PETyped of pexpr * ptype
   | PEList of pexpr list 
-  | PETuple of pexpr list
+  | PEPair of pexpr * pexpr
   | PELambda of (iden * ptype) list * pexpr
   | PERecord of (iden * pexpr) list
 
@@ -49,17 +49,13 @@ type pexpr =
 
   (* ifthenelse expression *)
   | PEIfThenElse of pexpr * pexpr * pexpr 
-  | PEMatchWith of pexpr * (pexpr * pexpr) list
-  | PECaseDefault
 
   (* function apply *)
   | PEDot of pexpr * iden
   | PEApply of pexpr * pexpr list
 
   | PELetIn of iden * ptype option * pexpr * pexpr
-  | PELet of iden * ptype option * pexpr 
-  | PELetTuple of (iden * ptype option) list * pexpr 
-  | PELetTupleIn of (iden * ptype option) list * pexpr * pexpr
+  | PELetPairIn of ((iden * ptype option) * (iden * ptype option)) * pexpr * pexpr
 
   [@@deriving show {with_path = false}]
 

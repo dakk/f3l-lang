@@ -11,11 +11,11 @@ type ttype =
   | TString
   | TBytes
   | TLambda of ttype * ttype
-  | TUnion of (string * ttype) list
+  | TUnion of string list
   | TList of ttype
   | TOption of ttype
   | TRecord of (iden * ttype) list
-  | TTuple of ttype list 
+  | TPair of ttype * ttype
 
 
 type tattr = {
@@ -43,7 +43,7 @@ let attributes (t: ttype) = match t with
   | TList (_) ->      { cmp=false; pack=true  }
   | TOption (_) ->    { cmp=false; pack=true  }
   | TRecord (_) ->    { cmp=false; pack=true  } 
-  | TTuple (_) ->     { cmp=true;  pack=true  }
+  | TPair (_, _) ->   { cmp=true;  pack=true  }
  
   (* internal types *)
   | TAny ->           { cmp=false; pack=false }
@@ -58,11 +58,11 @@ let rec show_ttype (at: ttype) = match at with
 | TString -> "string"
 | TBytes -> "bytes"
 | TLambda (p, r) -> "(" ^ show_ttype p ^ " -> " ^ show_ttype r ^ ")"
-| TUnion (el) -> List.fold_left (fun acc (x, _) -> acc ^ (if acc = "" then "" else " | ") ^ x) "" el
+| TUnion (el) -> List.fold_left (fun acc x -> acc ^ (if acc = "" then "" else " | ") ^ x) "" el
 | TList (t) -> show_ttype t ^ " list"
 | TOption (t) -> show_ttype t ^ " option"
 | TRecord (l) -> "record { " ^ List.fold_left (fun acc (x, xt) -> acc ^ (if acc = "" then "" else ", ") ^ x ^ ": " ^ show_ttype xt) "" l ^ " }"
-| TTuple (tl) -> "(" ^ List.fold_left (fun acc x -> acc ^ (if acc = "" then "" else " * ") ^ show_ttype x) "" tl ^ ")"
+| TPair (t1, t2) -> "(" ^ show_ttype t1 ^ " * " ^ show_ttype t2 ^ ")"
 
 let pp_ttype fmt (t: ttype) = Format.pp_print_string fmt (show_ttype t); ()
 

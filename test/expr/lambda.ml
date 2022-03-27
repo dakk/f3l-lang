@@ -9,4 +9,12 @@ let e_apply2: int -> int = fun (a: int) -> ((fun (b: int) -> (b))(12))
 let e_apply3: int -> int = fun (a: int) -> (e_apply2 (12))
 
 let e_if: int -> int = fun (a: int) -> (if a > 12 then 12 else 14 + 15)
-let e_matchwith: int -> (int option) = fun (a: int) -> (match a with | 1 -> Some(12) | _ -> (None: int option))
+(* let e_matchwith: int -> (int option) = fun (a: int) -> (match a with | 1 -> Some(12) | _ -> (None: int option)) *)
+
+
+type et = int -> int -> int
+
+let e1: et = fun (a: int) -> (fun (b: int) -> (a + b))
+let e2: et = fun (a: int) -> fun (b: int) -> a + b
+
+let e3 = fun a:int -> 12 * a

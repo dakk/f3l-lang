@@ -2,23 +2,17 @@
 
 <parameter> ::= IDENT COLON <type_sig>
 
-<param_opt_typed> ::= IDENT COLON <type_sig>
-                    | IDENT
+<param_opt_typed> ::= IDENT
+                    | IDENT COLON IDENT
 
 <ident> ::= IDENT
-
-<union_v> ::= IDENT
-            | IDENT OF <type_sig_min>
-
-<type_sig_min> ::= TANY
-                 | <ident>
 
 <type_sig> ::= TANY
              | <ident>
              | <type_expr> CONT
-             | LPAR <type_sig> MUL <type_sig> (MUL <type_sig>)* RPAR
+             | LPAR <type_sig> MUL <type_sig> RPAR
              | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
-             | <union_v> PIPE <union_v> (PIPE <union_v>)*
+             | <ident> PIPE <ident> (PIPE <ident>)*
              | LPAR <type_sig> RPAR
              | <type_sig> LAMBDA <type_sig>
 
@@ -26,13 +20,9 @@
 
 <erec_element> ::= IDENT EQ <expr>
 
-<match_case> ::= <expr> LAMBDA <expr>
-               | UNDERSCORE LAMBDA <expr>
-
 <left> ::= IDENT (DOT IDENT)*
 
 <expr> ::= UNIT
-         | NONE
          | TRUE
          | FALSE
          | STRING
@@ -40,20 +30,15 @@
          | FLOAT
          | INT
          | NAT
+         | NONE
          | SOME LPAR <expr> RPAR
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
-         | LPAR <expr> COMMA <expr> (COMMA <expr>)* RPAR
-         | FUN LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDA LPAR
-           <expr> RPAR
+         | LPAR <expr> COMMA <expr> RPAR
+         | FUN LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDA <expr>
+         | FUN <param_opt_typed> LAMBDA <expr>
          | LET IDENT COLON <type_sig> EQ <expr> IN <expr>
-         | LET IDENT COLON <type_sig> EQ <expr>
          | LET IDENT EQ <expr> IN <expr>
-         | LET IDENT EQ <expr>
-         | LET LPAR <param_opt_typed> (COMMA <param_opt_typed>)* RPAR EQ
-           <expr> IN <expr>
-         | LET LPAR <param_opt_typed> (COMMA <param_opt_typed>)* RPAR EQ
-           <expr>
          | <expr> ADD <expr>
          | <expr> SUB <expr>
          | <expr> DIV <expr>
@@ -66,11 +51,9 @@
          | <expr> LTE <expr>
          | <expr> GT <expr>
          | <expr> GTE <expr>
-         | <expr> EQEQ <expr>
+         | <expr> EQ <expr>
          | <expr> NEQ <expr>
          | IF <expr> THEN <expr> ELSE <expr>
-         | MATCH <expr> WITH PIPE <match_case> (PIPE <match_case>)*
-         | MATCH <expr> WITH <match_case> (PIPE <match_case>)*
          | IDENT
          | <left> DOT IDENT
          | <expr> DOT IDENT

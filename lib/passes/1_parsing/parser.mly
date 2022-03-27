@@ -38,41 +38,27 @@
   parameter: | i=IDENT COLON t=type_sig { (i, t) }
 
   param_opt_typed: 
-	| i=IDENT COLON t=type_sig 	{ (i, Some(t)) }
-	| i=IDENT  									{ (i, None) }
+	| i=IDENT  									{ (i, PTBuiltin("'a")) }
+  | i=IDENT COLON t=IDENT 		{ (i, PTBuiltin(t)) }
 
   ident: | i=IDENT { i }
-
-  union_v:
-  | i=IDENT                    { (i, PTBuiltin ("unit")) } 
-  | i=IDENT OF t=type_sig_min  { (i, t) }
-
-  type_sig_min:
-    | TANY                                          { Parse_tree.PTBuiltin ("'a") }
-    | t=ident                                       { Parse_tree.PTBuiltin (t) }
 
   type_sig:
     | TANY                                          { Parse_tree.PTBuiltin ("'a") }
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
     | bt=type_expr c=CONT                           { Parse_tree.PTCont (c, bt) }
-    | LPAR t1=type_sig MUL tl=separated_nonempty_list(MUL, type_sig) RPAR         
-                                                    { Parse_tree.PTTuple (t1::tl) }
+    | LPAR t1=type_sig MUL t2=type_sig RPAR         { Parse_tree.PTPair (t1, t2) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, parameter) RBRACE
                                                     { Parse_tree.PTRecord (tl)}
-    | x=union_v PIPE el=separated_nonempty_list(PIPE, union_v)  { Parse_tree.PTUnion (x::el) }
+    | x=ident PIPE el=separated_nonempty_list(PIPE, ident)  
+                                                    { Parse_tree.PTUnion (x::el) }
     | LPAR t=type_sig RPAR											    { t }
     | p=type_sig LAMBDA pr=type_sig									{ Parse_tree.PTLambda (p, pr) }
 
   type_expr: | te=type_sig {te}
 
-
   erec_element:
     | i=IDENT EQ b=expr { (i, b) }
-
-  match_case:
-		| e=expr LAMBDA v=expr     { (e, v) }
-		| UNDERSCORE LAMBDA v=expr { (loce $startpos $endpos @@ Parse_tree.PECaseDefault, v) }
-
 
 	left:
 		| l=left DOT i=IDENT				{ loce $startpos $endpos @@ Parse_tree.PEDot (l, i) }
@@ -80,7 +66,6 @@
 
   expr:
 		| UNIT						{ loce $startpos $endpos @@ Parse_tree.PEUnit }
-    | NONE  					{ loce $startpos $endpos @@ Parse_tree.PENone }
     | TRUE            { loce $startpos $endpos @@ Parse_tree.PEBool (true) }
     | FALSE           { loce $startpos $endpos @@ Parse_tree.PEBool (false) }
     | x=STRING 				{ loce $startpos $endpos @@ Parse_tree.PEString (x) }
@@ -88,27 +73,22 @@
     | x=FLOAT					{ loce $startpos $endpos @@ Parse_tree.PEFloat (x) }
     | x=INT 					{ loce $startpos $endpos @@ Parse_tree.PEInt (x) }
     | x=NAT 					{ loce $startpos $endpos @@ Parse_tree.PENat (x) }
+    | NONE  					{ loce $startpos $endpos @@ Parse_tree.PENone }
     | SOME LPAR x=expr RPAR 	  { loce $startpos $endpos @@ Parse_tree.PESome (x) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, erec_element) RBRACE
                                 { loce $startpos $endpos @@ Parse_tree.PERecord (tl) }
     | LSQUARE tl=separated_list(COMMA, expr) RSQUARE
                                 { loce $startpos $endpos @@ Parse_tree.PEList (tl) }
-    | LPAR t=expr COMMA tl=separated_nonempty_list(COMMA, expr) RPAR
-                                { loce $startpos $endpos @@ Parse_tree.PETuple (t::tl) }
-    | FUN LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDA LPAR e=expr RPAR
+    | LPAR t1=expr COMMA t2=expr RPAR
+                                { loce $startpos $endpos @@ Parse_tree.PEPair (t1, t2) }
+    | FUN LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDA e=expr
                                 { loce $startpos $endpos @@ Parse_tree.PELambda (tl, e) }
+    | FUN p=param_opt_typed LAMBDA e=expr
+                                { loce $startpos $endpos @@ Parse_tree.PELambda ([p], e) }
 
 		// bindings 
 		| LET i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, Some(t), e, ee) }
-		| LET i=IDENT COLON t=type_sig EQ e=expr { loce $startpos $endpos @@ Parse_tree.PELet (i, Some(t), e) }
 		| LET i=IDENT EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, None, e, ee) }
-		| LET i=IDENT EQ e=expr { loce $startpos $endpos @@ Parse_tree.PELet (i, None, e) }
-
-		| LET LPAR tl=separated_nonempty_list(COMMA, param_opt_typed) RPAR EQ e=expr IN ee=expr 
-			{ loce $startpos $endpos @@ Parse_tree.PELetTupleIn (tl, e, ee) }
-		| LET LPAR tl=separated_nonempty_list(COMMA, param_opt_typed) RPAR EQ e=expr 
-			{ loce $startpos $endpos @@ Parse_tree.PELetTuple (tl, e) }
-
 
     // arithm
     | e1=expr ADD e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PEAdd (e1,e2) }
@@ -125,24 +105,20 @@
     | e1=expr LTE e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PELte (e1,e2) }
     | e1=expr GT e2=expr 			  { loce $startpos $endpos @@ Parse_tree.PEGt (e1,e2) }
     | e1=expr GTE e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PEGte (e1,e2) }
-    | e1=expr EQEQ e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PEEq (e1,e2) }
+    | e1=expr EQ e2=expr 			  { loce $startpos $endpos @@ Parse_tree.PEEq (e1,e2) }
     | e1=expr NEQ e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PENeq (e1,e2) }
 
     // if then else
     | IF c=expr THEN e1=expr ELSE e2=expr 
                                 { loce $startpos $endpos @@ Parse_tree.PEIfThenElse (c,e1,e2) }
 
-		// match with
-		| MATCH c=expr WITH PIPE cl=separated_nonempty_list(PIPE, match_case) 
-		| MATCH c=expr WITH cl=separated_nonempty_list(PIPE, match_case) 
-																{ loce $startpos $endpos @@ Parse_tree.PEMatchWith (c, cl) }
 
-    // | i=MIDENT DOT i2=IDENT     { loce $startpos $endpos @@ Parse_tree.PEModRef (i, i2) }
     | i=IDENT 						      { loce $startpos $endpos @@ Parse_tree.PERef (i) }
     | e=left DOT i=IDENT 				{ loce $startpos $endpos @@ Parse_tree.PEDot (e, i) }
     | e=expr DOT i=IDENT 				{ loce $startpos $endpos @@ Parse_tree.PEDot (e, i) }
 
     // apply a function
+    // | i=left p=expr  			                                { loce $startpos $endpos @@ PEApply(i, [p]) }
     | i=left LPAR p=separated_list(COMMA, expr) RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
     | i=expr LPAR p=separated_list(COMMA, expr) RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
 		
@@ -173,6 +149,3 @@
     | d=ddef            { locd $startpos $endpos d }
     | e=dexternal       { locd $startpos $endpos e }
     | o=dopen           { locd $startpos $endpos o }
-
-  // braced (S):
-  // | LPAR s=S RPAR { s }
