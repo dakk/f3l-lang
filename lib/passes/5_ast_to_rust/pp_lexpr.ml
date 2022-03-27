@@ -30,6 +30,9 @@ match e with
 | LocalRef (id) -> 
   fprintf fmt "%s" id
 
+| UnionValue (id) -> 
+  fprintf fmt "%s" id
+  
 | Unit -> 
   fprintf fmt "unit"
 
@@ -153,4 +156,4 @@ match e with
     pp_lexpr e 
     pp_lexpr e2
 
-| _ -> failwith "pp_lexpr: not implemented"
+| _ -> failwith ("Unable to translate to rust: " ^ show_expr e)

@@ -1,10 +1,12 @@
 open Ast
 open Ast_ttype
-open Helpers.Errors
 open Format
 open Helpers.Gen_utils
 
 let rec pp_ltype fmt (a: ttype) = match a with
+| TAny ->
+  fprintf fmt "any"
+
 | TUnit -> 
   fprintf fmt "unit"
 
@@ -44,5 +46,4 @@ let rec pp_ltype fmt (a: ttype) = match a with
     pp_ltype t1 
     pp_ltype t2
 
-| _ -> raise @@ TypeError (None, sprintf "Type '%s' is not translable to rust" (show_ttype a))
 
