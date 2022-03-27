@@ -1,7 +1,6 @@
 type iden = string [@@deriving show {with_path = false}]
 
 type ptype = 
-  | PTAny 
   | PTBuiltin of string               (* type name *)
   | PTPair of ptype * ptype           (* pair of other types *)
   | PTRecord of (string * ptype) list (* record is (iden * type) list *)
@@ -52,7 +51,7 @@ type pexpr =
 
   (* function apply *)
   | PEDot of pexpr * iden
-  | PEApply of pexpr * pexpr list
+  | PEApply of pexpr * pexpr
 
   | PELetIn of iden * ptype option * pexpr * pexpr
   | PELetPairIn of ((iden * ptype option) * (iden * ptype option)) * pexpr * pexpr

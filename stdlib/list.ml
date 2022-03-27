@@ -2,11 +2,9 @@ type 'a list = ('a, 'alist)
 
 let empty (v:unit) = (unit, unit)
 
-let hd (l: 'a list) = match l with 
-| (v, ll) -> v 
+let hd (l: 'a list) = fst l
 
-let tl (l: 'a list) = match l with 
-| (v, ll) -> ll
+let tl (l: 'a list) = snd l
 
 let length (l: 'a list) = match l with
 | (unit, unit) -> 0
@@ -19,7 +17,7 @@ let map (f: 'a -> 'b) (l: 'a list) =
         match l with 
         | (unit, unit) -> nl
         | (v, ll) -> mapl ll (cons nl (f v))
-    in mapl l List.empty
+    in mapl l []
 
 
 let filter (f: 'a -> bool) (l: 'a list) = 

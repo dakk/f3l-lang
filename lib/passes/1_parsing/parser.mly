@@ -4,12 +4,11 @@
 %}
 
 %token EOF
-// QUOTE SIZE HT ASTERISK AT GET HAS QUESTION ASSERT
 %token LBRACE, RBRACE, LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ, DOT, LSQUARE, RSQUARE
-%token TYPE, DEF, AND, OR, NOT, TRUE, FALSE, OF
-%token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
-%token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
-%token NEQ, UNIT, UNDERSCORE, TANY
+%token TYPE, AND, OR, NOT, TRUE, FALSE
+%token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE
+%token LTE, LT, GT, GTE, NONE, SOME, LET, IN
+%token NEQ, UNIT, TANY
 %token OPEN, EXTERNAL
 %token LAMBDA, FUN
 %token <string> STRING
@@ -19,12 +18,11 @@
 %token <float> FLOAT
 %token <string> CONT
 %token <string> IDENT
-%token <string> MIDENT
 
 %left NOT
 %left OR
 %left AND
-%left EQEQ, NEQ
+%left NEQ
 %left LTE, LT, GT, GTE
 %left ADD, SUB
 %left MOD
@@ -118,9 +116,10 @@
     | e=expr DOT i=IDENT 				{ loce $startpos $endpos @@ Parse_tree.PEDot (e, i) }
 
     // apply a function
-    // | i=left p=expr  			                                { loce $startpos $endpos @@ PEApply(i, [p]) }
-    | i=left LPAR p=separated_list(COMMA, expr) RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
-    | i=expr LPAR p=separated_list(COMMA, expr) RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
+    // | i=left p=expr  			                                { loce $startpos $endpos @@ PEApply(i, p) }
+    // | i=expr p=expr  			                                { loce $startpos $endpos @@ PEApply(i, p) }
+    | i=left LPAR p=expr RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
+    | i=expr LPAR p=expr RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
 		
     | LPAR e=expr RPAR 				  { loce $startpos $endpos @@ e }
     | LPAR v=expr COLON t=type_sig RPAR { loce $startpos $endpos @@ Parse_tree.PETyped (v, t) }

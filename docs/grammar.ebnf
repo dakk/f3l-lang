@@ -57,8 +57,8 @@
          | IDENT
          | <left> DOT IDENT
          | <expr> DOT IDENT
-         | <left> LPAR [<expr> (COMMA <expr>)*] RPAR
-         | <expr> LPAR [<expr> (COMMA <expr>)*] RPAR
+         | <left> LPAR <expr> RPAR
+         | <expr> LPAR <expr> RPAR
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
 

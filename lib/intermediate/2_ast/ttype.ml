@@ -68,11 +68,13 @@ let pp_ttype fmt (t: ttype) = Format.pp_print_string fmt (show_ttype t); ()
 
 let compare t1 t2 = t1 = t2
 
-let compare_type_lazy t t' = (match t', t with 
+let compare_lazy t t' = match t', t with 
   | TList(_), TList(TAny) -> true 
-  | a, b when a=b -> true
-  | _, _ -> false
-) 
+  | TPair(a, TAny), TPair (c, b) -> a = c
+  | TPair(a, b), TPair (c, TAny) -> a = c
+  | TAny, _ -> true
+  | _, TAny -> true
+  | a, b -> a = b
 
 let compare_list t1 t2 = 
   if List.length t1 = 1 && List.length t2 == 0 && List.hd t1 = TUnit then true 

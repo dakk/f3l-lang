@@ -273,19 +273,19 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
   (* native functions *)
   | PEApply (PERef("fst"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "fst needs only one argument");
-    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
+    let (tt1, ee1) = transform_expr c env' ic in 
     (match tt1 with 
     | TPair(a, b) -> a, PairFst ((tt1, ee1))
-    | _ -> raise @@ TypeError (pel, "fst needs a TPair " ^ show_ttype_between_na tt1 @@ TPair(TAny, TAny)))
+    | TAny -> TPair(TAny, TAny), PairFst ((tt1, ee1))
+    | _ -> raise @@ TypeError (pel, "fst wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
     
 
   | PEApply (PERef("snd"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "snd needs only one argument");
-    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
+    let (tt1, ee1) = transform_expr c env' ic in 
     (match tt1 with 
     | TPair(a, b) -> b, PairSnd ((tt1, ee1))
-    | _ -> raise @@ TypeError (pel, "snd needs a TPair " ^ show_ttype_between_na tt1 @@ TPair(TAny, TAny)))
+    | TAny -> TPair(TAny, TAny), PairSnd ((tt1, ee1))
+    | _ -> raise @@ TypeError (pel, "snd wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
     
 
   (* | PEApply (PERef("abs"), c) -> 
@@ -366,26 +366,24 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
       
 
-  | PEApply (e, el) -> 
+  | PEApply (e, c) -> 
     let (tt,ee) = transform_expr e env' ic in  
     (match tt with
 
     (* Apply on lambda  *)
     | TLambda (arv, rettype) -> 
-      let argl = argv_to_list arv in 
-      let ap = el |> transform_expr_list in
-      if not (List.length ap = 0 && List.length argl = 1 && List.hd argl = TUnit) && List.length argl <> List.length ap then 
-        raise @@ InvalidExpression (pel, "Invalid argument number for lambda apply");
-      if not @@ Ast_ttype.compare_list argl (fst @@ List.split ap) then 
-        raise @@ TypeError (pel, "Invalid argument types apply");
-      if List.length argl = 1 && List.hd argl = TUnit then 
+      let argl = arv in 
+      let ap = transform_expr c env' ic in
+      if not @@ Ast_ttype.compare_lazy argl (fst ap) then 
+        raise @@ TypeError (pel, "Invalid argument types apply; " ^ show_ttype_got_expect argl (fst ap));
+      (* if List.length argl = 1 && List.hd argl = TUnit then 
         rettype, Apply ((tt,ee), (TUnit, Unit))
       else if List.length argl == 2 then 
         rettype, Apply((tt, ee), (TPair(List.hd argl, List.hd (List.tl argl)), Pair(List.hd ap, List.hd (List.tl ap))))
       else if (List.length ap) = 0 && (List.length argl) = 0 then
         rettype, Apply((tt, ee), (TUnit, Unit))
-      else
-        rettype, Apply((tt, ee), List.hd ap)
+      else *)
+        rettype, Apply((tt, ee), ap)
 
     | _ -> raise @@ TypeError (pel, "Applying on not a lambda: " ^ show_ttype tt)
     
@@ -411,7 +409,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PELetIn(i, top, e, e1) -> 
     let (tt, ee) = transform_expr e env' ic in 
     let t' = match top with | None -> tt | Some(t) -> transform_type t env' in
-    if not @@ compare_type_lazy tt t' then raise @@ TypeError (pel, "LetIn type mismatch; " ^ show_ttype_got_expect tt t');
+    if not @@ compare_lazy tt t' then raise @@ TypeError (pel, "LetIn type mismatch; " ^ show_ttype_got_expect tt t');
     let (tt1, ee1) = transform_expr e1 env' @@ push_ic i (Local(t')) ic in 
     tt1, LetIn (i, t', (tt, ee), (tt1, ee1))
 
