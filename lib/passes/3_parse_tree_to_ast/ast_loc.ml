@@ -2,7 +2,6 @@ open Ast
 open Ast_expr 
 open Ast_ttype
 open Lexing
-open Printf
 
 module AstEmp = struct 
   type t = | Def of iden * texpr | Expr of texpr

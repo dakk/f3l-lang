@@ -4,7 +4,7 @@
 %}
 
 %token EOF
-%token LBRACE, RBRACE, LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ, DOT, LSQUARE, RSQUARE
+%token LBRACE, RBRACE, LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ, DOT
 %token TYPE, AND, OR, NOT, TRUE, FALSE
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE
 %token LTE, LT, GT, GTE, LET, IN
@@ -16,7 +16,6 @@
 %token <int> INT
 %token <int> NAT
 %token <float> FLOAT
-%token <string> CONT
 %token <string> IDENT
 
 %left NOT
@@ -44,7 +43,6 @@
   type_sig:
     | TANY                                          { Parse_tree.PTBuiltin ("'a") }
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
-    | bt=type_expr c=CONT                           { Parse_tree.PTCont (c, bt) }
     | LPAR t1=type_sig MUL t2=type_sig RPAR         { Parse_tree.PTPair (t1, t2) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, parameter) RBRACE
                                                     { Parse_tree.PTRecord (tl)}
@@ -124,10 +122,10 @@
 
   dtype:
     | TYPE TANY x=ident EQ tl=type_sig 
-      { Parse_tree.DType (x, tl, true) }
+      { Parse_tree.DType (x, tl) }
 
     | TYPE x=IDENT EQ tl=type_sig
-      { Parse_tree.DType (x, tl, false) }
+      { Parse_tree.DType (x, tl) }
 
   ddef:
     | LET x=IDENT COLON t=type_expr EQ v=expr

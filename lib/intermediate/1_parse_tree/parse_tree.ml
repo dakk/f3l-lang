@@ -4,7 +4,6 @@ type ptype =
   | PTBuiltin of string               (* type name *)
   | PTPair of ptype * ptype           (* pair of other types *)
   | PTRecord of (string * ptype) list (* record is (iden * type) list *)
-  | PTCont of string * ptype          (* container type * inner_type *)
   | PTUnion of string list
   | PTLambda of ptype * ptype
   [@@deriving show {with_path = false}]
@@ -53,7 +52,7 @@ type pexpr =
 type declaration = 
   | DOpen of string
   | DDef of iden * ptype option * pexpr * bool
-  | DType of iden * ptype * bool (* iden * typedef * polymorphic *)
+  | DType of iden * ptype (* iden * typedef *)
   | DExternal of iden * ptype * string
 [@@deriving show {with_path = false}]
 

@@ -9,7 +9,6 @@
 
 <type_sig> ::= TANY
              | <ident>
-             | <type_expr> CONT
              | LPAR <type_sig> MUL <type_sig> RPAR
              | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
              | <ident> PIPE <ident> (PIPE <ident>)*

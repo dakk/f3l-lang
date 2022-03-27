@@ -1,5 +1,4 @@
 open Printf
-open Helpers.Errors
 
 type options = {
   target: string option;
@@ -82,10 +81,10 @@ let compile (filename: string) opt =
     (* output to a final language - first pass *)
     |> (fun ast -> 
       match opt.target with 
-      | None -> ""
       | Some ("rust") -> 
         if opt.verbose then printf "===> Generating rust code\n\n%!";        
         Passes.Ast_to_rust.generate_rust ast
+      | _ -> ""
     )
     |> print_endline
 

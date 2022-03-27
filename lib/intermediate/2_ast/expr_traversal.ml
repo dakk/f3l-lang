@@ -12,12 +12,10 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Record (a) -> 
     List.fold_left (fun acc e -> jf (traverse' @@ snd e) acc) empty a
 
-  | List (a) -> 
-    List.fold_left (fun acc e -> jf (traverse' e) acc) empty a
-
   | Bool (_)
   | Nat (_)
   | Int (_)
+  | Float (_)
   | String (_)
   | Bytes (_)
   | Typed (_)
@@ -31,6 +29,7 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | RecordAccess (a, _)
   | PairFst (a)
   | PairSnd (a)
+  | Not (a)
     -> traverse' a
 
   | Add (a, b)

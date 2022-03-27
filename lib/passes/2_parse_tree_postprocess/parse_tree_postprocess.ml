@@ -1,4 +1,3 @@
-open Parse_tree
 open Helpers.Errors
 
 (* find file m in paths ip *)

@@ -14,7 +14,6 @@ type expr =
 | String of string
 | Bytes of bytes
 | Typed of texpr * ttype
-| List of texpr list 
 | Pair of texpr * texpr
 | Lambda of (iden * ttype) list * texpr
 | Record of (iden * texpr) list
@@ -22,14 +21,6 @@ type expr =
 | RecordAccess of texpr * iden
 
 
-(* list *)
-(* | ListSize of texpr
-| ListPrepend of texpr * texpr
-| ListMapWith of texpr * texpr
-| ListHead of texpr
-| ListTail of texpr
-| ListFold of texpr * texpr * texpr
-| ListFilter of texpr * texpr *)
 
 (* string *)
 (* | StringConcat of texpr * texpr 

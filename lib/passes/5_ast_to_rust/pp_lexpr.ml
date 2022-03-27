@@ -1,8 +1,6 @@
 open Ast
 open Ast_ttype
 open Ast_expr
-open Helpers.Errors
-open Parsing
 open Format
 open Helpers.Gen_utils
 open Pp_ltype
@@ -10,8 +8,8 @@ open Pp_ltype
 
 let rec enum_index e i ii = match e with 
 | [] -> failwith "Enum value not found"
-| x::xe when x = i -> ii
-| x::xe -> enum_index xe i (ii+1)
+| x::_ when x = i -> ii
+| _::xe -> enum_index xe i (ii+1)
 
 let pp_par fmt ((ti, tt): string * ttype) = 
   fprintf fmt "%s: %a" ti pp_ltype tt
@@ -23,8 +21,7 @@ let pp_mpar fmt il =
 
 
 
-let rec pp_lexpr fmt ((te,e): texpr) = 
-  let let_surround fmt s = fprintf fmt "let %s = @[%a@] in " (temp_v ()) pp_lexpr s in
+let rec pp_lexpr fmt ((_,e): texpr) = 
   let pp_infix2 fmt op a b = fprintf fmt "(%a) %s (%a)" pp_lexpr a op pp_lexpr b in
   
 match e with
@@ -51,7 +48,6 @@ match e with
 | String (s) -> 
   fprintf fmt "\"%s\"" s
 
-
 | Bytes (s) -> 
   fprintf fmt "(\"%s\": bytes)" (Bytes.to_string s)
 
@@ -63,9 +59,6 @@ match e with
     pp_lexpr e
     pp_ltype t
   
-| List (el) -> 
-  fprintf fmt "[ %a ]" (pp_list "; " pp_lexpr) el
-
 | Pair (e1, e2) -> 
   fprintf fmt "( %a, %a )" 
     pp_lexpr e1
@@ -90,11 +83,12 @@ match e with
     i
 
 
-(* pair *)
-(*
-| PairFst of expr
-| PairSnd of expr
-*)
+| PairFst (e) -> 
+  fprintf fmt "fst %a" pp_lexpr e
+
+| PairSnd (e) ->
+  fprintf fmt "snd %a" pp_lexpr e
+
 
 (* aritmetic *) 
 | Add(a,b) -> 
@@ -159,3 +153,4 @@ match e with
     pp_lexpr e 
     pp_lexpr e2
 
+| _ -> failwith "pp_lexpr: not implemented"

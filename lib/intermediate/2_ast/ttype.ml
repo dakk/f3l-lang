@@ -63,8 +63,8 @@ let pp_ttype fmt (t: ttype) = Format.pp_print_string fmt (show_ttype t); ()
 let compare t1 t2 = t1 = t2
 
 let compare_lazy t t' = match t', t with 
-  | TPair(a, TAny), TPair (c, b) -> a = c
-  | TPair(a, b), TPair (c, TAny) -> a = c
+  | TPair(a, TAny), TPair (c, _) -> a = c
+  | TPair(a, _), TPair (c, TAny) -> a = c
   | TAny, _ -> true
   | _, TAny -> true
   | a, b -> a = b

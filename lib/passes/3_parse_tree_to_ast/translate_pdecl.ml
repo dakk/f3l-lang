@@ -5,12 +5,11 @@ open Translate_pexpr
 open Translate_ptype
 open Helpers.Errors
 open Parsing
-open Parse_tree
 
 let rec transform (p: Parse_tree.t) (e: Env.t): Env.t = 
   match p with 
   (* type definition *)
-  | Parse_tree.DType (id, t, poly) :: p' -> (
+  | Parse_tree.DType (id, t) :: p' -> (
     Env.assert_symbol_absence e id;
 
     let tt = transform_type t e in 
@@ -69,5 +68,8 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
       symbols=(id, External)::e.symbols;
       externals=(id, tt, n)::e.externals;
     }
+
+  | Parse_tree.DOpen (_) :: p' -> 
+    transform p' e
 
   | [] -> e

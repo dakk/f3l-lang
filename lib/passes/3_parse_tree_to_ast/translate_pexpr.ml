@@ -28,13 +28,11 @@ let binding_find ic (st: ireft) i: iref option =
     | ILocal, Local(_) when i=a -> true
     | _, _ -> false
   ) ic) with 
-  | Some(a,b) -> Some(b)
+  | Some(_,b) -> Some(b)
   | None -> None
 
 (* transform an pexpr to (ttype * expr) *)
 let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : texpr = 
-  let argv_to_list pel = match pel with | TPair(t1, t2) -> [t1;t2] | _ -> [pel] in
-  let transform_expr_list pel = List.map (fun p -> transform_expr p env' ic) pel in
   let transform_iexpr_list pel = List.map (fun (i, p) -> i, transform_expr p env' ic) pel in
   let transform_itype_list pel = List.map (fun (i, p) -> i, transform_type p env') pel in
   let push_ic i ii ic = (i, ii)::(List.remove_assoc i ic) in
@@ -45,13 +43,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     (match (attributes tt1).cmp, (attributes tt2).cmp with 
     | true, true -> ()
     | _, _ -> raise @@ TypeError (pel, show_ttype_not_cmp tt1 tt2))
-  in
-  let fold_container_type debs l =
-    List.fold_left (fun acc xt -> if acc <> xt then 
-      raise @@ TypeError (pel, debs ^ " must have the same type: " ^ show_ttype acc ^ " <> " ^ show_ttype xt)
-    else 
-      xt
-    ) (List.hd l) l
   in
   let r = (match pe with
 
@@ -87,12 +78,13 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | 2 -> 
         let vv = snd @@ List.split rl in
         TPair (List.hd vv, List.hd (List.tl vv))
+      | _ -> raise @@ TypeError (pel, "Too many arguments for lambda")
     ) in
     TLambda (arg, tt), Lambda(rl, (tt, ee))
 
   | PERecord (l) -> 
     let l' = l |> transform_iexpr_list in 
-    let (idtt, idee) = List.map (fun (i, (tt, ee)) -> (i, tt), (i, ee)) l' |> List.split in
+    let (idtt, _) = List.map (fun (i, (tt, ee)) -> (i, tt), (i, ee)) l' |> List.split in
     TRecord (idtt), Record (l')
 
 
@@ -251,7 +243,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     (match binding_find ic ILocal i with 
     | None -> let ref = Env.get_ref i env' in ref, GlobalRef (i)
     | Some (Local(t)) -> t, LocalRef (i)
-    | _ -> raise @@ SymbolNotFound (pel, "Symbol '" ^ i ^ "' is not a valid ref")
     )
 
   (* native functions *)
@@ -301,7 +292,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr e1 env' @@ push_ic i (Local(t')) ic in 
     tt1, LetIn (i, t', (tt, ee), (tt1, ee1))
 
-  | ex -> raise @@ InvalidExpression (pel, "Expression not handled yet: " ^ Parse_tree.show_pexpr ex)
   ) in 
 match pel with 
 | Some(p, _, _, _) -> Ast_loc.loce p r

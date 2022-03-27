@@ -1,6 +1,4 @@
 open Lexing
-open Lexer
-open Parse_tree
 open Helpers.Errors
 
 module Pt_loc = Pt_loc

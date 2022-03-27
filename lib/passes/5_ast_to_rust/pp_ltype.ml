@@ -1,8 +1,6 @@
 open Ast
 open Ast_ttype
-open Ast_expr
 open Helpers.Errors
-open Parsing
 open Format
 open Helpers.Gen_utils
 
@@ -33,7 +31,7 @@ let rec pp_ltype fmt (a: ttype) = match a with
     pp_ltype p
     pp_ltype r
 
-| TUnion (el) -> 
+| TUnion (_) -> 
   fprintf fmt "nat"
 
 

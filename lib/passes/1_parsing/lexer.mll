@@ -6,7 +6,6 @@
 
   let reserved = [
     "type"; 
-		"list";
     "open";
     "extern";
 		"let";
@@ -61,7 +60,6 @@ rule token = parse
   | "external"      { EXTERNAL }
   | "open"          { OPEN }
   | "type"          { TYPE }
-  | "list"          { CONT "list" }
   | "if"				  	{ IF }
   | "then"				  { THEN }
   | "else"				  { ELSE }
@@ -77,8 +75,6 @@ rule token = parse
   | "->"				 	 	{ LAMBDA }
   | "{"             { LBRACE }
   | "}"             { RBRACE }
-  | "["					  	{ LSQUARE }
-  | "]"					  	{ RSQUARE }
   | "."					  	{ DOT }
   | "("             { LPAR }
   | ")"             { RPAR }
