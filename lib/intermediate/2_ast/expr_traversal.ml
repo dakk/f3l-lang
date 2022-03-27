@@ -10,10 +10,10 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
       tf (t, e)
     with | _ -> match e with
   | Record (a) -> 
-    (List.fold_left (fun acc e -> jf (traverse' @@ snd e) acc) empty a)
+    List.fold_left (fun acc e -> jf (traverse' @@ snd e) acc) empty a
 
   | List (a) -> 
-    (List.fold_left (fun acc e -> jf (traverse' e) acc) empty a)
+    List.fold_left (fun acc e -> jf (traverse' e) acc) empty a
 
   | Bool (_)
   | Nat (_)
@@ -31,29 +31,10 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Lambda (_, a)
   | Some (a)
   | RecordAccess (a, _)
-  | OptionGetSome (a) 
-  | OptionIsNone (a)
-  | OptionIsSome (a)
-  | ListSize (a)
-  | ListHead (a)
-  | ListTail (a)
-  | StringSize (a)
-  | BytesSize (a)
-  | BytesPack (a)
-  | BytesUnpack (a)
   | PairFst (a)
   | PairSnd (a)
-  | Abs (a)
-  | Neg (a)
-  | IsNat (a)
-  | Not (a)
-  | ToInt (a) -> traverse' a
+    -> traverse' a
 
-  | ListPrepend (a, b)
-  | ListMapWith (a, b)
-  | StringConcat (a, b) 
-  | BytesConcat (a, b)
-  | ListFilter (a, b)
   | Add (a, b)
   | Sub (a, b)
   | Mul (a, b)
@@ -72,9 +53,6 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | LetIn (_, _, a, b)
   | Pair (a, b) -> jf (traverse' a) (traverse' b)
 
-  | ListFold (a, b, c)
-  | StringSlice (a, b, c)
-  | BytesSlice (a, b, c)
   | IfThenElse (a, b, c) -> jf (jf (traverse' a) (traverse' b)) (traverse' c)
   in traverse' te
 

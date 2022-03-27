@@ -45,7 +45,7 @@ let () =
       "types", `Quick, compile opt None "test/type/types.ml" None;
     ];
     "expression", [
-      "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml" None;
+      (* "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml" None; *)
       "record", `Quick, compile opt None "test/expr/record.ml" None;
       "literal", `Quick, compile opt None "test/expr/literal.ml" None;
       "literal_untyped", `Quick, compile opt None "test/expr/literal_untyped.ml" None;

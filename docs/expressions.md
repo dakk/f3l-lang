@@ -1,6 +1,6 @@
 # Expressions
 
 
-```text
+```ocaml
 let a = 12 in a
 ```

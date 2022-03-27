@@ -110,56 +110,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (idtt, idee) = List.map (fun (i, (tt, ee)) -> (i, tt), (i, ee)) l' |> List.split in
     TRecord (idtt), Record (l')
 
-  (* PEDot on base *) 
-  | PEApply (PEDot (PERef("Bytes"), "pack"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "Bytes.pack needs only one argument");
-    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
-    (* TODO: check for pack attribute *)
-    TBytes, BytesPack((tt1, ee1))
-  | PEApply (PEDot (PERef("Bytes"), "unpack"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "Bytes.unpack needs only one arguments");
-    let (tt2, ee2) = transform_expr (List.hd c) env' ic in 
-    if tt2 <> TBytes then  raise @@ TypeError (pel, "unpack needs a bytes expression, got: " ^ show_ttype tt2);
-    TOption(TAny), BytesUnpack((tt2, ee2))
 
 
-  (* PEApply(PEDot) base type apis *)
-  (* | PEApply (PEDot(e,i), el) -> 
-    let (te, ee) = transform_expr e env' ic in
-    let el' = el |> transform_expr_list in 
-    (match ee, te, i, el' with 
-      | _, TOption (ts), "getSome", [] -> ts, OptionGetSome(te, ee)
-      | _, TOption (ts), "isSome", [] -> TBool, OptionIsSome(te, ee)
-      | _, TOption (ts), "isNone", [] -> TBool, OptionIsNone(te, ee)
-
-      (* List *)
-      | _, TList (_), "size", [] -> TNat, ListSize (te, ee)
-      | _, TList (l), "head", [] -> l, ListHead (te, ee)
-      | _, TList (l), "tail", [] -> TList (l), ListTail (te, ee)
-      (* | _, TList (l), "fold", [(TLambda (TPair([ll; rt']), rt), lame); (ft, ff)] when l=ll && rt=rt' && rt=ft -> 
-        ft, ListFold((te, ee), (TLambda (TPair([ll; rt']), rt), lame), (ft, ff)) *)
-
-      | _, TList (l), "prepend", [(ll, e)] when ll = l -> 
-        TList (l), ListPrepend ((te, ee), (ll, e))
-
-      | _, TList (l), "mapWith", [(TLambda (ll, rt), lame)] when l = ll -> 
-        TList (rt), ListMapWith ((te, ee), (TLambda (ll, rt), lame))
-
-      | _, TList (l), "filter", [(TLambda (ll, TBool), lame)] when l=ll -> 
-        TList (l), ListFilter((te, ee), (TLambda (ll, TBool), lame))
-
-
-      (* String *)
-      | _, TString, "slice", [(TInt, i1); (TInt, i2)] -> TString, StringSlice ((te, ee), (TNat, i1), (TNat, i2))
-      | _, TString, "size", [] -> TNat, StringSize(te, ee)
-
-      (* Bytes *)
-      | _, TBytes, "slice", [(TInt, i1); (TInt, i2)] -> TBytes, BytesSlice ((te, ee), (TNat, i1), (TNat, i2))
-      | _, TBytes, "size", [] -> TNat, BytesSize(te, ee)
-
-      | _, _, i, _-> 
-        raise @@ TypeError (pel, "Invalid apply of " ^ i ^ " over '" ^ show_ttype te ^ "'")
-    ) *)
 
   (* PEDot *)
   | PEDot (e, i) -> 
@@ -185,13 +137,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | TInt, TNat -> TInt
       | TInt, TInt -> TInt
       | TFloat, TFloat -> TFloat
-      | TString, TString -> TString 
-      | TBytes, TBytes -> TBytes 
       | _, _ -> raise @@ TypeError (pel, "Add " ^ show_ttype_between_na tt1 tt2)
     ) in
-    if tt1 = TString then rt, StringConcat ((tt1, ee1), (tt2, ee2)) else 
-    if tt1 = TBytes then rt, BytesConcat ((tt1, ee1), (tt2, ee2))
-    else rt, Add ((tt1, ee1), (tt2, ee2))
+    rt, Add ((tt1, ee1), (tt2, ee2))
 
   | PEMul (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
@@ -323,7 +271,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     | _ -> raise @@ SymbolNotFound (pel, "Symbol '" ^ i ^ "' is not a valid ref")
     )
 
-  (* apply *)
+  (* native functions *)
   | PEApply (PERef("fst"), c) -> 
     if List.length c <> 1 then raise @@ APIError (pel, "fst needs only one argument");
     let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
@@ -365,6 +313,56 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
     if tt1 <> TInt then raise @@ TypeError (pel, "isNat " ^ show_ttype_between_na tt1 TNat);
     TBool, ToInt ((tt1, ee1)) *)
+
+  (* PEDot on base *) 
+  (* | PEApply (PEDot (PERef("Bytes"), "pack"), c) -> 
+    if List.length c <> 1 then raise @@ APIError (pel, "Bytes.pack needs only one argument");
+    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
+    (* TODO: check for pack attribute *)
+    TBytes, BytesPack((tt1, ee1))
+  | PEApply (PEDot (PERef("Bytes"), "unpack"), c) -> 
+    if List.length c <> 1 then raise @@ APIError (pel, "Bytes.unpack needs only one arguments");
+    let (tt2, ee2) = transform_expr (List.hd c) env' ic in 
+    if tt2 <> TBytes then  raise @@ TypeError (pel, "unpack needs a bytes expression, got: " ^ show_ttype tt2);
+    TOption(TAny), BytesUnpack((tt2, ee2)) *)
+
+  (* PEApply(PEDot) base type apis *)
+  (* | PEApply (PEDot(e,i), el) -> 
+    let (te, ee) = transform_expr e env' ic in
+    let el' = el |> transform_expr_list in 
+    (match ee, te, i, el' with 
+      | _, TOption (ts), "getSome", [] -> ts, OptionGetSome(te, ee)
+      | _, TOption (ts), "isSome", [] -> TBool, OptionIsSome(te, ee)
+      | _, TOption (ts), "isNone", [] -> TBool, OptionIsNone(te, ee)
+
+      (* List *)
+      | _, TList (_), "size", [] -> TNat, ListSize (te, ee)
+      | _, TList (l), "head", [] -> l, ListHead (te, ee)
+      | _, TList (l), "tail", [] -> TList (l), ListTail (te, ee)
+      (* | _, TList (l), "fold", [(TLambda (TPair([ll; rt']), rt), lame); (ft, ff)] when l=ll && rt=rt' && rt=ft -> 
+        ft, ListFold((te, ee), (TLambda (TPair([ll; rt']), rt), lame), (ft, ff)) *)
+
+      | _, TList (l), "prepend", [(ll, e)] when ll = l -> 
+        TList (l), ListPrepend ((te, ee), (ll, e))
+
+      | _, TList (l), "mapWith", [(TLambda (ll, rt), lame)] when l = ll -> 
+        TList (rt), ListMapWith ((te, ee), (TLambda (ll, rt), lame))
+
+      | _, TList (l), "filter", [(TLambda (ll, TBool), lame)] when l=ll -> 
+        TList (l), ListFilter((te, ee), (TLambda (ll, TBool), lame))
+
+
+      (* String *)
+      | _, TString, "slice", [(TInt, i1); (TInt, i2)] -> TString, StringSlice ((te, ee), (TNat, i1), (TNat, i2))
+      | _, TString, "size", [] -> TNat, StringSize(te, ee)
+
+      (* Bytes *)
+      | _, TBytes, "slice", [(TInt, i1); (TInt, i2)] -> TBytes, BytesSlice ((te, ee), (TNat, i1), (TNat, i2))
+      | _, TBytes, "size", [] -> TNat, BytesSize(te, ee)
+
+      | _, _, i, _-> 
+        raise @@ TypeError (pel, "Invalid apply of " ^ i ^ " over '" ^ show_ttype te ^ "'")
+    ) *)
 
       
 

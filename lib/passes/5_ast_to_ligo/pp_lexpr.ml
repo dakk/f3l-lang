@@ -29,7 +29,6 @@ let rec pp_lexpr fmt ((te,e): texpr) =
   
 match e with
 
-   
 | GlobalRef (id)
 | LocalRef (id) -> 
   fprintf fmt "%s" id
@@ -95,76 +94,6 @@ match e with
     pp_lexpr e 
     i
 
-(* option *)
-| OptionGetSome (oe) -> 
-  fprintf fmt "(match (%a) with | Some(v) -> v | None -> failwith \"Expect some value\")" 
-    pp_lexpr oe
-
-| OptionIsSome(oe) -> 
-  fprintf fmt "(match (%a) with | Some(v) -> true | None -> false)" 
-    pp_lexpr oe
-
-| OptionIsNone(oe) -> 
-  fprintf fmt "(match (%a) with | Some(v) -> true | None -> true)" 
-    pp_lexpr oe
-
-
-(* list *)
-| ListMapWith (le, ll) -> 
-  fprintf fmt "List.map (%a) (%a)" 
-    pp_lexpr ll
-    pp_lexpr le
-
-| ListPrepend (le, el) -> 
-  fprintf fmt "(%a) :: (%a)"
-    pp_lexpr el 
-    pp_lexpr le
-
-| ListSize (le) ->
-  fprintf fmt "List.size (%a)" pp_lexpr le
-
-| ListFold (le, ll, initial) -> 
-  fprintf fmt "List.fold (%a) (%a) (%a)" 
-    pp_lexpr ll
-    pp_lexpr le
-    pp_lexpr initial
-
-| ListFilter ((TList(lt), le), ll) ->
-  fprintf fmt "List.fold (fun (acc, e: %a * %a) -> if (%a)(e) then e::acc else acc) (%a) ([]: %a)"
-    pp_ltype (TList(lt))
-    pp_ltype (lt)
-    pp_lexpr ll
-    pp_lexpr (TList(lt), le)
-    pp_ltype (TList(lt))
-
-(*
-| ListHead of expr
-| ListTail of expr
-
-(* string *)
-| StringSlice of expr * expr * expr
-*)
-| StringSize (s) -> 
-  fprintf fmt "String.length (%a)" pp_lexpr s
-
-| StringConcat (a, b) -> 
-  pp_infix2 fmt "^" a b
-
-(* bytes *)
-| BytesPack(a) -> 
-  fprintf fmt "Bytes.pack (%a)" pp_lexpr a
-
-| BytesUnpack(a) -> 
-  fprintf fmt "Bytes.unpack (%a)" pp_lexpr a
-
-| BytesSize (s) -> 
-  fprintf fmt "Bytes.length (%a)" pp_lexpr s
-
-(* BytesSlice(a,b,c) *)
-
-| BytesConcat (a, b) -> 
-  pp_infix2 fmt "^" a b
-
 
 (* pair *)
 (*
@@ -184,18 +113,6 @@ match e with
   
 | Div(a,b) -> 
   pp_infix2 fmt "/" a b
-  
-| Abs(a) -> 
-  fprintf fmt "abs(%a)" pp_lexpr a
-
-| ToInt(a) -> 
-  fprintf fmt "int(%a)" pp_lexpr a
-
-| IsNat(a) -> 
-  fprintf fmt "Michelson.is_nat(%a)" pp_lexpr a
-
-| Neg(a) -> 
-  fprintf fmt "- (%a)" pp_lexpr a
 
 | Mod (a, b) -> 
   pp_infix2 fmt "mod" a b

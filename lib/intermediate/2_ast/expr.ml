@@ -24,30 +24,36 @@ type expr =
 | RecordAccess of texpr * iden
 
 (* option *)
-| OptionGetSome of texpr 
+(* | OptionGetSome of texpr 
 | OptionIsNone of texpr
-| OptionIsSome of texpr
+| OptionIsSome of texpr *)
 
 (* list *)
-| ListSize of texpr
+(* | ListSize of texpr
 | ListPrepend of texpr * texpr
 | ListMapWith of texpr * texpr
 | ListHead of texpr
 | ListTail of texpr
 | ListFold of texpr * texpr * texpr
-| ListFilter of texpr * texpr
+| ListFilter of texpr * texpr *)
 
 (* string *)
-| StringConcat of texpr * texpr 
+(* | StringConcat of texpr * texpr 
 | StringSlice of texpr * texpr * texpr
-| StringSize of texpr
+| StringSize of texpr *)
 
 (* bytes *)
-| BytesConcat of texpr * texpr 
+(* | BytesConcat of texpr * texpr 
 | BytesSlice of texpr * texpr * texpr
 | BytesPack of texpr 
 | BytesSize of texpr
-| BytesUnpack of texpr
+| BytesUnpack of texpr *)
+
+(* | Abs of texpr
+| ToInt of texpr
+| Neg of texpr
+| IsNat of texpr *)
+
 
 (* pair *)
 | PairFst of texpr
@@ -61,10 +67,6 @@ type expr =
 | Mod of texpr * texpr
 | EDiv of texpr * texpr
 
-| Abs of texpr
-| ToInt of texpr
-| Neg of texpr
-| IsNat of texpr
 
 (* bool *)
 | And of texpr * texpr
