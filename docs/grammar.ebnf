@@ -38,13 +38,9 @@
          | FUN LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDA LPAR
            <expr> RPAR
          | LET IDENT COLON <type_sig> EQ <expr> IN <expr>
-         | LET IDENT COLON <type_sig> EQ <expr>
          | LET IDENT EQ <expr> IN <expr>
-         | LET IDENT EQ <expr>
          | LET LPAR <param_opt_typed> (COMMA <param_opt_typed>)* RPAR EQ
            <expr> IN <expr>
-         | LET LPAR <param_opt_typed> (COMMA <param_opt_typed>)* RPAR EQ
-           <expr>
          | <expr> ADD <expr>
          | <expr> SUB <expr>
          | <expr> DIV <expr>

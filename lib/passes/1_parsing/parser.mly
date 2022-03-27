@@ -87,14 +87,9 @@
 
 		// bindings 
 		| LET i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, Some(t), e, ee) }
-		| LET i=IDENT COLON t=type_sig EQ e=expr { loce $startpos $endpos @@ Parse_tree.PELet (i, Some(t), e) }
 		| LET i=IDENT EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, None, e, ee) }
-		| LET i=IDENT EQ e=expr { loce $startpos $endpos @@ Parse_tree.PELet (i, None, e) }
-
 		| LET LPAR tl=separated_nonempty_list(COMMA, param_opt_typed) RPAR EQ e=expr IN ee=expr 
 			{ loce $startpos $endpos @@ Parse_tree.PELetTupleIn (tl, e, ee) }
-		| LET LPAR tl=separated_nonempty_list(COMMA, param_opt_typed) RPAR EQ e=expr 
-			{ loce $startpos $endpos @@ Parse_tree.PELetTuple (tl, e) }
 
     // arithm
     | e1=expr ADD e2=expr 			{ loce $startpos $endpos @@ Parse_tree.PEAdd (e1,e2) }

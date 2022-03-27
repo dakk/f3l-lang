@@ -406,15 +406,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr e1 env' @@ push_ic i (Local(t')) ic in 
     tt1, LetIn (i, t', (tt, ee), (tt1, ee1))
 
-  | PELetTuple(tl, e) -> 
-    let (tt, ee) = transform_expr e env' ic in 
-    (* TODO optional types of tl are ignored! *)
-    let ti = fst @@ List.split tl in
-    (match tt with 
-      | TTuple(tl') -> tt, LetTuple(List.combine ti tl', (tt, ee))
-      | _ -> raise @@ TypeError (pel, "Expected a tuple")
-    )
-
   | PELetTupleIn(tl, e, e1) -> 
     let (tt, ee) = transform_expr e env' ic in 
     (* TODO optional types of tl are ignored! *)
