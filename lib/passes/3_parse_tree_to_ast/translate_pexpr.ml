@@ -351,13 +351,13 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let ref = Env.get_ref i env' in 
     (match ref with
     | TUnion(u) -> (
-      let (apt, apv) = el |> transform_expr_list |> List.hd in
+      let (apt, apv) = transform_expr (List.hd el) env' ic in
       let rec checki u' = match u' with
         | [] -> failwith "TODO: questo errore non esiste"
         | (ii, t)::u'' -> 
           if ii = i then 
             if t <> apt then 
-              raise @@ TypeError (pel, "Union '" ^ i ^ "' needs a value of different type; " ^ show_ttype_got_expect TUnit t)
+              raise @@ TypeError (pel, "Union '" ^ i ^ "' needs a value of different type; " ^ show_ttype_got_expect apt t)
             else
               TUnion(u), UnionValue(i, TUnion(u), (apt, apv))
           else checki u''

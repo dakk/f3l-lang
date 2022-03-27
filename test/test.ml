@@ -63,11 +63,11 @@ let () =
       "lambda_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/lambda_fail.ml" None;
       "expr", `Quick, compile opt None "test/def/expr.ml" None;
       "let_expr", `Quick, compile opt None "test/def/let_expr.ml" None;
-      "enum", `Quick, compile opt None "test/def/enum.ml" None;
-      "enum_typed", `Quick, compile opt None "test/def/enum_typed.ml" None;
-      "enum_typed_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/enum_typed_fail.ml" None;
-      "enum_typed_fail2", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/enum_typed_fail2.ml" None;
-      "enum_dup_fail", `Quick, compile opt (Some(DuplicateSymbolError(None, ""))) "test/def/enum_dup_fail.ml" None;
+      "union", `Quick, compile opt None "test/def/union.ml" None;
+      "union_typed", `Quick, compile opt None "test/def/union_typed.ml" None;
+      "union_typed_fail", `Quick, compile opt None "test/def/union_typed_fail.ml" None;
+      "union_typed_fail2", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/union_typed_fail2.ml" None;
+      "union_dup_fail", `Quick, compile opt (Some(DuplicateSymbolError(None, ""))) "test/def/union_dup_fail.ml" None;
       "infer", `Quick, compile opt None "test/def/infer.ml" None;
       "let_infer", `Quick, compile opt None "test/def/let_infer.ml" None;
     ];
