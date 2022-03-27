@@ -14,9 +14,6 @@
 		"in";
 		"true";
 		"false";
-		"and";
-		"or";
-		"not";
     "fun";
   ]
 
@@ -68,9 +65,9 @@ rule token = parse
   | "if"				  	{ IF }
   | "then"				  { THEN }
   | "else"				  { ELSE }
-  | "and"				  	{ AND }
-  | "or"				  	{ OR }
-  | "not"				  	{ NOT }
+  | "&&"				  	{ AND }
+  | "||"				  	{ OR }
+  | "!" 				  	{ NOT }
 	| "let"						{ LET }
 	| "in"						{ IN }
   | "fun"           { FUN }

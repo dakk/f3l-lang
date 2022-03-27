@@ -23,6 +23,10 @@ type pexpr =
   | PERecord of (iden * pexpr) list
 
   | PERef of iden
+  | PEIfThenElse of pexpr * pexpr * pexpr 
+  | PEDot of pexpr * iden
+  | PEApply of pexpr * pexpr
+  | PELetIn of iden * ptype option * pexpr * pexpr * bool
 
   (* aritmetic *)
   | PEAdd of pexpr * pexpr
@@ -42,15 +46,6 @@ type pexpr =
   | PEGte of pexpr * pexpr
   | PEEq of pexpr * pexpr
   | PENeq of pexpr * pexpr
-
-  (* ifthenelse expression *)
-  | PEIfThenElse of pexpr * pexpr * pexpr 
-
-  (* function apply *)
-  | PEDot of pexpr * iden
-  | PEApply of pexpr * pexpr
-
-  | PELetIn of iden * ptype option * pexpr * pexpr * bool
 
   [@@deriving show {with_path = false}]
 

@@ -98,11 +98,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
 
 
-  (* PEDot *)
+  (* PEDot record access *)
   | PEDot (e, i) -> 
     let (te, ee) = transform_expr e env' ic in
     (match te with 
-    (* PEDot record access *)
     | TRecord(t) -> 
       (match List.assoc_opt i t with 
         | None -> raise @@ TypeError (pel, "Unkown record field '" ^ i ^ "'")
@@ -256,20 +255,13 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     )
 
   (* native functions *)
-  | PEApply (PERef("fst"), c) -> 
+  | PEApply (PERef(nf), c) when nf = "fst" || nf = "snd" -> 
     let (tt1, ee1) = transform_expr c env' ic in 
+    let pres = (tt1, ee1) in 
     (match tt1 with 
-    | TPair(a, b) -> a, PairFst ((tt1, ee1))
-    | TAny -> TPair(TAny, TAny), PairFst ((tt1, ee1))
-    | _ -> raise @@ TypeError (pel, "fst wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
-    
-
-  | PEApply (PERef("snd"), c) -> 
-    let (tt1, ee1) = transform_expr c env' ic in 
-    (match tt1 with 
-    | TPair(a, b) -> b, PairSnd ((tt1, ee1))
-    | TAny -> TPair(TAny, TAny), PairSnd ((tt1, ee1))
-    | _ -> raise @@ TypeError (pel, "snd wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
+    | TPair(a, b) -> if nf = "fst" then a, PairFst (pres) else b, PairSnd (pres)
+    | TAny -> TPair(TAny, TAny), if nf = "fst" then PairFst (pres) else PairSnd (pres)
+    | _ -> raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
     
       
 
