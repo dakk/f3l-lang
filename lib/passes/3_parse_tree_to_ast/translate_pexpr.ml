@@ -54,11 +54,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     ) (List.hd l) l
   in
   let r = (match pe with
-  (* Option *)
-  | PENone -> TOption (TAny), None
-  | PESome (e) -> 
-    let (tt, te) = transform_expr e env' ic in
-    TOption (tt), Some (tt, te)
 
   (* Literals *)
   | PEUnit -> TUnit, Unit
@@ -87,8 +82,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt, ee) = transform_expr e env' ic in 
     let tt' = transform_type et env' in
     (match tt, tt', ee with 
-    | TOption (TAny), TOption(t), None -> TOption(t), None
-    | TOption (TAny), TOption(t), be -> TOption(t), be
     | TList (TAny), TList(t), ee -> TList(t), ee
     | a, b, _ when a=b -> a, ee
     | a, b, c -> raise @@ TypeError (pel, "Invalid cast from '" ^ show_ttype a ^ "' to '" ^ show_ttype b ^ "' for value: " ^ show_expr c))
@@ -158,10 +151,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
     let rt = (match tt1, tt2 with 
-      | TNat, TNat -> TOption(TPair(TNat, TNat))
-      | TNat, TInt -> TOption(TPair(TInt, TNat)) 
-      | TInt, TNat -> TOption(TPair(TInt, TNat)) 
-      | TInt, TInt -> TOption(TPair(TInt, TNat)) 
+      | TNat, TNat -> TPair(TNat, TNat)
+      | TNat, TInt -> TPair(TInt, TNat)
+      | TInt, TNat -> TPair(TInt, TNat)
+      | TInt, TInt -> TPair(TInt, TNat)
       | _, _ -> raise @@ TypeError (pel, "EDiv " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, EDiv ((tt1, ee1), (tt2, ee2))
@@ -170,10 +163,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
     let rt = (match tt1, tt2 with 
-      | TNat, TNat -> TOption(TPair(TNat, TNat))
-      | TNat, TInt -> TOption(TPair(TInt, TNat)) 
-      | TInt, TNat -> TOption(TPair(TInt, TNat)) 
-      | TInt, TInt -> TOption(TPair(TInt, TNat)) 
+      | TNat, TNat -> TPair(TNat, TNat)
+      | TNat, TInt -> TPair(TInt, TNat)
+      | TInt, TNat -> TPair(TInt, TNat)
+      | TInt, TInt -> TPair(TInt, TNat)
       | _, _ -> raise @@ TypeError (pel, "Div " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, Mod ((tt1, ee1), (tt2, ee2))
@@ -262,8 +255,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     TBool, Neq((tt1, ee1), (tt2, ee2))
     
 
-  (* symbol reference *)
-    
+  (* symbol reference *)    
   | PERef (i) -> 
     (match binding_find ic ILocal i with 
     | None -> let ref = Env.get_ref i env' in ref, GlobalRef (i)
@@ -287,90 +279,11 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     | TAny -> TPair(TAny, TAny), PairSnd ((tt1, ee1))
     | _ -> raise @@ TypeError (pel, "snd wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
     
-
-  (* | PEApply (PERef("abs"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "abs needs only one argument");
-    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
-    if tt1 <> TInt then raise @@ TypeError (pel, "Abs " ^ show_ttype_between_na tt1 TInt);
-    TNat, Abs ((tt1, ee1))
-
-  | PEApply (PERef("neg"), c) ->
-    if List.length c <> 1 then raise @@ APIError (pel, "neg needs only one argument");
-    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
-    (match tt1 with 
-    | TInt -> TInt, Neg((tt1,ee1))
-    | TNat -> TInt, Neg((tt1,ee1))
-    | _ -> raise @@ TypeError (pel, "neg needs an int or a nat, got: " ^ show_ttype tt1))
-
-  | PEApply (PERef("int"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "int needs only one argument");
-    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
-    if tt1 <> TNat then raise @@ TypeError (pel, "Int " ^ show_ttype_between_na tt1 TNat);
-    TInt, ToInt ((tt1, ee1))
-
-  | PEApply (PERef("isNat"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "isNat needs only one argument");
-    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
-    if tt1 <> TInt then raise @@ TypeError (pel, "isNat " ^ show_ttype_between_na tt1 TNat);
-    TBool, ToInt ((tt1, ee1)) *)
-
-  (* PEDot on base *) 
-  (* | PEApply (PEDot (PERef("Bytes"), "pack"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "Bytes.pack needs only one argument");
-    let (tt1, ee1) = transform_expr (List.hd c) env' ic in 
-    (* TODO: check for pack attribute *)
-    TBytes, BytesPack((tt1, ee1))
-  | PEApply (PEDot (PERef("Bytes"), "unpack"), c) -> 
-    if List.length c <> 1 then raise @@ APIError (pel, "Bytes.unpack needs only one arguments");
-    let (tt2, ee2) = transform_expr (List.hd c) env' ic in 
-    if tt2 <> TBytes then  raise @@ TypeError (pel, "unpack needs a bytes expression, got: " ^ show_ttype tt2);
-    TOption(TAny), BytesUnpack((tt2, ee2)) *)
-
-  (* PEApply(PEDot) base type apis *)
-  (* | PEApply (PEDot(e,i), el) -> 
-    let (te, ee) = transform_expr e env' ic in
-    let el' = el |> transform_expr_list in 
-    (match ee, te, i, el' with 
-      | _, TOption (ts), "getSome", [] -> ts, OptionGetSome(te, ee)
-      | _, TOption (ts), "isSome", [] -> TBool, OptionIsSome(te, ee)
-      | _, TOption (ts), "isNone", [] -> TBool, OptionIsNone(te, ee)
-
-      (* List *)
-      | _, TList (_), "size", [] -> TNat, ListSize (te, ee)
-      | _, TList (l), "head", [] -> l, ListHead (te, ee)
-      | _, TList (l), "tail", [] -> TList (l), ListTail (te, ee)
-      (* | _, TList (l), "fold", [(TLambda (TPair([ll; rt']), rt), lame); (ft, ff)] when l=ll && rt=rt' && rt=ft -> 
-        ft, ListFold((te, ee), (TLambda (TPair([ll; rt']), rt), lame), (ft, ff)) *)
-
-      | _, TList (l), "prepend", [(ll, e)] when ll = l -> 
-        TList (l), ListPrepend ((te, ee), (ll, e))
-
-      | _, TList (l), "mapWith", [(TLambda (ll, rt), lame)] when l = ll -> 
-        TList (rt), ListMapWith ((te, ee), (TLambda (ll, rt), lame))
-
-      | _, TList (l), "filter", [(TLambda (ll, TBool), lame)] when l=ll -> 
-        TList (l), ListFilter((te, ee), (TLambda (ll, TBool), lame))
-
-
-      (* String *)
-      | _, TString, "slice", [(TInt, i1); (TInt, i2)] -> TString, StringSlice ((te, ee), (TNat, i1), (TNat, i2))
-      | _, TString, "size", [] -> TNat, StringSize(te, ee)
-
-      (* Bytes *)
-      | _, TBytes, "slice", [(TInt, i1); (TInt, i2)] -> TBytes, BytesSlice ((te, ee), (TNat, i1), (TNat, i2))
-      | _, TBytes, "size", [] -> TNat, BytesSize(te, ee)
-
-      | _, _, i, _-> 
-        raise @@ TypeError (pel, "Invalid apply of " ^ i ^ " over '" ^ show_ttype te ^ "'")
-    ) *)
-
       
 
   | PEApply (e, c) -> 
     let (tt,ee) = transform_expr e env' ic in  
     (match tt with
-
-    (* Apply on lambda  *)
     | TLambda (arv, rettype) -> 
       let argl = arv in 
       let ap = transform_expr c env' ic in
@@ -380,8 +293,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
         rettype, Apply((tt, ee), ap)
 
     | _ -> raise @@ TypeError (pel, "Applying on not a lambda: " ^ show_ttype tt)
-    
-    (* (Parse_tree.show_pexpr (PEApply(e, el)))) *)
   )
   
 
@@ -399,13 +310,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
 
 
-  (* let-binding and sequences *)
   | PELetIn(i, top, e, e1, recursive) -> 
     let (tt, ee) = 
-      if recursive then 
-        transform_expr e env' ((i, Local (TLambda(TAny, TAny)))::ic)
-      else 
-        transform_expr e env' ic in 
+      if recursive then transform_expr e env' ((i, Local (TLambda(TAny, TAny)))::ic)
+      else transform_expr e env' ic in 
     let t' = match top with | None -> tt | Some(t) -> transform_type t env' in
     if not @@ compare_lazy tt t' then raise @@ TypeError (pel, "LetIn type mismatch; " ^ show_ttype_got_expect tt t');
     let (tt1, ee1) = transform_expr e1 env' @@ push_ic i (Local(t')) ic in 

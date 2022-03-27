@@ -33,9 +33,6 @@ match e with
 | LocalRef (id) -> 
   fprintf fmt "%s" id
 
-| None -> 
-  fprintf fmt "None"
-
 | Unit -> 
   fprintf fmt "unit"
 
@@ -54,8 +51,6 @@ match e with
 | String (s) -> 
   fprintf fmt "\"%s\"" s
 
-| Some(a) -> 
-  fprintf fmt "Some (%a)" pp_lexpr a
 
 | Bytes (s) -> 
   fprintf fmt "(\"%s\": bytes)" (Bytes.to_string s)

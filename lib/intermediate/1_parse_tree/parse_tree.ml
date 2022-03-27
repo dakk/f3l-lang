@@ -11,14 +11,12 @@ type ptype =
 
 type pexpr =
   | PEUnit
-  | PENone
   | PEBool of bool
   | PENat of int 
   | PEInt of int 
   | PEFloat of float
   | PEString of string
   | PEBytes of string
-  | PESome of pexpr
   | PETyped of pexpr * ptype
   | PEList of pexpr list 
   | PEPair of pexpr * pexpr

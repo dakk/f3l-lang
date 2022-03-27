@@ -8,7 +8,6 @@
     "type"; 
 		"list";
     "open";
-		"option";
     "extern";
 		"let";
     "rec";
@@ -66,15 +65,12 @@ rule token = parse
   | "open"          { OPEN }
   | "type"          { TYPE }
   | "list"          { CONT "list" }
-  | "option"        { CONT "option" }
   | "if"				  	{ IF }
   | "then"				  { THEN }
   | "else"				  { ELSE }
   | "and"				  	{ AND }
   | "or"				  	{ OR }
   | "not"				  	{ NOT }
-  | "Some"				  { SOME }
-  | "None"				  { NONE }
 	| "let"						{ LET }
 	| "in"						{ IN }
   | "fun"           { FUN }

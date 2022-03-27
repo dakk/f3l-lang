@@ -7,7 +7,7 @@ let opt = Compiler.{
   print_ast = true;
   verbose = false;
   no_remove_unused = true;
-  include_paths = ["."; "./test/module"];
+  include_paths = ["."; "./test/module"; "./test/expr"];
 }
 
 let optc = { opt with no_remove_unused = false }

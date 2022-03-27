@@ -30,8 +30,6 @@
          | FLOAT
          | INT
          | NAT
-         | NONE
-         | SOME LPAR <expr> RPAR
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
          | LPAR <expr> COMMA <expr> RPAR

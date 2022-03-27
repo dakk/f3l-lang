@@ -22,14 +22,12 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Bytes (_)
   | Typed (_)
   | LocalRef (_)
-  | None
   | Unit 
   | GlobalRef (_)
   | External (_, _)
   | UnionValue (_) -> empty
 
   | Lambda (_, a)
-  | Some (a)
   | RecordAccess (a, _)
   | PairFst (a)
   | PairSnd (a)

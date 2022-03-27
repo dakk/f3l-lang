@@ -19,7 +19,6 @@ let rec transform_type (pt: Parse_tree.ptype) (e: Env.t): ttype = match pt with
   let tt' = transform_type tt e in
   match c with 
   | "list" -> TList (tt') 
-  | "option" -> TOption (tt')
   | c -> raise @@ TypeError (None, "Invalid container type '" ^ c ^ "'")
 )
 | Parse_tree.PTRecord (el) -> TRecord (List.map (fun (n, tt) -> n, transform_type tt e) el)

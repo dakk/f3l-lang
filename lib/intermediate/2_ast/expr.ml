@@ -6,7 +6,6 @@ type expr =
 | GlobalRef of iden
 | External of iden * ttype
 
-| None
 | Unit 
 | Bool of bool
 | Nat of int 
@@ -14,7 +13,6 @@ type expr =
 | Float of float
 | String of string
 | Bytes of bytes
-| Some of texpr
 | Typed of texpr * ttype
 | List of texpr list 
 | Pair of texpr * texpr
@@ -23,10 +21,6 @@ type expr =
 | UnionValue of iden
 | RecordAccess of texpr * iden
 
-(* option *)
-(* | OptionGetSome of texpr 
-| OptionIsNone of texpr
-| OptionIsSome of texpr *)
 
 (* list *)
 (* | ListSize of texpr

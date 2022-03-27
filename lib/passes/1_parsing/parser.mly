@@ -7,7 +7,7 @@
 %token LBRACE, RBRACE, LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ, DOT, LSQUARE, RSQUARE
 %token TYPE, AND, OR, NOT, TRUE, FALSE
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE
-%token LTE, LT, GT, GTE, NONE, SOME, LET, IN
+%token LTE, LT, GT, GTE, LET, IN
 %token NEQ, UNIT, TANY, REC
 %token OPEN, EXTERNAL
 %token LAMBDA, FUN
@@ -71,8 +71,6 @@
     | x=FLOAT					{ loce $startpos $endpos @@ Parse_tree.PEFloat (x) }
     | x=INT 					{ loce $startpos $endpos @@ Parse_tree.PEInt (x) }
     | x=NAT 					{ loce $startpos $endpos @@ Parse_tree.PENat (x) }
-    | NONE  					{ loce $startpos $endpos @@ Parse_tree.PENone }
-    | SOME LPAR x=expr RPAR 	  { loce $startpos $endpos @@ Parse_tree.PESome (x) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, erec_element) RBRACE
                                 { loce $startpos $endpos @@ Parse_tree.PERecord (tl) }
     | LSQUARE tl=separated_list(COMMA, expr) RSQUARE

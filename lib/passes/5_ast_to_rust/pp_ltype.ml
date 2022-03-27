@@ -40,8 +40,6 @@ let rec pp_ltype fmt (a: ttype) = match a with
   fprintf fmt "%a list" pp_ltype t
 
 
-| TOption (t) -> 
-  fprintf fmt "%a option" pp_ltype t
 
 | TRecord (l) -> 
   let pp_rec_field fmt (x, xt) = fprintf fmt "%s: %a" x pp_ltype xt in
