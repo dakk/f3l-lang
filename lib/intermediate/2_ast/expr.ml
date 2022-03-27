@@ -54,7 +54,6 @@ type expr =
 | Neg of texpr
 | IsNat of texpr *)
 
-
 (* pair *)
 | PairFst of texpr
 | PairSnd of texpr

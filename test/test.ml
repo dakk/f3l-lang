@@ -12,8 +12,8 @@ let opt = Compiler.{
 
 let optc = { opt with no_remove_unused = false }
 
-let optl = { opt with target=Some("ligo") }
-let optlc = { optc with target=Some("ligo") }
+let optl = { opt with target=Some("rust") }
+let optlc = { optc with target=Some("rust") }
 
 
 let compile opt exc path cname _ = 

@@ -18,16 +18,8 @@ let pp_defs fmt defs =
   (pp_list "@\n" pp_def) fmt @@ List.rev defs
 
 
- 
-
-
-
-let generate_ligo_code (ast: t) = 
+let generate_rust (ast: t) = 
   reset_temp ();
   (* dump def *)
   pp_defs sfmt ast.defs;
   sget ()
-
-
-let generate_ligo (ast: t) = 
-  generate_ligo_code ast

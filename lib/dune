@@ -9,7 +9,7 @@
   ast
   ast_remove_unused
   parse_tree_to_ast
-  ast_to_ligo 
+  ast_to_rust 
  )
  (modules intermediate passes compiler))
 

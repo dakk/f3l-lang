@@ -11,10 +11,8 @@ let run action filename opt =
 
 let summary = ""
 ^ "=== actions ===\n\n"
-^ "  compile file.f3l [-target c|coq]\n"
+^ "  compile file.f3l [-target rust]\n"
 ^ "                 compiles to target language\n\n"
-^ "  extract-interface file.f3l\n"
-^ "                 extracts the f3l interface for the given module\n\n"
 
 
 let command =
@@ -30,10 +28,10 @@ let command =
         and ppt       = flag "-print-pt" no_arg ~doc:" print parse-tree"
         and verbose   = flag "-verbose" no_arg ~doc:" enable verbosity"
         and noremoveunused   = flag "-no-remove-unused" no_arg ~doc:" disable removing unused symbols"
-        and target    = flag "-target" (optional string) ~doc:" target language (c, coq)"
+        and target    = flag "-target" (optional string) ~doc:" target language (rust)"
       in fun () -> 
         let opt = Compiler.{
-          target = if is_none target then Some("tz") else target;
+          target = if is_none target then Some("rust") else target;
           print_pt = ppt;
           print_ast = past;
           verbose = verbose;

@@ -11,7 +11,7 @@ type options = {
 }
 
 let default_options = {
-  target = Some ("c");
+  target = Some ("rust");
   print_pt = true;
   print_ast = true;
   verbose = true;
@@ -83,9 +83,9 @@ let compile (filename: string) opt =
     |> (fun ast -> 
       match opt.target with 
       | None -> ""
-      | Some ("ligo") -> 
-        if opt.verbose then printf "===> Generating ligo code\n\n%!";        
-        Passes.Ast_to_ligo.generate_ligo ast
+      | Some ("rust") -> 
+        if opt.verbose then printf "===> Generating rust code\n\n%!";        
+        Passes.Ast_to_rust.generate_rust ast
     )
     |> print_endline
 
