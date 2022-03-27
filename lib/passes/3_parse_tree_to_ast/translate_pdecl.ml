@@ -12,7 +12,12 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
   | Parse_tree.DType (id, t) :: p' -> (
     Env.assert_symbol_absence e id;
 
-    let tt = transform_type t e in 
+    let temp_env = { e with 
+      symbols=(id, Type)::e.symbols;
+      types=(id, TAny)::e.types;
+    } in
+    let tt = transform_type t temp_env in 
+
     match tt with 
     | TUnion (el') -> 
       let rec consume el d s = match el with
@@ -27,11 +32,11 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
       transform p' { e with 
         symbols=(id, Type)::(s @ e.symbols);
         defs=d @ e.defs;
-        types=(id, transform_type t e)::e.types;
+        types=(id, tt)::e.types;
       }
     | _ -> transform p' { e with 
       symbols=(id, Type)::e.symbols;
-      types=(id, transform_type t e)::e.types;
+      types=(id, tt)::e.types;
     }
   )
   (* toplevel let *)

@@ -1,4 +1,4 @@
-type 'a list = ('a, 'alist)
+type 'a list = ('a, 'a list)
 
 let empty (v:unit) = (unit, unit)
 

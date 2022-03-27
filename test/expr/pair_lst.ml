@@ -1,3 +1,3 @@
 
 
-(* type 'a lst = ('a * lst) *)
+type 'a lst = ('a * lst)
