@@ -41,6 +41,11 @@
 	| i=IDENT COLON t=type_sig 	{ (i, Some(t)) }
 	| i=IDENT  									{ (i, None) }
 
+  param_opt_typed2: 
+	| i=IDENT  									{ (i, PTBuiltin("'a")) }
+  | i=IDENT COLON t=IDENT 		{ (i, PTBuiltin(t)) }
+
+
   ident: | i=IDENT { i }
 
   type_sig:
@@ -81,8 +86,10 @@
                                 { loce $startpos $endpos @@ Parse_tree.PEList (tl) }
     | LPAR t=expr COMMA tl=separated_nonempty_list(COMMA, expr) RPAR
                                 { loce $startpos $endpos @@ Parse_tree.PETuple (t::tl) }
-    | FUN LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDA LPAR e=expr RPAR
+    | FUN LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDA e=expr
                                 { loce $startpos $endpos @@ Parse_tree.PELambda (tl, e) }
+    | FUN p=param_opt_typed2 LAMBDA e=expr
+                                { loce $startpos $endpos @@ Parse_tree.PELambda ([p], e) }
 
 		// bindings 
 		| LET i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, Some(t), e, ee) }

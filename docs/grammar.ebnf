@@ -5,6 +5,9 @@
 <param_opt_typed> ::= IDENT COLON <type_sig>
                     | IDENT
 
+<param_opt_typed2> ::= IDENT
+                     | IDENT COLON IDENT
+
 <ident> ::= IDENT
 
 <type_sig> ::= TANY
@@ -35,8 +38,8 @@
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LSQUARE [<expr> (COMMA <expr>)*] RSQUARE
          | LPAR <expr> COMMA <expr> (COMMA <expr>)* RPAR
-         | FUN LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDA LPAR
-           <expr> RPAR
+         | FUN LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDA <expr>
+         | FUN <param_opt_typed2> LAMBDA <expr>
          | LET IDENT COLON <type_sig> EQ <expr> IN <expr>
          | LET IDENT EQ <expr> IN <expr>
          | LET LPAR <param_opt_typed> (COMMA <param_opt_typed>)* RPAR EQ
