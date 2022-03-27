@@ -236,40 +236,7 @@ match e with
 | Apply(lam, par) -> 
   fprintf fmt "%a (%a)" 
     pp_lexpr lam 
-    pp_lexpr par
-
-| MatchWith (e, el) -> 
-  let rec rr fmt el = (match el with 
-  | [] -> fprintf fmt ""
-  | (e', te')::((_, CaseDefault), tee')::el' -> 
-    fprintf fmt "if %s = (%a) then @[(%a: %a)@]@\nelse (%a: %a)"
-      "tmatchwithtemp"
-      pp_lexpr e'
-      pp_lexpr te'
-      pp_ltype te
-      pp_lexpr tee'
-      pp_ltype te
-
-  | (e', te')::elle::el' -> 
-    fprintf fmt "if %s = (%a) then @[(%a: %a)@]@\nelse %a" 
-      "tmatchwithtemp"
-      pp_lexpr e'
-      pp_lexpr te'
-      pp_ltype te
-      rr (elle::el')
-
-  | (e', te')::[] -> 
-    fprintf fmt "if %s = (%a) then @[(%a: %a)@] " 
-      "tmatchwithtemp"
-      pp_lexpr e'
-      pp_lexpr te'
-      pp_ltype te
-  ) in 
-  fprintf fmt "let %s = %a in @\n%a" 
-    "tmatchwithtemp"
-    pp_lexpr e
-    rr el
-     
+    pp_lexpr par     
 
 | LetIn (id, tt, e, e2) -> 
   fprintf fmt "let %s: %a = @\n%a in @\n%a " 

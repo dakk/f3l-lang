@@ -78,8 +78,6 @@ type expr =
 | Neq of texpr * texpr
 
 | IfThenElse of texpr * texpr * texpr 
-| MatchWith of texpr * (texpr * texpr) list
-| CaseDefault
 | Apply of texpr * texpr
      
 | LetIn of iden * ttype * texpr * texpr
