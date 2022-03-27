@@ -34,7 +34,6 @@ let rec pp_ltype fmt (a: ttype) = match a with
 | TUnion (_) -> 
   fprintf fmt "nat"
 
-
 | TRecord (l) -> 
   let pp_rec_field fmt (x, xt) = fprintf fmt "%s: %a" x pp_ltype xt in
   fprintf fmt "{ @[%a@] }" 
@@ -45,5 +44,5 @@ let rec pp_ltype fmt (a: ttype) = match a with
     pp_ltype t1 
     pp_ltype t2
 
-| _ -> raise @@ TypeError (None, sprintf "Type '%s' is not translable to ligo" (show_ttype a))
+| _ -> raise @@ TypeError (None, sprintf "Type '%s' is not translable to rust" (show_ttype a))
 

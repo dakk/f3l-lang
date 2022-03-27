@@ -49,7 +49,6 @@ type expr =
 | Mul of texpr * texpr
 | Div of texpr * texpr
 | Mod of texpr * texpr
-| EDiv of texpr * texpr
 
 
 (* bool *)

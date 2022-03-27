@@ -37,7 +37,6 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Mul (a, b)
   | Div (a, b)
   | Mod (a, b)
-  | EDiv (a, b)
   | And (a, b)
   | Or (a, b)
   | Lt (a, b)

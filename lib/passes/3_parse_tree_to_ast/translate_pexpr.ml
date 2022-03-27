@@ -130,17 +130,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     ) in
     rt, Mul ((tt1, ee1), (tt2, ee2))
 
-  | PEEDiv (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let rt = (match tt1, tt2 with 
-      | TNat, TNat -> TPair(TNat, TNat)
-      | TNat, TInt -> TPair(TInt, TNat)
-      | TInt, TNat -> TPair(TInt, TNat)
-      | TInt, TInt -> TPair(TInt, TNat)
-      | _, _ -> raise @@ TypeError (pel, "EDiv " ^ show_ttype_between_na tt1 tt2)
-    ) in
-    rt, EDiv ((tt1, ee1), (tt2, ee2))
 
   | PEMod (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
