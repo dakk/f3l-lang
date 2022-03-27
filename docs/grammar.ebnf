@@ -8,9 +8,13 @@
 <ident> ::= IDENT
 
 <union_v> ::= IDENT
-            | IDENT OF <ident>
+            | IDENT OF <type_sig_min>
 
-<type_sig> ::= <ident>
+<type_sig_min> ::= TANY
+                 | <ident>
+
+<type_sig> ::= TANY
+             | <ident>
              | <type_expr> CONT
              | LPAR <type_sig> MUL <type_sig> (MUL <type_sig>)* RPAR
              | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
@@ -75,7 +79,8 @@
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
 
-<dtype> ::= TYPE IDENT EQ <type_sig>
+<dtype> ::= TYPE TANY <ident> EQ <type_sig>
+          | TYPE IDENT EQ <type_sig>
 
 <ddef> ::= LET IDENT COLON <type_expr> EQ <expr>
          | LET IDENT EQ <expr>

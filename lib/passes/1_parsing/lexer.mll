@@ -83,6 +83,7 @@ rule token = parse
   | "fun"           { FUN }
   | "of"            { OF }
   
+  | "'a"            { TANY }  
 	| "#"							{ HT }
   | "->"				 	 	{ LAMBDA }
   | "{"             { LBRACE }

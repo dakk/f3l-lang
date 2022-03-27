@@ -65,7 +65,8 @@ let () =
       "let_expr", `Quick, compile opt None "test/def/let_expr.ml" None;
       "union", `Quick, compile opt None "test/def/union.ml" None;
       "union_typed", `Quick, compile opt None "test/def/union_typed.ml" None;
-      "union_typed_fail", `Quick, compile opt None "test/def/union_typed_fail.ml" None;
+      "union_opt_typedef", `Quick, compile opt None "test/def/union_opt_typedef.ml" None;
+      "union_typed_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/union_typed_fail.ml" None;
       "union_typed_fail2", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/union_typed_fail2.ml" None;
       "union_dup_fail", `Quick, compile opt (Some(DuplicateSymbolError(None, ""))) "test/def/union_dup_fail.ml" None;
       "infer", `Quick, compile opt None "test/def/infer.ml" None;

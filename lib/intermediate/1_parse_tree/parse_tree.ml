@@ -1,6 +1,7 @@
 type iden = string [@@deriving show {with_path = false}]
 
 type ptype = 
+  | PTAny 
   | PTBuiltin of string               (* type name *)
   | PTTuple of ptype list             (* tuple of other types *)
   | PTRecord of (string * ptype) list (* record is (iden * type) list *)
@@ -66,7 +67,7 @@ type pexpr =
 type declaration = 
   | DOpen of string
   | DDef of iden * ptype option * pexpr
-  | DType of iden * ptype
+  | DType of iden * ptype * bool (* iden * typedef * polymorphic *)
   | DExternal of iden * ptype * string
 [@@deriving show {with_path = false}]
 

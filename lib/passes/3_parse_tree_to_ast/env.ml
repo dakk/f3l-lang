@@ -18,6 +18,7 @@ let start_env = {
   defs=[];
   externals=[];
   types=[
+    "'a", TAny;
     "unit", TUnit;
     "int", TInt;
     "nat", TNat;
@@ -27,6 +28,7 @@ let start_env = {
     "bytes", TBytes;
   ];
   symbols=[
+    "'a", Type;
     "unit", Type;
     "int", Type;
     "nat", Type;

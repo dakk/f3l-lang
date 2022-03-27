@@ -9,7 +9,7 @@
 %token TYPE, DEF, AND, OR, NOT, TRUE, FALSE, OF
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE, WITH, MATCH
 %token LTE, LT, GT, GTE, EQEQ, NONE, SOME, HT, LET, IN
-%token NEQ, UNIT, UNDERSCORE
+%token NEQ, UNIT, UNDERSCORE, TANY
 %token OPEN, EXTERNAL
 %token LAMBDA, FUN
 %token <string> STRING
@@ -44,10 +44,15 @@
   ident: | i=IDENT { i }
 
   union_v:
-  | i=IDENT               { (i, PTBuiltin("unit")) } 
-  | i=IDENT OF t=ident    { (i, PTBuiltin(t)) }
+  | i=IDENT                    { (i, PTBuiltin ("unit")) } 
+  | i=IDENT OF t=type_sig_min  { (i, t) }
+
+  type_sig_min:
+    | TANY                                          { Parse_tree.PTBuiltin ("'a") }
+    | t=ident                                       { Parse_tree.PTBuiltin (t) }
 
   type_sig:
+    | TANY                                          { Parse_tree.PTBuiltin ("'a") }
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
     | bt=type_expr c=CONT                           { Parse_tree.PTCont (c, bt) }
     | LPAR t1=type_sig MUL tl=separated_nonempty_list(MUL, type_sig) RPAR         
@@ -145,8 +150,11 @@
     | LPAR v=expr COLON t=type_sig RPAR { loce $startpos $endpos @@ Parse_tree.PETyped (v, t) }
 
   dtype:
+    | TYPE TANY x=ident EQ tl=type_sig 
+      { Parse_tree.DType (x, tl, true) }
+
     | TYPE x=IDENT EQ tl=type_sig
-      { Parse_tree.DType (x, tl) }
+      { Parse_tree.DType (x, tl, false) }
 
   ddef:
     | LET x=IDENT COLON t=type_expr EQ v=expr

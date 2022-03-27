@@ -10,7 +10,7 @@ open Parse_tree
 let rec transform (p: Parse_tree.t) (e: Env.t): Env.t = 
   match p with 
   (* type definition *)
-  | Parse_tree.DType (id, t) :: p' -> (
+  | Parse_tree.DType (id, t, poly) :: p' -> (
     Env.assert_symbol_absence e id;
 
     let tt = transform_type t e in 
