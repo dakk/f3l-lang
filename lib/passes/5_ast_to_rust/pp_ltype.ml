@@ -4,6 +4,9 @@ open Format
 open Helpers.Gen_utils
 
 let rec pp_ltype fmt (a: ttype) = match a with
+| TTypeRef (i, t) -> 
+  fprintf fmt "%s" i 
+
 | TAny ->
   fprintf fmt "any"
 
@@ -33,8 +36,11 @@ let rec pp_ltype fmt (a: ttype) = match a with
     pp_ltype p
     pp_ltype r
 
-| TUnion (_) -> 
-  fprintf fmt "nat"
+| TUnion (l) -> 
+  let pp_rec_field fmt i = fprintf fmt "%s" i in
+  fprintf fmt "@[%a@]" 
+    (pp_list " | " pp_rec_field) l
+
 
 | TRecord (l) -> 
   let pp_rec_field fmt (x, xt) = fprintf fmt "%s: %a" x pp_ltype xt in

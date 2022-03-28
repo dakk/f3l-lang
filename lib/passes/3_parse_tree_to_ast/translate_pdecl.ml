@@ -72,7 +72,7 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
     let tt = transform_type t e in
     transform p' { e with 
       symbols=(id, External)::e.symbols;
-      externals=(id, tt, n)::e.externals;
+      externals=(id, (tt, n))::e.externals;
     }
 
   | Parse_tree.DOpen (_) :: p' -> 

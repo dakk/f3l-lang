@@ -2,6 +2,7 @@ type iden = string
 [@@deriving show {with_path = false}]
 
 type ttype = 
+  | TTypeRef of iden * ttype
   | TAny
   | TUnit
   | TInt
@@ -39,7 +40,8 @@ let attributes (t: ttype) = match t with
   | TLambda (_, _) -> { cmp=false; pack=true  }
   | TUnion (_) ->     { cmp=true;  pack=true  } 
   | TRecord (_) ->    { cmp=false; pack=true  } 
-  | TPair (_, _) ->   { cmp=true;  pack=true  }
+  | TPair (_, _) ->   { cmp=true;  pack=true  } 
+  | TTypeRef (_, _) ->{ cmp=true;  pack=true  }
  
   (* internal types *)
   | TAny ->           { cmp=false; pack=false }
@@ -57,6 +59,7 @@ let rec show_ttype (at: ttype) = match at with
 | TUnion (el) -> List.fold_left (fun acc x -> acc ^ (if acc = "" then "" else " | ") ^ x) "" el
 | TRecord (l) -> "record { " ^ List.fold_left (fun acc (x, xt) -> acc ^ (if acc = "" then "" else ", ") ^ x ^ ": " ^ show_ttype xt) "" l ^ " }"
 | TPair (t1, t2) -> "(" ^ show_ttype t1 ^ " * " ^ show_ttype t2 ^ ")"
+| TTypeRef (i, t) -> i
 
 let pp_ttype fmt (t: ttype) = Format.pp_print_string fmt (show_ttype t); ()
 

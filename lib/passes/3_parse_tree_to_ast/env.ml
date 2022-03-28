@@ -11,7 +11,7 @@ type t = {
   types:      (iden * ttype) list;
   defs:       (iden * texpr) list;
   symbols:    (iden * st) list;
-  externals:  (iden * ttype * string) list;
+  externals:  (iden * (ttype * string)) list;
 } [@@deriving show {with_path = false}]
 
 let start_env = {
@@ -54,7 +54,7 @@ let get_ref sn (e: t) =
   | Some (Def) -> let (tt, _) = List.assoc sn e.defs in tt  
   | Some (Union) -> let (tt, _) = List.assoc sn e.defs in tt  
   | Some (External) -> let rec rr l = (match l with 
-    | (n,tt,_)::l' -> if n = sn then tt else rr l' 
+    | (n,(tt,_))::l' -> if n = sn then tt else rr l' 
     | _ -> raise @@ SymbolNotFound(None, "Unknown reference to symbol '" ^ sn ^ "'")
   ) in rr e.externals
   | _ -> raise @@ SymbolNotFound(None, "Symbol '" ^ sn ^ "' not found in env")
