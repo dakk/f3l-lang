@@ -4,6 +4,8 @@
  (libraries helpers ast)
  (modules 
   remove_unused 
+  unroll_types
+  remove_base_types
  ))
 
 (env

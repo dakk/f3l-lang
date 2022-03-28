@@ -52,8 +52,6 @@ let build_ast (filename: string) opt =
   |> Passes.Parse_tree_postprocess.inject_opens opt.include_paths
 
 
-  (* parse and inject opens *)
-
   (* print pt *)
   |> app opt.print_pt print_pt
 
@@ -65,8 +63,14 @@ let build_ast (filename: string) opt =
   |> app opt.verbose @@ print_str "===> Dropping unused code" 
   |> ap (not opt.no_remove_unused) @@ Passes.Ast_optimize_remove_unused.remove_unused 
 
+  (* |> Passes.Ast_optimize_unroll_types.unroll_types *)
+
+  |> Passes.Ast_optimize_remove_base_types.remove_base_types 
+
   (* print ast *)
   |> app opt.print_ast print_ast 
+
+
 
     
 let write_file (filename: string) data = 
