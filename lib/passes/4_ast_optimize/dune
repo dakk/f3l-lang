@@ -1,0 +1,11 @@
+(library
+ (name ast_optimize)
+ (public_name f3l.passes.ast_optimize)
+ (libraries helpers ast)
+ (modules 
+  remove_unused 
+ ))
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))

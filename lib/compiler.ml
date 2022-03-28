@@ -61,6 +61,10 @@ let build_ast (filename: string) opt =
   |> app opt.verbose @@ print_str "===> Translating Parse_tree to Ast"
   |> Passes.Parse_tree_to_ast.translate 
 
+  (* remove unused *)
+  |> app opt.verbose @@ print_str "===> Dropping unused code" 
+  |> ap (not opt.no_remove_unused) @@ Passes.Ast_optimize_remove_unused.remove_unused 
+
   (* print ast *)
   |> app opt.print_ast print_ast 
 
@@ -73,11 +77,6 @@ let write_file (filename: string) data =
 (* text_file => ast => target *)
 let compile (filename: string) opt =
   build_ast filename opt
-    (* remove unused *)
-    (* |> app opt.verbose @@ print_str "===> Dropping unused code"  *)
-    (* |> ap (not opt.no_remove_unused) @@ Passes.Ast_remove_unused.remove_unused opt.contract *)
-    (* |> app opt.print_ast print_ast  *)
-
     (* output to a final language - first pass *)
     |> (fun ast -> 
       match opt.target with 

@@ -1,3 +1,5 @@
+(* remove unused code / symbol *)
+
 (* open Ast
 open Ast_expr
 open Ast_expr_traversal
@@ -23,3 +25,6 @@ let remove_unused _ (ast: Ast.t) =
         false)
     ) ast.defs
   } *)
+  
+let remove_unused (ast: Ast.t) = 
+  ast
