@@ -16,6 +16,16 @@ type ttype =
   | TRecord of (iden * ttype) list
   | TPair of ttype * ttype
 
+let is_base (t: ttype) = match t with 
+  | TUnit -> true
+  | TAny -> true
+  | TInt -> true
+  | TNat -> true
+  | TFloat -> true
+  | TBool -> true
+  | TString -> true
+  | TBytes -> true 
+  | _ -> false
 
 let rec type_final tt1: ttype = match tt1 with
 | TTypeRef(tn, t) -> type_final t 
@@ -54,6 +64,7 @@ let attributes (t: ttype) = match t |> type_final with
   (* internal types *)
   | TAny ->           { cmp=false; pack=false }
   
+
 let rec show_ttype (at: ttype) = match at with 
 | TAny -> "'a"
 | TUnit -> "unit"

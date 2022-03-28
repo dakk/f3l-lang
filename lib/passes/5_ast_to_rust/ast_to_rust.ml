@@ -20,7 +20,7 @@ let pp_ast fmt ast =
       fprintf fmt "let %s = @[%a@]@\n" 
       i 
       pp_lexpr (t,e)
-    | Ast.Type (t) ->
+    | Ast.Type (t) when not (Ast_ttype.is_base t) ->
       fprintf fmt "type %s = @[%a@]@\n" 
       i 
       pp_ltype t
@@ -29,9 +29,10 @@ let pp_ast fmt ast =
       i 
       pp_ltype t 
       ie
+    | _ -> ()
 
   in
-  (pp_list "@\n" pp_s) fmt @@ ast
+  (pp_list "" pp_s) fmt @@ ast
 
 
 let generate_rust (ast: t) = 
