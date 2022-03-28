@@ -28,7 +28,7 @@ let is_base (t: ttype) = match t with
   | _ -> false
 
 let rec type_final tt1: ttype = match tt1 with
-| TTypeRef(tn, t) -> type_final t 
+| TTypeRef(_, t) -> type_final t 
 | TPair(t1, t2) -> TPair ((type_final t1), (type_final t2))
 | TRecord(tl) -> TRecord (List.map (fun (n, t) -> (n, type_final t)) tl)
 | TLambda (tt1, tt2) -> TLambda (type_final tt1, type_final tt2)
@@ -78,7 +78,7 @@ let rec show_ttype (at: ttype) = match at with
 | TUnion (el) -> List.fold_left (fun acc x -> acc ^ (if acc = "" then "" else " | ") ^ x) "" el
 | TRecord (l) -> "record { " ^ List.fold_left (fun acc (x, xt) -> acc ^ (if acc = "" then "" else ", ") ^ x ^ ": " ^ show_ttype xt) "" l ^ " }"
 | TPair (t1, t2) -> "(" ^ show_ttype t1 ^ " * " ^ show_ttype t2 ^ ")"
-| TTypeRef (i, t) -> i
+| TTypeRef (i, _) -> i
 
 let pp_ttype fmt (t: ttype) = Format.pp_print_string fmt (show_ttype t); ()
 

@@ -4,7 +4,7 @@ open Format
 open Helpers.Gen_utils
 
 let rec pp_ltype fmt (a: ttype) = match a with
-| TTypeRef (i, t) -> 
+| TTypeRef (i, _) -> 
   fprintf fmt "%s" i 
 
 | TAny ->

@@ -14,6 +14,7 @@
 		"true";
 		"false";
     "fun";
+    "not";
   ]
 
 
@@ -65,7 +66,7 @@ rule token = parse
   | "else"				  { ELSE }
   | "&&"				  	{ AND }
   | "||"				  	{ OR }
-  | "!" 				  	{ NOT }
+  | "not" 			  	{ NOT }
 	| "let"						{ LET }
 	| "in"						{ IN }
   | "fun"           { FUN }

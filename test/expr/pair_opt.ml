@@ -9,7 +9,7 @@ let is_none = fun v: option -> if fst (v) = None then true else false
 
 let get_some = fun v -> snd (v)
 
-let is_some = fun v -> ! (is_none (v))
+let is_some = fun v -> not (is_none (v))
 
 let aa = (Some, 12)
 let bb = (None, ())
