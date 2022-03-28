@@ -107,7 +107,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEAdd (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
-    let rt = (match tt1, tt2 with 
+    let rt = (match tt1 |> type_final, tt2 |> type_final with 
       | TNat, TNat -> TNat
       | TNat, TInt -> TInt 
       | TInt, TNat -> TInt
@@ -120,7 +120,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEMul (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
-    let rt = (match tt1, tt2 with 
+    let rt = (match tt1 |> type_final, tt2 |> type_final with 
       | TNat, TNat -> TNat
       | TNat, TInt -> TInt 
       | TInt, TNat -> TInt
@@ -134,7 +134,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEMod (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
-    let rt = (match tt1, tt2 with 
+    let rt = (match tt1 |> type_final, tt2 |> type_final with 
       | TNat, TNat -> TPair(TNat, TNat)
       | TNat, TInt -> TPair(TInt, TNat)
       | TInt, TNat -> TPair(TInt, TNat)
@@ -146,7 +146,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEDiv (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
-    let rt = (match tt1, tt2 with 
+    let rt = (match tt1 |> type_final, tt2 |> type_final with 
       | TNat, TNat -> TInt
       | TNat, TInt -> TInt
       | TInt, TNat -> TInt
@@ -159,7 +159,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PESub (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
-    let rt = (match tt1, tt2 with 
+    let rt = (match tt1 |> type_final, tt2 |> type_final with 
       | TNat, TNat -> TInt
       | TNat, TInt -> TInt 
       | TInt, TNat -> TInt
@@ -172,20 +172,20 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   (* Boolean *)
   | PENot (e1) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
-    if tt1 = TBool then TBool, Not (tt1, ee1) 
+    if tt1 |> type_final = TBool then TBool, Not (tt1, ee1) 
     else raise @@ TypeError (pel, "Not needs a boolean expression, got: '" ^ show_ttype tt1 ^ "'")
 
   | PEOr (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
-    if tt1 <> TBool || tt2 <> TBool then 
+    if tt1 |> type_final <> TBool || tt2 |> type_final <> TBool then 
       raise @@ TypeError (pel, "Or branches should be boolean expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
     TBool, Or ((tt1, ee1), (tt2, ee2))
 
   | PEAnd (e1, e2) -> 
     let (tt1, ee1) = transform_expr e1 env' ic in 
     let (tt2, ee2) = transform_expr e2 env' ic in 
-    if tt1 <> TBool || tt2 <> TBool then 
+    if tt1 |> type_final <> TBool || tt2 |> type_final <> TBool then 
       raise @@ TypeError (pel, "And branches should be boolean expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
     TBool, And ((tt1, ee1), (tt2, ee2))
   
@@ -238,7 +238,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEApply (PERef(nf), c) when nf = "fst" || nf = "snd" -> 
     let (tt1, ee1) = transform_expr c env' ic in 
     let pres = (tt1, ee1) in 
-    (match tt1 with 
+    (match tt1 |> type_final with 
     | TPair(a, b) -> if nf = "fst" then a, PairFst (pres) else b, PairSnd (pres)
     | TAny -> TPair(TAny, TAny), if nf = "fst" then PairFst (pres) else PairSnd (pres)
     | _ -> raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
@@ -247,7 +247,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
 
   | PEApply (e, c) -> 
     let (tt,ee) = transform_expr e env' ic in  
-    (match tt with
+    (match tt |> type_final with
     | TLambda (arv, rettype) -> 
       let argl = arv in 
       let ap = transform_expr c env' ic in
@@ -264,7 +264,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tc, ec) = transform_expr c env' ic in 
     let (te1, ee1) = transform_expr e1 env' ic in 
     let (te2, ee2) = transform_expr e2 env' ic in 
-    (match tc, te1, te2 with 
+    (match tc |> type_final, te1 |> type_final, te2 |> type_final with 
     | TBool, t, t' when t = t' -> t, IfThenElse ((tc, ec), (te1, ee1), (te2, ee2))
     | TBool, t, t' when t <> t' -> 
       raise @@ TypeError (pel, "If branches should have same type, got: '" ^ show_ttype t ^ "' and '" ^ show_ttype t' ^ "'")

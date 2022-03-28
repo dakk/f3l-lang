@@ -2,13 +2,13 @@ open Ast
 open Ast_ttype
 open Helpers.Errors
 
+
 (* transform a pttype to a ttype *)
 let rec transform_type (pt: Parse_tree.ptype) (e: Env.t): ttype = match pt with 
 | Parse_tree.PTBuiltin (tn) -> 
   (match Env.get_type_opt tn e with 
   | None -> raise @@ TypeError (None, "Undefined type '" ^ tn ^ "'")
-  | Some (t) -> t)
-  (* TTypeRef(tn, t)) *)
+  | Some (t) -> TTypeRef(tn, t))
     (* t) *)
 | Parse_tree.PTPair (tl1, tl2) -> 
   TPair (transform_type tl1 e, transform_type tl2 e)
