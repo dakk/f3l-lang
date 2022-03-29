@@ -17,8 +17,6 @@
 
 <type_expr> ::= <type_sig>
 
-<left> ::= IDENT
-
 <value> ::= UNIT
           | TRUE
           | FALSE
@@ -55,7 +53,6 @@
          | <expr> EQ <expr>
          | <expr> NEQ <expr>
          | IF <expr> THEN <expr> ELSE <expr>
-         | <left> LPAR <expr> RPAR
          | <expr> LPAR <expr> RPAR
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR

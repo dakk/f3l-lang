@@ -68,9 +68,6 @@
 
   type_expr: | te=type_sig {te}
 
-	left:
-    | i=IDENT 						      { loce $startpos $endpos @@ PERef (i) }
-
   value:
   	| UNIT						{ loce $startpos $endpos @@ PEUnit }
     | TRUE            { loce $startpos $endpos @@ PEBool (true) }
@@ -125,7 +122,6 @@
 
 
     // apply a function
-    | i=left LPAR p=expr RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
     | i=expr LPAR p=expr RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
 		
     | LPAR e=expr RPAR 				          { loce $startpos $endpos @@ e }
