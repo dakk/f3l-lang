@@ -1,6 +1,5 @@
 open Untyped_ast
 open Format
-open Helpers.Gen_utils
 
 
 let rec pp_lexpr fmt (e: uexpr) = 

@@ -1,7 +1,6 @@
 open Ast
 open Ast_ttype
 open Format
-open Helpers.Gen_utils
 
 let rec pp_ltype fmt (a: ttype) = match a with
 | TTypeRef (_, _) -> failwith "not handled"
