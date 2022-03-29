@@ -9,17 +9,13 @@ let pp_ast fmt ast =
   let pp_s fmt (i, t) =
     match t with 
     | Ast.Def (t, e) -> 
-      fprintf fmt "let %s = @[%a@]@;\n" 
+      fprintf fmt "%a %s = @[%a@]@;\n" 
+      pp_ltype t 
       i 
       pp_lexpr (t,e)
-    | Ast.Type (t) when not (Ast_ttype.is_base t) ->
-      fprintf fmt "type %s = @[%a@]@;\n" 
-      i 
-      pp_ltype t
     | Ast.External (t, ie) ->
-      fprintf fmt "external %s = @[%a@]@ %s;\n" 
+      fprintf fmt "#define %s = %s\n" 
       i 
-      pp_ltype t 
       ie
     | _ -> ()
 
@@ -27,9 +23,17 @@ let pp_ast fmt ast =
   (pp_list "" pp_s) fmt @@ ast
 
 
-let generate_rust (ast: t) = 
+let generate_c (ast: t) = 
   reset_temp ();
-  (* fprintf sfmt "fn main() {\n"; *)
+
+  fprintf sfmt "#define lambda(return_type, function_body) \
+    ({ return_type __fn__ function_body __fn__; })\n";
+
+  (* fprintf sfmt "struct pair {
+    void *fst;
+    void *snd;
+  };\n"; *)
+  
   pp_ast sfmt ast;
-  (* fprintf sfmt "}\n"; *)
+  
   sget ()

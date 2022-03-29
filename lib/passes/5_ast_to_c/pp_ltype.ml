@@ -4,43 +4,35 @@ open Format
 open Helpers.Gen_utils
 
 let rec pp_ltype fmt (a: ttype) = match a with
-| TTypeRef (i, _) -> 
-  fprintf fmt "%s" i 
-
-| TAny ->
-  fprintf fmt "any"
+| TTypeRef (i, t) -> fprintf fmt "WTF"
+| TAny -> fprintf fmt "void *"
+| TUnion (l) -> fprintf fmt "WTF"
 
 | TUnit -> 
-  fprintf fmt "unit"
+  fprintf fmt "void *"
 
 | TInt -> 
   fprintf fmt "int"
 
 | TNat -> 
-  fprintf fmt "nat"
+  fprintf fmt "unsigned"
 
 | TFloat -> 
   fprintf fmt "float"
 
 | TBool -> 
-  fprintf fmt "bool"
+  fprintf fmt "unsigned short"
 
 | TString -> 
-  fprintf fmt "string"
+  fprintf fmt "char []"
 
 | TBytes -> 
-  fprintf fmt "bytes"
+  fprintf fmt "char []"
 
 | TLambda (p, r) -> 
-  fprintf fmt "(%a -> %a)" 
-    pp_ltype p
+  fprintf fmt "%a (*)(%a)" 
     pp_ltype r
-
-| TUnion (l) -> 
-  let pp_rec_field fmt i = fprintf fmt "%s" i in
-  fprintf fmt "@[%a@]" 
-    (pp_list " | " pp_rec_field) l
-
+    pp_ltype p
 
 | TRecord (l) -> 
   let pp_rec_field fmt (x, xt) = fprintf fmt "%s: %a" x pp_ltype xt in
@@ -48,7 +40,7 @@ let rec pp_ltype fmt (a: ttype) = match a with
     (pp_list ";@." pp_rec_field) l
 
 | TPair (t1, t2) -> 
-  fprintf fmt "(%a * %a)" 
+  fprintf fmt "pair_of_%a_%a" 
     pp_ltype t1 
     pp_ltype t2
 

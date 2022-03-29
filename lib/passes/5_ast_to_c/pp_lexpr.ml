@@ -20,6 +20,8 @@ let rec pp_lexpr fmt ((_,e): texpr) =
   let pp_infix2 fmt op a b = fprintf fmt "(%a) %s (%a)" pp_lexpr a op pp_lexpr b in
   
 match e with
+| External (id, t) -> 
+  fprintf fmt "%s" id
 
 | GlobalRef (id)
 | LocalRef (id) -> 
@@ -29,13 +31,13 @@ match e with
   fprintf fmt "%s" id
   
 | Unit -> 
-  fprintf fmt "unit"
+  fprintf fmt "null"
 
 | Bool (i) -> 
   fprintf fmt "%b" i
 
 | Nat (i) -> 
-  fprintf fmt "%dn" i
+  fprintf fmt "%d" i
 
 | Int (i) -> 
   fprintf fmt "%d" i
@@ -47,23 +49,24 @@ match e with
   fprintf fmt "\"%s\"" s
 
 | Bytes (s) -> 
-  fprintf fmt "(\"%s\": bytes)" (Bytes.to_string s)
+  fprintf fmt "\"%s\"" (Bytes.to_string s)
 
 (* | UnionValue (i) -> 
   (match te with | TUnion(e) -> fprintf fmt "%dn" @@ enum_index e i 0) *)
 
 | Typed (e, t) -> 
-  fprintf fmt "(%a: %a)" 
-    pp_lexpr e
+  fprintf fmt "(%a) %a" 
     pp_ltype t
+    pp_lexpr e
   
 | Pair (e1, e2) -> 
-  fprintf fmt "( %a, %a )" 
+  fprintf fmt "{ .fst=%a; .snd=%a; }" 
     pp_lexpr e1
     pp_lexpr e2
 
 | Lambda (arg, e) -> 
-    fprintf fmt "| %a | {@[%a@]}"    
+    fprintf fmt "lambda (%a, (%a) { return @[%a@]; }"    
+      pp_ltype (fst e)
       pp_par arg
       pp_lexpr e
 
@@ -77,12 +80,11 @@ match e with
     pp_lexpr e 
     i
 
-
 | PairFst (e) -> 
-  fprintf fmt "fst %a" pp_lexpr e
+  fprintf fmt "%a.fst" pp_lexpr e
 
 | PairSnd (e) ->
-  fprintf fmt "snd %a" pp_lexpr e
+  fprintf fmt "%a.snd" pp_lexpr e
 
 
 (* aritmetic *) 
@@ -99,7 +101,7 @@ match e with
   pp_infix2 fmt "/" a b
 
 | Mod (a, b) -> 
-  pp_infix2 fmt "mod" a b
+  pp_infix2 fmt "%" a b
 
 
 (* bool *)
@@ -125,13 +127,13 @@ match e with
   pp_infix2 fmt ">=" a b
 
 | Eq (a, b) -> 
-  pp_infix2 fmt "=" a b
+  pp_infix2 fmt "==" a b
 
 | Neq (a, b) -> 
-  pp_infix2 fmt "<>" a b
+  pp_infix2 fmt "!=" a b
 
 | IfThenElse (c, a, b) -> 
-  fprintf fmt "(if %a then %a else %a)" 
+  fprintf fmt "if (%a) then %a else %a" 
     pp_lexpr c
     pp_lexpr a 
     pp_lexpr b
@@ -148,4 +150,4 @@ match e with
     pp_lexpr e 
     pp_lexpr e2
 
-| _ -> failwith ("Unable to translate to rust: " ^ show_expr e)
+| _ -> failwith ("Unable to translate to c: " ^ show_expr e)

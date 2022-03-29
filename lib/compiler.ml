@@ -11,7 +11,7 @@ type options = {
 }
 
 let default_options = {
-  target = Some ("rust");
+  target = Some ("c");
   print_pt = true;
   print_ast = true;
   print_uast = true;
@@ -98,13 +98,14 @@ let write_file (filename: string) data =
 let compile (filename: string) opt =
   let pt = build_pt filename opt in
   let ast = build_ast pt opt in
-  let uast = build_uast ast opt in ()
-    (* |> (fun ast -> 
+  let uast = build_uast ast opt in 
+
+  ast |> (fun ast -> 
       match opt.target with 
-      | Some ("rust") -> 
-        if opt.verbose then printf "===> Generating rust code\n\n%!";        
-        Passes.Ast_to_rust.generate_rust ast
+      | Some ("c") -> 
+        if opt.verbose then printf "===> Generating c code\n\n%!";        
+        Passes.Ast_to_c.generate_c ast
       | _ -> ""
     )
-    |> print_endline *)
+    |> print_endline 
 
