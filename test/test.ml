@@ -49,6 +49,8 @@ let () =
       "match_case", `Quick, compile opt None "test/sugar/match_case.ml";
       "pipegt", `Quick, compile opt None "test/sugar/pipegt.ml";
       "currying", `Quick, compile opt None "test/sugar/currying.ml";
+      "n_uple", `Quick, compile opt None "test/sugar/n_uple.ml";
+      "list", `Quick, compile opt None "test/sugar/list.ml";
     ];
     "expression", [
       (* "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml"; *)

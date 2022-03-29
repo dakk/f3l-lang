@@ -237,13 +237,19 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     | Some (Local(t)) -> t, LocalRef (i)
     )
 
-  (* native pair function *)
-  | PEApply (PERef(nf), c) when nf = "fst" || nf = "snd" -> 
+  (* native pair/list function *)
+  | PEApply (PERef(nf), c) when nf = "fst" || nf = "snd" || nf = "hd" || nf = "tl" -> 
     let (tt1, ee1) = transform_expr c env' ic in 
     let pres = (tt1, ee1) in 
-    (match tt1 |> type_final with 
-    | TPair(a, b) -> if nf = "fst" then a, PairFst (pres) else b, PairSnd (pres)
-    | TAny -> TPair(TAny, TAny), if nf = "fst" then PairFst (pres) else PairSnd (pres)
+    (match (tt1 |> type_final), nf with 
+    | TPair(a, b), "fst" 
+    | TPair(a, b), "hd" -> a, PairFst (pres) 
+    | TPair(a, b), "snd"
+    | TPair(a, b), "tl" -> b, PairSnd (pres)
+    | TAny, "fst" 
+    | TAny, "hd" -> TPair(TAny, TAny), PairFst (pres)
+    | TAny, "snd"
+    | TAny, "tl" -> TPair(TAny, TAny), PairSnd (pres)
     | _ -> raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
     
       

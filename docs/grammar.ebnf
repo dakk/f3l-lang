@@ -67,6 +67,8 @@
          | <expr> LPAR <expr> RPAR
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
+         | LPAR <expr> COMMA <expr> COMMA <expr> (COMMA <expr>)* RPAR
+         | LSPAR <expr> (SEMICOLON <expr>)* RSPAR
          | FUN LPAR <param_opt_typed2> (COMMA <param_opt_typed2>)* RPAR
            LAMBDA <expr>
          | <expr> PIPEGT <expr>

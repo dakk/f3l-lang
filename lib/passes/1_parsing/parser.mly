@@ -20,7 +20,7 @@
 %token <float> FLOAT
 %token <string> IDENT
 
-%token MATCH, WITH, UNDERSCORE, PIPEGT
+%token MATCH, WITH, UNDERSCORE, PIPEGT, RSPAR, LSPAR
 
 %left PIPEGT
 %left NOT
@@ -136,11 +136,39 @@
 
     ////////// SUGAR
 
+    // N-uple
+    | LPAR e1=expr COMMA e2=expr COMMA tl=separated_nonempty_list(COMMA, expr) RPAR
+                                { let rec nbuild tl = match tl with 
+                                  | [] -> raise (SyntaxError2 ("Empty tuple set"))
+                                  | x::[] -> PEPair (x, PEUnit) 
+                                  | x::xs -> PEPair (x, nbuild xs)                                
+                                  in loce $startpos $endpos @@ nbuild (e1::e2::tl) }
+
+
+    // List 
+    | LSPAR tl=separated_nonempty_list(SEMICOLON, expr) RSPAR
+                                { let rec nbuild tl = match tl with 
+                                  | [] -> PEUnit
+                                  | x::[] -> PEPair (x, PEUnit) 
+                                  | x::xs -> PEPair (x, nbuild xs)                                
+                                  in loce $startpos $endpos @@ nbuild tl }
+
+    // | e1=expr DOT LSPAR x=NAT RSPAR 
+    //                             {
+    //                               let rec nbuild i = if i = 0 then 
+    //                                 PEApply (PERef("fst"), e1) 
+    //                               else 
+    //                                 PEApply (PERef("snd"), nbuild (i-1))
+    //                               in loce $startpos $endpos @@ nbuild x
+    //                             }
+
+
     // Multi-param lambda 
     // DEF: defun f (x,y) = fun x -> fun y -> x + y
     // APPLY: f(x,y) = f(x)(y)
     | FUN LPAR p=separated_nonempty_list(COMMA, param_opt_typed2) RPAR LAMBDA e=expr
                                   { let rec lbuild cl = match cl with 
+                                    | [] -> raise (SyntaxError2 ("Empty parameter set"))
                                     | c::[] -> PELambda (c, e)
                                     | c::cl -> PELambda (c, lbuild cl)
                                     in loce $startpos $endpos @@ lbuild p }

@@ -98,7 +98,6 @@ let write_file (filename: string) data =
 let compile (filename: string) opt =
   let pt = build_pt filename opt in
   let ast = build_ast pt opt in
-  let uast = build_uast ast opt in 
 
   ast |> (fun ast -> 
       match opt.target with 

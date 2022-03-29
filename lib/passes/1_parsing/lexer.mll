@@ -85,6 +85,8 @@ rule token = parse
   | "{"             { LBRACE }
   | "}"             { RBRACE }
   | "."					  	{ DOT }
+  | "["             { LSPAR }
+  | "]"             { RSPAR }
   | "("             { LPAR }
   | ")"             { RPAR }
   | ","             { COMMA }
