@@ -43,6 +43,10 @@
 	| i=IDENT  									{ (i, PTBuiltin("'a")) }
   | LPAR i=IDENT COLON t=type_sig RPAR		{ (i, t) }
 
+  param_opt_typed2: 
+	| i=IDENT  									{ (i, PTBuiltin("'a")) }
+  | i=IDENT COLON t=type_sig	{ (i, t) }
+
   ident: | i=IDENT { i }
 
   type_sig:
@@ -131,6 +135,17 @@
 
 
     ////////// SUGAR
+
+    // Multi-param lambda 
+    // DEF: defun f (x,y) = fun x -> fun y -> x + y
+    // APPLY: f(x,y) = f(x)(y)
+    | FUN LPAR p=separated_nonempty_list(COMMA, param_opt_typed2) RPAR LAMBDA e=expr
+                                  { let rec lbuild cl = match cl with 
+                                    | c::[] -> PELambda (c, e)
+                                    | c::cl -> PELambda (c, lbuild cl)
+                                    in loce $startpos $endpos @@ lbuild p }
+
+
     // |> apply 
     | p=expr PIPEGT i=expr  			{ loce $startpos $endpos @@ PEApply(i, p) }
 

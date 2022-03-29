@@ -5,6 +5,9 @@
 <param_opt_typed> ::= IDENT
                     | LPAR IDENT COLON <type_sig> RPAR
 
+<param_opt_typed2> ::= IDENT
+                     | IDENT COLON <type_sig>
+
 <ident> ::= IDENT
 
 <type_sig> ::= TANY
@@ -64,6 +67,8 @@
          | <expr> LPAR <expr> RPAR
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
+         | FUN LPAR <param_opt_typed2> (COMMA <param_opt_typed2>)* RPAR
+           LAMBDA <expr>
          | <expr> PIPEGT <expr>
          | MATCH <expr> WITH <case> (PIPE <case>)*
          | MATCH <expr> WITH PIPE <case> (PIPE <case>)*
