@@ -20,7 +20,7 @@
 %token <float> FLOAT
 %token <string> IDENT
 
-%token MATCH, WITH, UNDERSCORE, PIPEGT, RSPAR, LSPAR
+%token MATCH, WITH, UNDERSCORE, PIPEGT, RSPAR, LSPAR, OF
 
 %left PIPEGT
 %left NOT
@@ -49,6 +49,8 @@
 
   ident: | i=IDENT { i }
 
+  // typed_union_element: | i=IDENT OF t=IDENT { i }
+
   type_sig:
     | TANY                                          { PTBuiltin ("'a") }
     | t=ident                                       { PTBuiltin (t) }
@@ -59,6 +61,12 @@
                                                     { PTUnion (x::el) }
     | LPAR t=type_sig RPAR											    { t }
     | p=type_sig LAMBDA pr=type_sig									{ PTLambda (p, pr) }
+
+    ///////////// SUGAR
+    // Typed union 
+    // | el=separated_nonempty_list(PIPE, typed_union_element)  
+    //                                                 { PTPair (PTUnion (el), PTBuiltin ("'a")) }
+    
 
   type_expr: | te=type_sig {te}
 
@@ -136,6 +144,9 @@
 
     ////////// SUGAR
 
+    // Typed union element 
+    // | i=IDENT LPAR e=expr RPAR  { loce $startpos $endpos @@ PEPair (PERef(i), e) }
+
     // N-uple
     | LPAR e1=expr COMMA e2=expr COMMA tl=separated_nonempty_list(COMMA, expr) RPAR
                                 { let rec nbuild tl = match tl with 
@@ -153,7 +164,8 @@
                                   | x::xs -> PEPair (x, nbuild xs)                                
                                   in loce $startpos $endpos @@ nbuild tl }
 
-    // | e1=expr DOT LSPAR x=NAT RSPAR 
+    // Nth access to tuple and lists
+    // | NTH e1=expr x=NAT
     //                             {
     //                               let rec nbuild i = if i = 0 then 
     //                                 PEApply (PERef("fst"), e1) 

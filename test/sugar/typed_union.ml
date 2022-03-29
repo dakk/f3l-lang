@@ -1,0 +1,1 @@
+(* type t = Cane of string | Gatto of string *)

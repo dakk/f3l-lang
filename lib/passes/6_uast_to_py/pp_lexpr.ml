@@ -126,5 +126,3 @@ match e with
     id 
     pp_lexpr e 
     pp_lexpr e2
-
-| _ -> failwith ("Unable to translate to py: " ^ show_uexpr e)

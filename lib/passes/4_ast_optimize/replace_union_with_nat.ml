@@ -4,9 +4,9 @@ open Ast_expr
 
 let replace_union_with_nat ast = 
   let rec replace_type t mp = match t with 
-  | TTypeRef (i, t) -> replace_type t mp
+  | TTypeRef (_, t) -> replace_type t mp
   | TLambda (t, tt) -> TLambda (replace_type t mp, replace_type tt mp)
-  | TUnion (sl) -> TNat
+  | TUnion (_) -> TNat
   | TRecord (il) -> TRecord (List.map (fun (n, t) -> (n, replace_type t mp)) il)
   | TPair(t1, t2) -> TPair (replace_type t1 mp, replace_type t2 mp)
   | _ -> t
@@ -52,7 +52,7 @@ let replace_union_with_nat ast =
 
   let rec ruwn a mp i = match a with 
   | [] -> []
-  | (ii, Type(TUnion(el)))::al -> 
+  | (_, Type(TUnion(el)))::al -> 
     let rec replace_un acc l mp i = (match l with
     | [] -> (acc, mp, i)
     | ii::l' -> replace_un (acc) l' ((ii, i)::mp) (i+1))
@@ -61,7 +61,7 @@ let replace_union_with_nat ast =
     let na, mp', i' = replace_un [] el mp i in 
     (na @ (ruwn al mp' i'))
 
-  | (ii, Type(t))::al -> 
+  | (_, Type(_))::al -> 
     (* (ii, Type(replace_type t mp)):: *)
     ruwn al mp i
   | (ii, Def((t,e)))::al -> (ii, Def(replace_exp (t,e) mp))::ruwn al mp i

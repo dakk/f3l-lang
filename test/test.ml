@@ -51,6 +51,7 @@ let () =
       "currying", `Quick, compile opt None "test/sugar/currying.ml";
       "n_uple", `Quick, compile opt None "test/sugar/n_uple.ml";
       "list", `Quick, compile opt None "test/sugar/list.ml";
+      "typed_union", `Quick, compile opt None "test/sugar/typed_union.ml";
     ];
     "expression", [
       (* "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml"; *)

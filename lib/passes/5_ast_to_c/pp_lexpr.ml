@@ -20,7 +20,7 @@ let rec pp_lexpr fmt ((_,e): texpr) =
   let pp_infix2 fmt op a b = fprintf fmt "(%a) %s (%a)" pp_lexpr a op pp_lexpr b in
   
 match e with
-| External (id, t) -> 
+| External (id, _) -> 
   fprintf fmt "%s" id
 
 | GlobalRef (id)
@@ -150,4 +150,3 @@ match e with
     pp_lexpr e 
     pp_lexpr e2
 
-| _ -> failwith ("Unable to translate to c: " ^ show_expr e)

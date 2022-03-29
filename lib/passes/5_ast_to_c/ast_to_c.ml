@@ -13,7 +13,7 @@ let pp_ast fmt ast =
       pp_ltype t 
       i 
       pp_lexpr (t,e)
-    | Ast.External (t, ie) ->
+    | Ast.External (_, ie) ->
       fprintf fmt "#define %s = %s\n" 
       i 
       ie

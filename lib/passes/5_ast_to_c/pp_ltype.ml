@@ -4,9 +4,12 @@ open Format
 open Helpers.Gen_utils
 
 let rec pp_ltype fmt (a: ttype) = match a with
-| TTypeRef (i, t) -> fprintf fmt "WTF"
-| TAny -> fprintf fmt "void *"
-| TUnion (l) -> fprintf fmt "WTF"
+| TTypeRef (_, _) -> failwith "not handled"
+| TUnion (_) -> failwith "not handled"
+
+
+| TAny -> 
+  fprintf fmt "void *"
 
 | TUnit -> 
   fprintf fmt "void *"

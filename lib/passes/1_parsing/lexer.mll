@@ -18,6 +18,7 @@
 
     "match";
     "with";
+    "of";
   ]
 
 
@@ -79,6 +80,7 @@ rule token = parse
   | "with"          { WITH }
   | "_"             { UNDERSCORE }
   | "|>"            { PIPEGT }
+  | "of"            { OF }    
   
   | "'a"            { TANY }  
   | "->"				 	 	{ LAMBDA }

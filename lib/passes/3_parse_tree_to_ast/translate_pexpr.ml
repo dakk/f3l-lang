@@ -242,10 +242,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt1, ee1) = transform_expr c env' ic in 
     let pres = (tt1, ee1) in 
     (match (tt1 |> type_final), nf with 
-    | TPair(a, b), "fst" 
-    | TPair(a, b), "hd" -> a, PairFst (pres) 
-    | TPair(a, b), "snd"
-    | TPair(a, b), "tl" -> b, PairSnd (pres)
+    | TPair(a, _), "fst" 
+    | TPair(a, _), "hd" -> a, PairFst (pres) 
+    | TPair(_, b), "snd"
+    | TPair(_, b), "tl" -> b, PairSnd (pres)
     | TAny, "fst" 
     | TAny, "hd" -> TPair(TAny, TAny), PairFst (pres)
     | TAny, "snd"

@@ -15,7 +15,6 @@ let pp_uast fmt uast =
       fprintf fmt "TODOEXTERNAL %s = %s\n" 
       i 
       ie
-    | _ -> ()
 
   in
   (pp_list "" pp_s) fmt @@ uast
