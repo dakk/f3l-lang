@@ -45,6 +45,10 @@ let () =
     "type", [
       "types", `Quick, compile opt None "test/type/types.ml";
     ];
+    "sugar", [
+      "match_case", `Quick, compile opt None "test/sugar/match_case.ml";
+      "pipegt", `Quick, compile opt None "test/sugar/pipegt.ml";
+    ];
     "expression", [
       (* "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml"; *)
       "record", `Quick, compile opt None "test/expr/record.ml";
@@ -57,7 +61,6 @@ let () =
       "rec", `Quick, compile opt None "test/expr/rec.ml";
       "pair_lst", `Quick, compile opt None "test/expr/pair_lst.ml";
       "pair_fstsnd_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/expr/pair_fstsnd_fail.ml";
-      (* "match_case", `Quick, compile opt None "test/expr/match_case.ml"; *)
       (* "pair_destruct_typed", `Quick, compile opt None "test/expr/pair_destruct_typed.ml";
       "pair_destruct_untyped", `Quick, compile opt None "test/expr/pair_destruct_untyped.ml"; *)
     ];

@@ -15,6 +15,9 @@
 		"false";
     "fun";
     "not";
+
+    "match";
+    "with";
   ]
 
 
@@ -71,6 +74,11 @@ rule token = parse
 	| "in"						{ IN }
   | "fun"           { FUN }
   | "rec"           { REC }
+
+  | "match"         { MATCH }
+  | "with"          { WITH }
+  | "_"             { UNDERSCORE }
+  | "|>"            { PIPEGT }
   
   | "'a"            { TANY }  
   | "->"				 	 	{ LAMBDA }

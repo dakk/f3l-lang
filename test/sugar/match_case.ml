@@ -11,7 +11,10 @@ let bb = match z with
 | World -> false 
 | No -> true
 
-let c = match 2 with | 1 -> Hello | 2 -> World | _ -> No
+let c = match 2 with 
+| 1 -> "ciao" 
+| 2 -> "hola"
+| _ -> "hello" 
 
-let as = Some(12)
+(* let as = Some(12) *)
 (* let d = match as.isSome() with | true -> as.getSome() | false -> 13 *)

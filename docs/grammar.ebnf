@@ -21,14 +21,20 @@
 
 <left> ::= IDENT (DOT IDENT)*
 
-<expr> ::= UNIT
-         | TRUE
-         | FALSE
-         | STRING
-         | BYTES
-         | FLOAT
-         | INT
-         | NAT
+<value> ::= UNIT
+          | TRUE
+          | FALSE
+          | STRING
+          | BYTES
+          | FLOAT
+          | INT
+          | NAT
+          | IDENT
+
+<case> ::= <value> LAMBDA <expr>
+         | UNDERSCORE LAMBDA <expr>
+
+<expr> ::= <value>
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LPAR <expr> COMMA <expr> RPAR
          | FUN LPAR RPAR LAMBDA <expr>
@@ -52,13 +58,15 @@
          | <expr> EQ <expr>
          | <expr> NEQ <expr>
          | IF <expr> THEN <expr> ELSE <expr>
-         | IDENT
          | <left> DOT IDENT
          | <expr> DOT IDENT
          | <left> LPAR <expr> RPAR
          | <expr> LPAR <expr> RPAR
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
+         | <expr> PIPEGT <expr>
+         | MATCH <expr> WITH <case> (PIPE <case>)*
+         | MATCH <expr> WITH PIPE <case> (PIPE <case>)*
 
 <dtype> ::= TYPE TANY <ident> EQ <type_sig>
           | TYPE IDENT EQ <type_sig>

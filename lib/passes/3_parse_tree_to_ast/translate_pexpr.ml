@@ -100,6 +100,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | TInt, TNat -> TInt
       | TInt, TInt -> TInt
       | TFloat, TFloat -> TFloat
+      | TAny, b when b = TNat || b = TInt || b = TFloat -> b
+      | b, TAny when b = TNat || b = TInt || b = TFloat -> b
       | _, _ -> raise @@ TypeError (pel, "Add " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, Add ((tt1, ee1), (tt2, ee2))
@@ -113,6 +115,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | TInt, TNat -> TInt
       | TInt, TInt -> TInt
       | TFloat, TFloat -> TFloat
+      | TAny, b when b = TNat || b = TInt || b = TFloat -> b
+      | b, TAny when b = TNat || b = TInt || b = TFloat -> b
       | _, _ -> raise @@ TypeError (pel, "Mul " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, Mul ((tt1, ee1), (tt2, ee2))
@@ -138,6 +142,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | TNat, TInt -> TInt
       | TInt, TNat -> TInt
       | TInt, TInt -> TInt
+      | TFloat, TFloat -> TFloat
+      | TAny, b when b = TNat || b = TInt || b = TFloat -> b
+      | b, TAny when b = TNat || b = TInt || b = TFloat -> b
       | _, _ -> raise @@ TypeError (pel, "Div " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, Div ((tt1, ee1), (tt2, ee2))
@@ -151,6 +158,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
       | TNat, TInt -> TInt 
       | TInt, TNat -> TInt
       | TInt, TInt -> TInt
+      | TFloat, TFloat -> TFloat
+      | TAny, b when b = TNat || b = TInt || b = TFloat -> b
+      | b, TAny when b = TNat || b = TInt || b = TFloat -> b
       | _, _ -> raise @@ TypeError (pel, "Sub " ^ show_ttype_between_na tt1 tt2)
     ) in
     rt, Sub ((tt1, ee1), (tt2, ee2))
