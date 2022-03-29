@@ -54,8 +54,6 @@ let () =
       "typed_union", `Quick, compile opt None "test/sugar/typed_union.ml";
     ];
     "expression", [
-      (* "pack_unpack", `Quick, compile opt None "test/expr/pack_unpack.ml"; *)
-      "record", `Quick, compile opt None "test/expr/record.ml";
       "literal", `Quick, compile opt None "test/expr/literal.ml";
       "literal_untyped", `Quick, compile opt None "test/expr/literal_untyped.ml";
       "lambda", `Quick, compile opt None "test/expr/lambda.ml";

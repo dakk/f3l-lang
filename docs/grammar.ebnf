@@ -1,7 +1,5 @@
 <program> ::= <declaration>* EOF
 
-<parameter> ::= IDENT COLON <type_sig>
-
 <param_opt_typed> ::= IDENT
                     | LPAR IDENT COLON <type_sig> RPAR
 
@@ -13,16 +11,13 @@
 <type_sig> ::= TANY
              | <ident>
              | <type_sig> MUL <type_sig>
-             | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
              | <ident> PIPE <ident> (PIPE <ident>)*
              | LPAR <type_sig> RPAR
              | <type_sig> LAMBDA <type_sig>
 
 <type_expr> ::= <type_sig>
 
-<erec_element> ::= IDENT EQ <expr>
-
-<left> ::= IDENT (DOT IDENT)*
+<left> ::= IDENT
 
 <value> ::= UNIT
           | TRUE
@@ -38,7 +33,6 @@
          | UNDERSCORE LAMBDA <expr>
 
 <expr> ::= <value>
-         | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LPAR <expr> COMMA <expr> RPAR
          | FUN LPAR RPAR LAMBDA <expr>
          | FUN <param_opt_typed> LAMBDA <expr>
@@ -61,8 +55,6 @@
          | <expr> EQ <expr>
          | <expr> NEQ <expr>
          | IF <expr> THEN <expr> ELSE <expr>
-         | <left> DOT IDENT
-         | <expr> DOT IDENT
          | <left> LPAR <expr> RPAR
          | <expr> LPAR <expr> RPAR
          | LPAR <expr> RPAR

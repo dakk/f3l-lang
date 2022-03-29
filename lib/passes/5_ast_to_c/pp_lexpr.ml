@@ -67,15 +67,6 @@ match e with
       pp_par arg
       pp_lexpr e
 
-| Record (il) -> 
-  let pp_rec_as fmt (i, e) = fprintf fmt "%s=%a" i pp_lexpr e in
-  fprintf fmt "{ %a }"
-    (pp_list "; " pp_rec_as) il
-  
-| RecordAccess (e, i) -> 
-  fprintf fmt "%a.%s" 
-    pp_lexpr e 
-    i
 
 | PairFst (e) -> 
   fprintf fmt "%a.fst" pp_lexpr e

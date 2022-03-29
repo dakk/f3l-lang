@@ -7,13 +7,11 @@ let replace_union_with_nat ast =
   | TTypeRef (_, t) -> replace_type t mp
   | TLambda (t, tt) -> TLambda (replace_type t mp, replace_type tt mp)
   | TUnion (_) -> TNat
-  | TRecord (il) -> TRecord (List.map (fun (n, t) -> (n, replace_type t mp)) il)
   | TPair(t1, t2) -> TPair (replace_type t1 mp, replace_type t2 mp)
   | _ -> t
   in
 
   let rec replace_exp (t,e) mp : texpr = match e with 
-  | Record (a) -> replace_type t mp, Record (List.map (fun (n, e) -> (n, replace_exp e mp)) a)
   | Bool (a) -> replace_type t mp, Bool (a)
   | Nat (a) -> replace_type t mp, Nat (a)
   | Int (a) -> replace_type t mp, Int (a)
@@ -27,7 +25,6 @@ let replace_union_with_nat ast =
   | External (a, b) -> replace_type t mp, External (a, replace_type b mp)
   | UnionValue (a) -> TNat, Nat(List.assoc a mp)
   | Lambda (a, b) -> replace_type t mp, Lambda ((fst a, replace_type (snd a) mp), replace_exp b mp)
-  | RecordAccess (a, b) -> replace_type t mp, RecordAccess (replace_exp a mp, b)
   | PairFst (a) -> replace_type t mp, PairFst (replace_exp a mp)
   | PairSnd (a) -> replace_type t mp, PairSnd (replace_exp a mp)
   | Apply (a, b) -> replace_type t mp, Apply (replace_exp a mp, replace_exp b mp)

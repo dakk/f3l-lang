@@ -164,8 +164,6 @@ let as: string = snd apair
 ```
 
 
-## Record
-
 
 ## Lambda
 

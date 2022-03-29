@@ -3,7 +3,6 @@ type iden = string [@@deriving show {with_path = false}]
 type ptype = 
   | PTBuiltin of string               (* type name *)
   | PTPair of ptype * ptype           (* pair of other types *)
-  | PTRecord of (string * ptype) list (* record is (iden * type) list *)
   | PTUnion of string list
   | PTLambda of ptype * ptype
   [@@deriving show {with_path = false}]
@@ -19,11 +18,9 @@ type pexpr =
   | PETyped of pexpr * ptype
   | PEPair of pexpr * pexpr
   | PELambda of (iden * ptype) * pexpr
-  | PERecord of (iden * pexpr) list
 
   | PERef of iden
   | PEIfThenElse of pexpr * pexpr * pexpr 
-  | PEDot of pexpr * iden
   | PEApply of pexpr * pexpr
   | PELetIn of iden * ptype option * pexpr * pexpr * bool
 

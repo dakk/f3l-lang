@@ -37,11 +37,6 @@ let rec pp_ltype fmt (a: ttype) = match a with
     pp_ltype r
     pp_ltype p
 
-| TRecord (l) -> 
-  let pp_rec_field fmt (x, xt) = fprintf fmt "%s: %a" x pp_ltype xt in
-  fprintf fmt "{ @[%a@] }" 
-    (pp_list ";@." pp_rec_field) l
-
 | TPair (t1, t2) -> 
   fprintf fmt "pair_of_%a_%a" 
     pp_ltype t1 

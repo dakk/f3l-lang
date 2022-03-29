@@ -16,9 +16,7 @@ type expr =
 | Typed of texpr * ttype
 | Pair of texpr * texpr
 | Lambda of (iden * ttype) * texpr
-| Record of (iden * texpr) list
 | UnionValue of iden
-| RecordAccess of texpr * iden
 
 (* pair *)
 | PairFst of texpr

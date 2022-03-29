@@ -18,7 +18,7 @@
 
     "match";
     "with";
-    "of";
+    (* "of"; *)
   ]
 
 
@@ -80,13 +80,13 @@ rule token = parse
   | "with"          { WITH }
   | "_"             { UNDERSCORE }
   | "|>"            { PIPEGT }
-  | "of"            { OF }    
+  (* | "of"            { OF }     *)
   
   | "'a"            { TANY }  
   | "->"				 	 	{ LAMBDA }
-  | "{"             { LBRACE }
-  | "}"             { RBRACE }
-  | "."					  	{ DOT }
+  (* | "{"             { LBRACE } *)
+  (* | "}"             { RBRACE } *)
+  (* | "."					  	{ DOT } *)
   | "["             { LSPAR }
   | "]"             { RSPAR }
   | "("             { LPAR }

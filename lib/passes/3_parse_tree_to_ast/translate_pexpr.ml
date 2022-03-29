@@ -71,24 +71,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt, ee) = transform_expr e env' (push_ic argi (Local(argt)) ic) in 
     TLambda (argt, tt), Lambda((argi, argt), (tt, ee))
 
-  | PERecord (l) -> 
-    let l' = List.map (fun (i, p) -> i, transform_expr p env' ic) l in 
-    let (idtt, _) = List.map (fun (i, (tt, ee)) -> (i, tt), (i, ee)) l' |> List.split in
-    TRecord (idtt), Record (l')
-
-
-  (* PEDot record access *)
-  | PEDot (e, i) -> 
-    let (te, ee) = transform_expr e env' ic in
-    (match te with 
-    | TRecord(t) -> 
-      (match List.assoc_opt i t with 
-        | None -> raise @@ TypeError (pel, "Unkown record field '" ^ i ^ "'")
-        | Some(t) -> t, RecordAccess((te, ee), i))
-    | _ -> raise @@ InvalidExpression (pel, "Unhandled dot access of '" ^ i ^ "' on expression '" ^ show_expr ee ^ "'")
-    )
-
-
 
   (* Arithmetic *)
   | PEAdd (e1, e2) -> 

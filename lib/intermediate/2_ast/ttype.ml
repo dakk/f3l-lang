@@ -13,7 +13,6 @@ type ttype =
   | TBytes
   | TLambda of ttype * ttype
   | TUnion of string list
-  | TRecord of (iden * ttype) list
   | TPair of ttype * ttype
 
 let is_base (t: ttype) = match t with 
@@ -30,7 +29,6 @@ let is_base (t: ttype) = match t with
 let rec type_final tt1: ttype = match tt1 with
 | TTypeRef(_, t) -> type_final t 
 | TPair(t1, t2) -> TPair ((type_final t1), (type_final t2))
-| TRecord(tl) -> TRecord (List.map (fun (n, t) -> (n, type_final t)) tl)
 | TLambda (tt1, tt2) -> TLambda (type_final tt1, type_final tt2)
 | _ -> tt1
 
@@ -57,7 +55,6 @@ let attributes (t: ttype) = match t |> type_final with
   | TBytes ->         { cmp=true;  pack=true  }
   | TLambda (_, _) -> { cmp=false; pack=true  }
   | TUnion (_) ->     { cmp=true;  pack=true  } 
-  | TRecord (_) ->    { cmp=false; pack=true  } 
   | TPair (_, _) ->   { cmp=true;  pack=true  } 
   | TTypeRef (_, _) ->{ cmp=true;  pack=true  }
  
@@ -76,7 +73,6 @@ let rec show_ttype (at: ttype) = match at with
 | TBytes -> "bytes"
 | TLambda (p, r) -> "(" ^ show_ttype p ^ " -> " ^ show_ttype r ^ ")"
 | TUnion (el) -> List.fold_left (fun acc x -> acc ^ (if acc = "" then "" else " | ") ^ x) "" el
-| TRecord (l) -> "record { " ^ List.fold_left (fun acc (x, xt) -> acc ^ (if acc = "" then "" else ", ") ^ x ^ ": " ^ show_ttype xt) "" l ^ " }"
 | TPair (t1, t2) -> "(" ^ show_ttype t1 ^ " * " ^ show_ttype t2 ^ ")"
 | TTypeRef (i, _) -> i
 

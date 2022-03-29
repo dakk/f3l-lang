@@ -6,7 +6,9 @@
 %}
 
 %token EOF
-%token LBRACE, RBRACE, LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ, DOT
+// %token LBRACE, RBRACE
+// %token OF, DOT
+%token LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ 
 %token TYPE, AND, OR, NOT, TRUE, FALSE
 %token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE
 %token LTE, LT, GT, GTE, LET, IN
@@ -20,7 +22,7 @@
 %token <float> FLOAT
 %token <string> IDENT
 
-%token MATCH, WITH, UNDERSCORE, PIPEGT, RSPAR, LSPAR, OF
+%token MATCH, WITH, UNDERSCORE, PIPEGT, RSPAR, LSPAR
 
 %left PIPEGT
 %left NOT
@@ -36,8 +38,6 @@
 
 %%
   program: dl=list(declaration) EOF { dl }
-
-  parameter: | i=IDENT COLON t=type_sig { (i, t) }
 
   param_opt_typed: 
 	| i=IDENT  									{ (i, PTBuiltin("'a")) }
@@ -55,8 +55,6 @@
     | TANY                                          { PTBuiltin ("'a") }
     | t=ident                                       { PTBuiltin (t) }
     | t1=type_sig MUL t2=type_sig                   { PTPair (t1, t2) }
-    | LBRACE tl=separated_nonempty_list(SEMICOLON, parameter) RBRACE
-                                                    { PTRecord (tl)}
     | x=ident PIPE el=separated_nonempty_list(PIPE, ident)  
                                                     { PTUnion (x::el) }
     | LPAR t=type_sig RPAR											    { t }
@@ -70,11 +68,7 @@
 
   type_expr: | te=type_sig {te}
 
-  erec_element:
-    | i=IDENT EQ b=expr { (i, b) }
-
 	left:
-		| l=left DOT i=IDENT				{ loce $startpos $endpos @@ PEDot (l, i) }
     | i=IDENT 						      { loce $startpos $endpos @@ PERef (i) }
 
   value:
@@ -94,8 +88,6 @@
 
   expr:
     | e=value                   { loce $startpos $endpos @@ e }
-    | LBRACE tl=separated_nonempty_list(SEMICOLON, erec_element) RBRACE
-                                { loce $startpos $endpos @@ PERecord (tl) }
     | LPAR t1=expr COMMA t2=expr RPAR
                                 { loce $startpos $endpos @@ PEPair (t1, t2) }
     | FUN LPAR RPAR LAMBDA e=expr
@@ -131,8 +123,6 @@
     | IF c=expr THEN e1=expr ELSE e2=expr 
                                 { loce $startpos $endpos @@ PEIfThenElse (c,e1,e2) }
 
-    | e=left DOT i=IDENT 				{ loce $startpos $endpos @@ PEDot (e, i) }
-    | e=expr DOT i=IDENT 				{ loce $startpos $endpos @@ PEDot (e, i) }
 
     // apply a function
     | i=left LPAR p=expr RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }

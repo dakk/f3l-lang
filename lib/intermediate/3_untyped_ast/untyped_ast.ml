@@ -15,9 +15,7 @@ type uexpr =
 | UBytes of bytes
 | UPair of uexpr * uexpr
 | ULambda of iden * uexpr
-| URecord of (iden * uexpr) list
 | UUnionValue of iden
-| URecordAccess of uexpr * iden
 
 (* pair *)
 | UPairFst of uexpr

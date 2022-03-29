@@ -3,7 +3,6 @@ open Ast
 open Ast_expr
 
 let rec translate_exp (a: Ast_expr.texpr): Untyped_ast.uexpr = match snd a with 
-| Record (a) -> URecord (List.map (fun (i, te) -> (i, translate_exp te)) a)
 | Bool (a) -> UBool(a)
 | Nat (a) -> UNat(a)
 | Int (a) -> UInt(a)
@@ -17,7 +16,6 @@ let rec translate_exp (a: Ast_expr.texpr): Untyped_ast.uexpr = match snd a with
 | External (a, _) -> UExternal(a) 
 | UnionValue (_) -> failwith "Impossible situation"
 | Lambda (a, b) -> ULambda (fst a, translate_exp b)
-| RecordAccess (a, b) -> URecordAccess(translate_exp a, b)
 | PairFst (a) -> UPairFst(translate_exp a)
 | PairSnd (a) -> UPairSnd(translate_exp a)
 | Apply (a, b) -> UApply(translate_exp a, translate_exp b)
