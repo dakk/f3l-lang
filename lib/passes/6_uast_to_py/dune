@@ -1,0 +1,10 @@
+(library
+ (name uast_to_py)
+ (public_name f3l.passes.uast_to_py)
+ (libraries num helpers untyped_ast)
+ (modules uast_to_py pp_lexpr))
+
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))
