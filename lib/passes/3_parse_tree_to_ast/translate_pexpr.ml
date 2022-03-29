@@ -235,11 +235,10 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEApply (e, c) -> 
     let (tt,ee) = transform_expr e env' ic in  
     (match tt |> type_final with
-    | TLambda (arv, rettype) -> 
-      let argl = arv in 
+    | TLambda (arg, rettype) -> 
       let ap = transform_expr c env' ic in
-      if not @@ Ast_ttype.compare_lazy argl (fst ap) then 
-        raise @@ TypeError (pel, "Invalid argument types apply; " ^ show_ttype_got_expect argl (fst ap))
+      if not @@ Ast_ttype.compare_lazy arg (fst ap) then 
+        raise @@ TypeError (pel, "Invalid argument types apply; " ^ show_ttype_got_expect arg (fst ap))
       else
         rettype, Apply((tt, ee), ap)
 
