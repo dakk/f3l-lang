@@ -10,3 +10,6 @@ let x1 = 13 |> (12 |> a)
 
 (* this is not handled *)
 (* let x = a(12,13) *)
+
+(* this typefail *)
+(* let a = fun (x, y) -> x + y *)
