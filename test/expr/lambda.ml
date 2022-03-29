@@ -17,3 +17,15 @@ let e1: et = fun (a: int) -> (fun (b: int) -> (a + b))
 let e2: et = fun (a: int) -> fun (b: int) -> a + b
 
 let e3 = fun a:int -> 12 * a *)
+
+
+let a = 12 
+
+(* global in lambda *)
+let x = fun b -> a * b
+
+
+let y = 
+  let aa = 12 in 
+  let y1 = fun b -> aa * b in 
+  y1 (12)

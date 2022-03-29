@@ -36,7 +36,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   let push_ic i ii ic = (i, ii)::(List.remove_assoc i ic) in
   let pel = Pt_loc.eline pe in
   let assert_comparable tt1 tt2 = 
-    if tt1 <> tt2 then raise @@ TypeError (pel, show_ttype_not_cmp tt1 tt2);
+    if not (comparable tt1 tt2) then raise @@ TypeError (pel, show_ttype_not_cmp tt1 tt2);
     (match (attributes tt1).cmp, (attributes tt2).cmp with 
     | true, true -> ()
     | _, _ -> raise @@ TypeError (pel, show_ttype_not_cmp tt1 tt2))
@@ -229,9 +229,9 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     | TPair(_, b), "snd"
     | TPair(_, b), "tl" -> b, PairSnd (pres)
     | TAny, "fst" 
-    | TAny, "hd" -> TPair(TAny, TAny), PairFst (pres)
+    | TAny, "hd" -> TAny, PairFst (pres)
     | TAny, "snd"
-    | TAny, "tl" -> TPair(TAny, TAny), PairSnd (pres)
+    | TAny, "tl" -> TAny, PairSnd (pres)
     | _ -> raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
     
       
@@ -239,6 +239,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   | PEApply (e, c) -> 
     let (tt,ee) = transform_expr e env' ic in  
     (match tt |> type_final with
+    | TAny -> TAny, Apply((tt, ee), transform_expr c env' ic)
     | TLambda (arg, rettype) -> 
       let ap = transform_expr c env' ic in
       if not @@ Ast_ttype.compare_lazy arg (fst ap) then 
@@ -255,8 +256,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (te1, ee1) = transform_expr e1 env' ic in 
     let (te2, ee2) = transform_expr e2 env' ic in 
     (match tc |> type_final, te1 |> type_final, te2 |> type_final with 
-    | TBool, t, t' when t = t' -> t, IfThenElse ((tc, ec), (te1, ee1), (te2, ee2))
-    | TBool, t, t' when t <> t' -> 
+    | TBool, t, t' when compare t t' -> t, IfThenElse ((tc, ec), (te1, ee1), (te2, ee2))
+    | TBool, t, t' when not (compare t t') -> 
       raise @@ TypeError (pel, "If branches should have same type, got: '" ^ show_ttype t ^ "' and '" ^ show_ttype t' ^ "'")
     | _, _, _ -> raise @@ TypeError (pel, "If condition should be a boolean expression, got '" ^ show_ttype tc ^ "'"))
 

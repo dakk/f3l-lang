@@ -46,7 +46,7 @@ type tattr = {
 *)
 
 let attributes (t: ttype) = match t |> type_final with 
-  | TUnit ->          { cmp=false; pack=true  }
+  | TUnit ->          { cmp=true;  pack=true  }
   | TInt ->           { cmp=true;  pack=true  }
   | TNat ->           { cmp=true;  pack=true  }
   | TFloat ->         { cmp=true;  pack=true  }
@@ -59,7 +59,7 @@ let attributes (t: ttype) = match t |> type_final with
   | TTypeRef (_, _) ->{ cmp=true;  pack=true  }
  
   (* internal types *)
-  | TAny ->           { cmp=false; pack=false }
+  | TAny ->           { cmp=true; pack=false }
   
 
 let rec show_ttype (at: ttype) = match at with 
@@ -78,9 +78,19 @@ let rec show_ttype (at: ttype) = match at with
 
 let pp_ttype fmt (t: ttype) = Format.pp_print_string fmt (show_ttype t); ()
 
+let rec comparable a b = match a, b with 
+| TAny, _ 
+| _, TAny -> true 
+| TPair(a, b), TPair(c, d) -> comparable a c && comparable b d
+| a, b when a = b -> true 
+| _ -> false
 
 
-let compare t1 t2 = (t1 |> type_final) = (t2 |> type_final)
+let rec compare t1 t2 = match (t1 |> type_final), (t2 |> type_final) with 
+| TAny, _ -> true 
+| _, TAny -> true
+| TPair(a, b), TPair(c, d) -> compare a c && compare b d
+| _, _ -> t1 = t2 
 
 let compare_lazy t t' = match t' |> type_final, t |> type_final with 
   | TPair(a, TAny), TPair (c, _) -> a = c
