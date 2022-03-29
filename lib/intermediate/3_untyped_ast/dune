@@ -1,0 +1,10 @@
+(library
+ (name untyped_ast)
+ (public_name f3l.intermediate.untyped_ast)
+ (preprocess (pps ppx_jane ppx_deriving.show))
+ (libraries num ppx_deriving helpers)
+ (modules untyped_ast))
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))

@@ -20,25 +20,6 @@ type expr =
 | UnionValue of iden
 | RecordAccess of texpr * iden
 
-
-
-(* string *)
-(* | StringConcat of texpr * texpr 
-| StringSlice of texpr * texpr * texpr
-| StringSize of texpr *)
-
-(* bytes *)
-(* | BytesConcat of texpr * texpr 
-| BytesSlice of texpr * texpr * texpr
-| BytesPack of texpr 
-| BytesSize of texpr
-| BytesUnpack of texpr *)
-
-(* | Abs of texpr
-| ToInt of texpr
-| Neg of texpr
-| IsNat of texpr *)
-
 (* pair *)
 | PairFst of texpr
 | PairSnd of texpr

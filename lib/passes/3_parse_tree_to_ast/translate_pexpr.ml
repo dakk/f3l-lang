@@ -217,7 +217,13 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   (* symbol reference *)    
   | PERef (i) -> 
     (match binding_find ic ILocal i with 
-    | None -> let ref = Env.get_ref i env' in ref, GlobalRef (i)
+    | None -> (
+      let ref = Env.get_ref i env' in 
+      match List.assoc_opt i env'.symbols with
+      | Some(Union) -> ref, UnionValue (i)
+      | Some(External) -> ref, External (i, ref)
+      | _ -> ref, GlobalRef (i)
+    )
     | Some (Local(t)) -> t, LocalRef (i)
     )
 

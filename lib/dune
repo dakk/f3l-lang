@@ -7,9 +7,11 @@
   parsing  
   parse_tree_postprocess
   ast
+  untyped_ast
   ast_optimize
   parse_tree_to_ast
   ast_to_rust 
+  ast_to_uast
  )
  (modules intermediate passes compiler))
 
