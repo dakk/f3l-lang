@@ -51,9 +51,6 @@ match e with
 | Bytes (s) -> 
   fprintf fmt "\"%s\"" (Bytes.to_string s)
 
-(* | UnionValue (i) -> 
-  (match te with | TUnion(e) -> fprintf fmt "%dn" @@ enum_index e i 0) *)
-
 | Typed (e, t) -> 
   fprintf fmt "(%a) %a" 
     pp_ltype t
