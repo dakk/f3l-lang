@@ -33,10 +33,7 @@ let binding_find ic (st: ireft) i: iref option =
 
 (* transform an pexpr to (ttype * expr) *)
 let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : texpr = 
-  let transform_iexpr_list pel = List.map (fun (i, p) -> i, transform_expr p env' ic) pel in
-  let transform_itype_list pel = List.map (fun (i, p) -> i, transform_type p env') pel in
   let push_ic i ii ic = (i, ii)::(List.remove_assoc i ic) in
-  let push_local_many rl ic = List.fold_left (fun ic (i,x) -> (i, Local(x))::(List.remove_assoc i ic)) ic rl in
   let pel = Pt_loc.eline pe in
   let assert_comparable tt1 tt2 = 
     if tt1 <> tt2 then raise @@ TypeError (pel, show_ttype_not_cmp tt1 tt2);
@@ -69,25 +66,15 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     | a, b, _ when a=b -> a, ee
     | a, b, c -> raise @@ TypeError (pel, "Invalid cast from '" ^ show_ttype a ^ "' to '" ^ show_ttype b ^ "' for value: " ^ show_expr c))
 
-  | PELambda (argl, e) -> 
-    let rl = argl |> transform_itype_list in
-    let (tt, ee) = transform_expr e env' (push_local_many rl ic) in 
-    let arg = (match List.length rl with 
-      | 0 -> TUnit
-      | 1 -> snd @@ List.hd rl
-      | 2 -> 
-        let vv = snd @@ List.split rl in
-        TPair (List.hd vv, List.hd (List.tl vv))
-      | _ -> raise @@ TypeError (pel, "Too many arguments for lambda")
-    ) in
-    TLambda (arg, tt), Lambda(rl, (tt, ee))
+  | PELambda ((argi, argt), e) -> 
+    let argt = transform_type argt env' in
+    let (tt, ee) = transform_expr e env' (push_ic argi (Local(argt)) ic) in 
+    TLambda (argt, tt), Lambda((argi, argt), (tt, ee))
 
   | PERecord (l) -> 
-    let l' = l |> transform_iexpr_list in 
+    let l' = List.map (fun (i, p) -> i, transform_expr p env' ic) l in 
     let (idtt, _) = List.map (fun (i, (tt, ee)) -> (i, tt), (i, ee)) l' |> List.split in
     TRecord (idtt), Record (l')
-
-
 
 
   (* PEDot record access *)
@@ -234,7 +221,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     | Some (Local(t)) -> t, LocalRef (i)
     )
 
-  (* native functions *)
+  (* native pair function *)
   | PEApply (PERef(nf), c) when nf = "fst" || nf = "snd" -> 
     let (tt1, ee1) = transform_expr c env' ic in 
     let pres = (tt1, ee1) in 

@@ -1,8 +1,8 @@
 let e_sum: int -> int = fun (a: int) -> (0 + 1)
 let e_gt: int -> bool = fun (a: int) -> (0 > 1)
 let e_gt2: int -> bool = fun (a: int) -> (a > 1)
-let e_comp: (int * int) -> bool = fun (a: int, b: int) -> ((a * 8) > (b - 12))
-let e_comp2: (int * int) -> bool = fun (a: int, b: int) -> ((a * (b - 8)) > (b - 12))
+let e_comp: (int * int) -> bool = fun (a: int * int) -> ((fst (a) * 8) > (snd(a) - 12))
+let e_comp2: (int * int) -> bool = fun (a: int * int) -> ((fst(a) * (snd(a) - 8)) > (snd(a) - 12))
 
 (* let e_apply: int -> bool = fun (a: int) -> (e_comp (12, 13)) *)
 

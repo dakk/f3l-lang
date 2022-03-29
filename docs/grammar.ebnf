@@ -3,13 +3,13 @@
 <parameter> ::= IDENT COLON <type_sig>
 
 <param_opt_typed> ::= IDENT
-                    | IDENT COLON IDENT
+                    | LPAR IDENT COLON <type_sig> RPAR
 
 <ident> ::= IDENT
 
 <type_sig> ::= TANY
              | <ident>
-             | LPAR <type_sig> MUL <type_sig> RPAR
+             | <type_sig> MUL <type_sig>
              | LBRACE <parameter> (SEMICOLON <parameter>)* RBRACE
              | <ident> PIPE <ident> (PIPE <ident>)*
              | LPAR <type_sig> RPAR
@@ -31,7 +31,7 @@
          | NAT
          | LBRACE <erec_element> (SEMICOLON <erec_element>)* RBRACE
          | LPAR <expr> COMMA <expr> RPAR
-         | FUN LPAR [<parameter> (COMMA <parameter>)*] RPAR LAMBDA <expr>
+         | FUN LPAR RPAR LAMBDA <expr>
          | FUN <param_opt_typed> LAMBDA <expr>
          | LET IDENT COLON <type_sig> EQ <expr> IN <expr>
          | LET IDENT EQ <expr> IN <expr>

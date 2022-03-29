@@ -14,11 +14,6 @@ let rec enum_index e i ii = match e with
 let pp_par fmt ((ti, tt): string * ttype) = 
   fprintf fmt "%s: %a" ti pp_ltype tt
 
-let pp_mpar fmt il =
-  fprintf fmt "%a: %a"
-    (pp_list ", " pp_str) (fst @@ List.split il)
-    (pp_list " * " pp_ltype) (snd @@ List.split il)
-
 
 
 let rec pp_lexpr fmt ((_,e): texpr) = 
@@ -67,12 +62,9 @@ match e with
     pp_lexpr e1
     pp_lexpr e2
 
-| Lambda (il, e) -> 
-  if List.length il = 0 then 
-    fprintf fmt "( fun (override: unit) -> @[@\n%a@] )" pp_lexpr e 
-  else 
-    fprintf fmt "(fun (%a) -> @[%a@])"    
-      pp_mpar il
+| Lambda (arg, e) -> 
+    fprintf fmt "| %a | {@[%a@]}"    
+      pp_par arg
       pp_lexpr e
 
 | Record (il) -> 

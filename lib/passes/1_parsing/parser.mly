@@ -36,14 +36,14 @@
 
   param_opt_typed: 
 	| i=IDENT  									{ (i, PTBuiltin("'a")) }
-  | i=IDENT COLON t=IDENT 		{ (i, PTBuiltin(t)) }
+  | LPAR i=IDENT COLON t=type_sig RPAR		{ (i, t) }
 
   ident: | i=IDENT { i }
 
   type_sig:
     | TANY                                          { Parse_tree.PTBuiltin ("'a") }
     | t=ident                                       { Parse_tree.PTBuiltin (t) }
-    | LPAR t1=type_sig MUL t2=type_sig RPAR         { Parse_tree.PTPair (t1, t2) }
+    | t1=type_sig MUL t2=type_sig                   { Parse_tree.PTPair (t1, t2) }
     | LBRACE tl=separated_nonempty_list(SEMICOLON, parameter) RBRACE
                                                     { Parse_tree.PTRecord (tl)}
     | x=ident PIPE el=separated_nonempty_list(PIPE, ident)  
@@ -73,10 +73,10 @@
                                 { loce $startpos $endpos @@ Parse_tree.PERecord (tl) }
     | LPAR t1=expr COMMA t2=expr RPAR
                                 { loce $startpos $endpos @@ Parse_tree.PEPair (t1, t2) }
-    | FUN LPAR tl=separated_list(COMMA, parameter) RPAR LAMBDA e=expr
-                                { loce $startpos $endpos @@ Parse_tree.PELambda (tl, e) }
+    | FUN LPAR RPAR LAMBDA e=expr
+                                { loce $startpos $endpos @@ Parse_tree.PELambda (("_", PTBuiltin("unit")), e) }
     | FUN p=param_opt_typed LAMBDA e=expr
-                                { loce $startpos $endpos @@ Parse_tree.PELambda ([p], e) }
+                                { loce $startpos $endpos @@ Parse_tree.PELambda (p, e) }
 
 		// bindings 
 		| LET i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ Parse_tree.PELetIn (i, Some(t), e, ee, false) }

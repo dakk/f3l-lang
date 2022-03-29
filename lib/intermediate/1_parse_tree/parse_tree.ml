@@ -18,7 +18,7 @@ type pexpr =
   | PEBytes of string
   | PETyped of pexpr * ptype
   | PEPair of pexpr * pexpr
-  | PELambda of (iden * ptype) list * pexpr
+  | PELambda of (iden * ptype) * pexpr
   | PERecord of (iden * pexpr) list
 
   | PERef of iden

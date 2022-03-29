@@ -1,8 +1,6 @@
 let a: int -> int = fun (a: int) -> (0 + 1)
 let b: int -> bool = fun (a: int) -> (0 > 1)
 let c: int -> bool = fun (a: int) -> (a > 1)
-let d: (int * int) -> bool = fun (a: int, b: int) -> ((a * 8) > (b - 12))
-let e: (int * int) -> bool = fun (a: int, b: int) -> ((a * (b - 8)) > (b - 12))
 
 (* let f: int -> bool = fun (a: int) -> (d (12, 13)) *)
 
