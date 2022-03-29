@@ -6,3 +6,6 @@ let z = tl (a)
 
 let x = fst (a)
 let y = snd (a)
+
+
+let nl = ("nuovoelemento", a)
