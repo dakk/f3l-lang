@@ -44,6 +44,8 @@ let () =
     ];
     "type", [
       "types", `Quick, compile opt None "test/type/types.ml";
+      "atype", `Quick, compile opt None "test/type/atype.ml";
+      (* "atype_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/type/atype_fail.ml"; *)
     ];
     "sugar", [
       "match_case", `Quick, compile opt None "test/sugar/match_case.ml";

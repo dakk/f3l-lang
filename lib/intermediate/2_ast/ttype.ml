@@ -57,8 +57,6 @@ let attributes (t: ttype) = match t |> type_final with
   | TUnion (_) ->     { cmp=true;  pack=true  } 
   | TPair (_, _) ->   { cmp=true;  pack=true  } 
   | TTypeRef (_, _) ->{ cmp=true;  pack=true  }
- 
-  (* internal types *)
   | TAny ->           { cmp=true; pack=false }
   
 
@@ -85,6 +83,7 @@ let rec comparable a b = match a, b with
 | a, b when a = b -> true 
 | _ -> false
 
+let compare_strict t t' = t = t'
 
 let rec compare_lazy t t' = match t' |> type_final, t |> type_final with 
   | TPair(a, b), TPair(c, d) -> compare_lazy a c && compare_lazy b d

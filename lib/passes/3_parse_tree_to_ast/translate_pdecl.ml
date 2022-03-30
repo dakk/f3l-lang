@@ -58,7 +58,7 @@ let rec transform (p: Parse_tree.t) (e: Env.t): Env.t =
       let (t, exp) = transform_expr v temp_env [] in 
 
       let t = match (t |> type_final, et |> type_final) with
-        | a, b when a = b -> t
+        | a, b when compare_lazy a b -> t
         | _, _ -> raise @@ TypeError (Pt_loc.dline p, "Def '" ^ id ^ "' expect to have type '" ^ show_ttype et ^ "', but type '" ^ show_ttype t ^ "' found")
       in t, exp)
     in transform p' { e with 
