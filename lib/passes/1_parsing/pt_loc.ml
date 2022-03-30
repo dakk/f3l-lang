@@ -14,6 +14,13 @@ let locations = ref @@ LocationTable.create 10000
 let ladd = LocationTable.add !locations
 let pp_pos s _ = s, !filename, s.pos_lnum, (s.pos_cnum - s.pos_bol + 1)
 
+let locdl s e x = 
+  let rec pr xl = match xl with 
+  | [] -> x
+  | x'::xl' -> ladd (Decl (x')) @@ pp_pos s e; pr xl'
+  in pr x 
+
+
 let locd s e x = ladd (Decl (x)) @@ pp_pos s e; x
 let loce s e x = ladd (Expr (x)) @@ pp_pos s e; x
 (* let loci s e x = ladd (Iden (x)) @@ pp_pos s e; x *)

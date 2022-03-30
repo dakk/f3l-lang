@@ -21,8 +21,10 @@
 %token <int> NAT
 %token <float> FLOAT
 %token <string> IDENT
+%token <string> MIDENT
 
 %token MATCH, WITH, UNDERSCORE, PIPEGT, RSPAR, LSPAR
+%token MODULE, STRUCT, END, DOT
 
 %left PIPEGT
 %left NOT
@@ -37,7 +39,7 @@
 %start <Parse_tree.t> program
 
 %%
-  program: dl=list(declaration) EOF { dl }
+  program: dl=list(declaration) EOF { List.flatten (dl: declaration list list) }
 
   param_opt_typed: 
 	| i=IDENT  									{ (i, PTBuiltin("'a")) }
@@ -48,6 +50,7 @@
   | i=IDENT COLON t=type_sig	{ (i, t) }
 
   ident: | i=IDENT { i }
+  mident: | i=MIDENT { i }
 
   // typed_union_element: | i=IDENT OF t=IDENT { i }
 
@@ -61,6 +64,9 @@
     | p=type_sig LAMBDA pr=type_sig									{ PTLambda (p, pr) }
 
     ///////////// SUGAR
+    // Module dot access 
+    | t=MIDENT DOT tt=ident                         { PTBuiltin (t ^ "_" ^ tt)}
+    
     // Typed union 
     // | el=separated_nonempty_list(PIPE, typed_union_element)  
     //                                                 { PTPair (PTUnion (el), PTBuiltin ("'a")) }
@@ -129,6 +135,9 @@
 
 
     ////////// SUGAR
+
+    // Module dot access
+    | i=MIDENT DOT ii=IDENT         { loce $startpos $endpos @@ PERef (i ^ "_" ^ ii) }
 
     // Typed union element 
     // | i=IDENT LPAR e=expr RPAR  { loce $startpos $endpos @@ PEPair (PERef(i), e) }
@@ -210,8 +219,24 @@
 
   dopen: | OPEN p=ident { DOpen (p) }
 
+  ////////// SUGAR
+
+  // Modules; all the declarations x will be renamed to Module_name_x, and so every dot access
+  dmodule:
+  | MODULE x=MIDENT EQ STRUCT dl=list(declaration) END
+      { 
+        let rec nbuild (dl: declaration list): declaration list = match dl with 
+        | [] -> []
+        | (DDef(i, pt, e, b))::dl' -> (DDef(x ^ "_" ^ i, pt, e, b))::nbuild dl'
+        | (DType(i, t))::dl' -> (DType(x ^ "_" ^ i, t))::nbuild dl'
+        | (DExternal(i, t, n))::dl' -> (DExternal(x ^ "_" ^ i, t, n))::nbuild dl'
+        | (DOpen(i))::dl' -> raise (SyntaxError2 ("Open not allowed in module"))
+        in nbuild @@ List.flatten dl
+      }
+
   declaration:
-    | t=dtype           { locd $startpos $endpos t }
-    | d=ddef            { locd $startpos $endpos d }
-    | e=dexternal       { locd $startpos $endpos e }
-    | o=dopen           { locd $startpos $endpos o }
+    | m=dmodule         { locdl $startpos $endpos m }
+    | t=dtype           { locdl $startpos $endpos [t] }
+    | d=ddef            { locdl $startpos $endpos [d] }
+    | e=dexternal       { locdl $startpos $endpos [e] }
+    | o=dopen           { locdl $startpos $endpos [o] }

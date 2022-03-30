@@ -87,6 +87,7 @@ let compare_strict t t' = t = t'
 
 let rec compare_lazy t t' = match t' |> type_final, t |> type_final with 
   | TPair(a, b), TPair(c, d) -> compare_lazy a c && compare_lazy b d
+  | TLambda (a, b), TLambda (c, d) -> compare_lazy a c && compare_lazy b d
   | TAny, _ -> true
   | _, TAny -> true
   | a, b -> a = b

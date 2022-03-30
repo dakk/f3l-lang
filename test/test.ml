@@ -87,6 +87,6 @@ let () =
     ];
     "module", [
       "open", `Quick, compile opt None "test/module/open.ml";
-      (* "module", `Quick, compile opt None "test/module/module.ml"; *)
+      "module", `Quick, compile opt None "test/module/module.ml";
     ];
   ]
