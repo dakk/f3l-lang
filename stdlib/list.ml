@@ -1,10 +1,10 @@
-type 'a list = ('a, 'a list)
+type 'a list = ('a * 'a)
 
-let empty (v:unit) = (unit, unit)
+let empty = ((), ())
 
-let hd (l: 'a list) = fst l
+let hd = fun (l: 'a list) -> fst (l)
 
-let tl (l: 'a list) = snd l
+let tl = fun (l: 'a list) -> snd (l)
 
 let length (l: 'a list) = match l with
 | (unit, unit) -> 0
