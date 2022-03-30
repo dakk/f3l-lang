@@ -256,8 +256,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (te1, ee1) = transform_expr e1 env' ic in 
     let (te2, ee2) = transform_expr e2 env' ic in 
     (match tc |> type_final, te1 |> type_final, te2 |> type_final with 
-    | TBool, t, t' when compare t t' -> t, IfThenElse ((tc, ec), (te1, ee1), (te2, ee2))
-    | TBool, t, t' when not (compare t t') -> 
+    | TBool, t, t' when compare_lazy t t' -> t, IfThenElse ((tc, ec), (te1, ee1), (te2, ee2))
+    | TBool, t, t' when not (compare_lazy t t') -> 
       raise @@ TypeError (pel, "If branches should have same type, got: '" ^ show_ttype t ^ "' and '" ^ show_ttype t' ^ "'")
     | _, _, _ -> raise @@ TypeError (pel, "If condition should be a boolean expression, got '" ^ show_ttype tc ^ "'"))
 

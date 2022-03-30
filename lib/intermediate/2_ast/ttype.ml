@@ -86,15 +86,8 @@ let rec comparable a b = match a, b with
 | _ -> false
 
 
-let rec compare t1 t2 = match (t1 |> type_final), (t2 |> type_final) with 
-| TAny, _ -> true 
-| _, TAny -> true
-| TPair(a, b), TPair(c, d) -> compare a c && compare b d
-| _, _ -> t1 = t2 
-
-let compare_lazy t t' = match t' |> type_final, t |> type_final with 
-  | TPair(a, TAny), TPair (c, _) -> a = c
-  | TPair(a, _), TPair (c, TAny) -> a = c
+let rec compare_lazy t t' = match t' |> type_final, t |> type_final with 
+  | TPair(a, b), TPair(c, d) -> compare_lazy a c && compare_lazy b d
   | TAny, _ -> true
   | _, TAny -> true
   | a, b -> a = b
