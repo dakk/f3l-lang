@@ -14,21 +14,7 @@ Cast from an any type to a specific one:
 
 # Base Types
 
-## Numerical \(nat, int, float \)
-
-### Nat
-
-Nat type represents natural numbers \(positive integers U { 0 }\); a nat literal should be always followed by an _n._
-
-```c
-let a: nat = 12n;
-```
-
-A nat value can be converted to _int_ type using the _int\(nat\)_ builtin function:
-
-```c
-let b: int = int(12n);
-```
+## Numerical \(int, float \)
 
 ### Int
 
@@ -38,18 +24,6 @@ Int type represents integer numbers; we define an _int_:
 let a: int = 12;
 ```
 
-We can check if the _int_ is a _nat_:
-
-```c
-let b1: bool = isNat(12);  // true
-let b2: bool = isNat(-12); // false
-```
-
-Transform an _int_ to a _nat_:
-
-```c
-let c: nat = abs(-12);
-```
 
 And negate a _nat_ or _int_ \(the result type is always an int\):
 

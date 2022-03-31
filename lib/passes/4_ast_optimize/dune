@@ -4,7 +4,7 @@
  (libraries helpers ast)
  (modules 
   remove_unused 
-  replace_union_with_nat
+  replace_union_with_int
  ))
 
 (env

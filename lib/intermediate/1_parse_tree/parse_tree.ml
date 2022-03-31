@@ -10,7 +10,6 @@ type ptype =
 type pexpr =
   | PEUnit
   | PEBool of bool
-  | PENat of int 
   | PEInt of int 
   | PEFloat of float
   | PEString of string
@@ -30,6 +29,10 @@ type pexpr =
   | PEMul of pexpr * pexpr
   | PEDiv of pexpr * pexpr
   | PEMod of pexpr * pexpr
+  | PEFAdd of pexpr * pexpr
+  | PEFSub of pexpr * pexpr
+  | PEFMul of pexpr * pexpr
+  | PEFDiv of pexpr * pexpr
 
   (* bool *)
   | PEAnd of pexpr * pexpr

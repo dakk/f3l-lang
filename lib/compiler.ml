@@ -69,7 +69,7 @@ let build_ast (pt: Parse_tree.t) opt =
 
     (* replace unions *)
     |> app opt.verbose @@ print_str "===> Replacing unions" 
-    |> Passes.Ast_optimize_1_replace_union_with_nat.replace_union_with_nat 
+    |> Passes.Ast_optimize_1_replace_union_with_int.replace_union_with_int 
 
     (* remove unused *)
     |> app opt.verbose @@ print_str "===> Dropping unused code" 

@@ -11,7 +11,6 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
     with | _ -> match e with
 
   | Bool (_)
-  | Nat (_)
   | Int (_)
   | Float (_)
   | String (_)

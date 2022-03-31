@@ -8,7 +8,6 @@ type uexpr =
 
 | UUnit 
 | UBool of bool
-| UNat of int 
 | UInt of int 
 | UFloat of float
 | UString of string

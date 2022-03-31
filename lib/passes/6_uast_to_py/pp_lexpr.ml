@@ -22,9 +22,6 @@ match e with
 | UBool (true) -> fprintf fmt "True"
 | UBool (false) -> fprintf fmt "False"
 
-| UNat (i) -> 
-  fprintf fmt "%d" i
-
 | UInt (i) -> 
   fprintf fmt "%d" i
 

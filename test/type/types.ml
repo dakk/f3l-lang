@@ -1,6 +1,6 @@
 
-type getBalance = (nat * nat)
+type getBalance = (int * int)
 
-type tl = (nat -> nat)
+type tl = (int -> int)
 
-type tll = (tl -> nat)
+type tll = (tl -> int)

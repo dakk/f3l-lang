@@ -8,7 +8,6 @@ type expr =
 
 | Unit 
 | Bool of bool
-| Nat of int 
 | Int of int 
 | Float of float
 | String of string
@@ -28,6 +27,11 @@ type expr =
 | Mul of texpr * texpr
 | Div of texpr * texpr
 | Mod of texpr * texpr
+
+| FAdd of texpr * texpr
+| FSub of texpr * texpr
+| FMul of texpr * texpr
+| FDiv of texpr * texpr
 
 
 (* bool *)

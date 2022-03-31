@@ -21,7 +21,6 @@ let start_env = {
     "'a", TAny;
     "unit", TUnit;
     "int", TInt;
-    "nat", TNat;
     "float", TFloat;
     "bool", TBool;
     "string", TString;
@@ -31,7 +30,6 @@ let start_env = {
     "'a", Type;
     "unit", Type;
     "int", Type;
-    "nat", Type;
     "float", Type;
     "bool", Type;
     "string", Type;

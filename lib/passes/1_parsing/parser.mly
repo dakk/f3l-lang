@@ -10,7 +10,9 @@
 // %token OF, DOT
 %token LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ 
 %token TYPE, AND, OR, NOT, TRUE, FALSE
-%token ADD, SUB, DIV, MUL, MOD, IF, THEN, ELSE
+%token ADD, SUB, DIV, MUL, MOD
+%token FADD, FSUB, FDIV, FMUL
+%token IF, THEN, ELSE
 %token LTE, LT, GT, GTE, LET, IN
 %token NEQ, UNIT, TANY, REC
 %token OPEN, EXTERNAL
@@ -18,7 +20,6 @@
 %token <string> STRING
 %token <string> BYTES
 %token <int> INT
-%token <int> NAT
 %token <float> FLOAT
 %token <string> IDENT
 // %token <string> MIDENT
@@ -82,7 +83,6 @@
     | x=BYTES			 		{ loce $startpos $endpos @@ PEBytes (x) }
     | x=FLOAT					{ loce $startpos $endpos @@ PEFloat (x) }
     | x=INT 					{ loce $startpos $endpos @@ PEInt (x) }
-    | x=NAT 					{ loce $startpos $endpos @@ PENat (x) }
     | i=IDENT 				{ loce $startpos $endpos @@ PERef (i) }
 
   case:
@@ -104,12 +104,18 @@
 		| LET REC i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ PELetIn (i, Some(t), e, ee, true) }
 		| LET REC i=IDENT EQ e=expr IN ee=expr { loce $startpos $endpos @@ PELetIn (i, None, e, ee, true) }
 
-    // arithm
+    // arithm (int)
     | e1=expr ADD e2=expr 			{ loce $startpos $endpos @@ PEAdd (e1,e2) }
     | e1=expr SUB e2=expr 			{ loce $startpos $endpos @@ PESub (e1,e2) }
     | e1=expr DIV e2=expr 			{ loce $startpos $endpos @@ PEDiv (e1,e2) }
     | e1=expr MUL e2=expr 			{ loce $startpos $endpos @@ PEMul (e1,e2) }
     | e1=expr MOD e2=expr 			{ loce $startpos $endpos @@ PEMod (e1,e2) }
+
+    // arithm (float)
+    | e1=expr FADD e2=expr 			{ loce $startpos $endpos @@ PEFAdd (e1,e2) }
+    | e1=expr FSUB e2=expr 			{ loce $startpos $endpos @@ PEFSub (e1,e2) }
+    | e1=expr FDIV e2=expr 			{ loce $startpos $endpos @@ PEFDiv (e1,e2) }
+    | e1=expr FMUL e2=expr 			{ loce $startpos $endpos @@ PEFMul (e1,e2) }
 
     // boolean
     | e1=expr AND e2=expr 			{ loce $startpos $endpos @@ PEAnd (e1,e2) }
@@ -160,7 +166,7 @@
                                   in loce $startpos $endpos @@ nbuild tl }
 
     // Nth access to tuple and lists
-    // | NTH e1=expr x=NAT
+    // | NTH e1=expr x=INT
     //                             {
     //                               let rec nbuild i = if i = 0 then 
     //                                 PEApply (PERef("fst"), e1) 

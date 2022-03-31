@@ -16,9 +16,6 @@ let rec pp_ltype fmt (a: ttype) = match a with
 | TInt -> 
   fprintf fmt "int"
 
-| TNat -> 
-  fprintf fmt "unsigned"
-
 | TFloat -> 
   fprintf fmt "float"
 

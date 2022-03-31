@@ -35,9 +35,6 @@ match e with
 | Bool (i) -> 
   fprintf fmt "%b" i
 
-| Nat (i) -> 
-  fprintf fmt "%d" i
-
 | Int (i) -> 
   fprintf fmt "%d" i
 

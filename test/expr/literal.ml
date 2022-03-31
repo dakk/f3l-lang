@@ -1,7 +1,6 @@
 (* open Pair_opt *)
 
 let litString: string = "hola"
-let litNat: nat = 1n
 let litFloat: float = 12.
 let litFloat2: float = 12.034
 let litInt: int = 12

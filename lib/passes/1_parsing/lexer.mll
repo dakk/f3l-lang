@@ -41,7 +41,6 @@ let letter = letter_up | letter_dw
 
 (* let mident = letter_up (letter | digit | '_')* *)
 let ident = letter (letter | digit | '_')*
-let nat = digit digit* "n"
 let int = digit digit*
 let float = digit digit* "." digit*
 
@@ -61,7 +60,6 @@ rule token = parse
   | blank+          { token lexbuf }
   | float as f      { FLOAT (float_of_string f) }
   | int as i 			  { INT (int_of_string i) }
-  | nat as i 			  { NAT (int_of_string (String.sub i 0 ((String.length i) - 1))) }
 
 	| "()"					  { UNIT }
   | "external"      { EXTERNAL }
@@ -105,7 +103,12 @@ rule token = parse
   | "-"					  	{ SUB }
   | "/"					  	{ DIV }
   | "*"					  	{ MUL }
-  | "%"					  	{ MOD }
+  | "mod"				  	{ MOD }
+  | "+."				  	{ FADD }
+  | "-."				  	{ FSUB }
+  | "/."				  	{ FDIV }
+  | "*."				  	{ FMUL }
+
   | "="             { EQ }
   | "<>"				  	{ NEQ }
   | ">"					  	{ GT }

@@ -2,18 +2,17 @@ open Ast
 open Ast_ttype
 open Ast_expr
 
-let replace_union_with_nat ast = 
+let replace_union_with_int ast = 
   let rec replace_type t mp = match t with 
   | TTypeRef (_, t) -> replace_type t mp
   | TLambda (t, tt) -> TLambda (replace_type t mp, replace_type tt mp)
-  | TUnion (_) -> TNat
+  | TUnion (_) -> TInt
   | TPair(t1, t2) -> TPair (replace_type t1 mp, replace_type t2 mp)
   | _ -> t
   in
 
   let rec replace_exp (t,e) mp : texpr = match e with 
   | Bool (a) -> replace_type t mp, Bool (a)
-  | Nat (a) -> replace_type t mp, Nat (a)
   | Int (a) -> replace_type t mp, Int (a)
   | Float (a) -> replace_type t mp, Float (a)
   | String (a) -> replace_type t mp, String (a)
@@ -23,7 +22,7 @@ let replace_union_with_nat ast =
   | Unit -> replace_type t mp, Unit
   | GlobalRef (a) -> replace_type t mp, GlobalRef (a)
   | External (a, b) -> replace_type t mp, External (a, replace_type b mp)
-  | UnionValue (a) -> TNat, Nat(List.assoc a mp)
+  | UnionValue (a) -> TInt, Int(List.assoc a mp)
   | Lambda (a, b) -> replace_type t mp, Lambda ((fst a, replace_type (snd a) mp), replace_exp b mp)
   | PairFst (a) -> replace_type t mp, PairFst (replace_exp a mp)
   | PairSnd (a) -> replace_type t mp, PairSnd (replace_exp a mp)
@@ -53,7 +52,6 @@ let replace_union_with_nat ast =
     let rec replace_un acc l mp i = (match l with
     | [] -> (acc, mp, i)
     | ii::l' -> replace_un (acc) l' ((ii, i)::mp) (i+1))
-    (* (ii, Def(TNat, Nat(i))):: *)
     in
     let na, mp', i' = replace_un [] el mp i in 
     (na @ (ruwn al mp' i'))

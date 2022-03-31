@@ -13,5 +13,4 @@ let l= true or false
 let u = ()
 
 let litString = "hola"
-let litNat = 1n
 let litInt = 12 *)

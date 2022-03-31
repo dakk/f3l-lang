@@ -6,7 +6,6 @@ type ttype =
   | TAny
   | TUnit
   | TInt
-  | TNat
   | TFloat
   | TBool
   | TString
@@ -20,7 +19,6 @@ let is_base (t: ttype) = match t with
   | TUnit -> true
   | TAny -> true
   | TInt -> true
-  | TNat -> true
   | TFloat -> true
   | TBool -> true
   | TString -> true
@@ -40,7 +38,6 @@ let rec show_ttype (at: ttype) = match at with
 | TAny -> "'a"
 | TUnit -> "unit"
 | TInt -> "int"
-| TNat -> "nat"
 | TFloat -> "float"
 | TBool -> "bool"
 | TString -> "string"
@@ -73,7 +70,6 @@ let rec compare_lazy t t' = match t' |> type_final, t |> type_final with
 
 let rec allowed_cast f t = match f, t with 
 | a, b when a = b -> true
-| TNat, TInt -> true
 | TAny, _ -> true
 | _, TAny -> true
 | TPair(a, b), TPair(TAny, TAny) -> a = b

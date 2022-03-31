@@ -4,7 +4,6 @@ open Ast_expr
 
 let rec translate_exp (a: Ast_expr.texpr): Untyped_ast.uexpr = match snd a with 
 | Bool (a) -> UBool(a)
-| Nat (a) -> UNat(a)
 | Int (a) -> UInt(a)
 | Float (a) -> UFloat(a)
 | String (a) -> UString(a)

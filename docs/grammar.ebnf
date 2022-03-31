@@ -25,7 +25,6 @@
           | BYTES
           | FLOAT
           | INT
-          | NAT
           | IDENT
 
 <case> ::= <value> LAMBDA <expr>
@@ -44,6 +43,10 @@
          | <expr> DIV <expr>
          | <expr> MUL <expr>
          | <expr> MOD <expr>
+         | <expr> FADD <expr>
+         | <expr> FSUB <expr>
+         | <expr> FDIV <expr>
+         | <expr> FMUL <expr>
          | <expr> AND <expr>
          | <expr> OR <expr>
          | NOT <expr>

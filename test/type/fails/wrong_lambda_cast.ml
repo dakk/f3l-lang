@@ -1,1 +1,1 @@
-let a : int -> nat = fun (a: int) -> (a)
+let a : int -> string = fun (a: int) -> (a)
