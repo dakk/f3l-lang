@@ -11,6 +11,8 @@ module List = struct
     | (unit, unit) -> 0
     | (v, ll) -> 1 + length ll 
 
+    let is_empty = fun (x,y) -> x = () && y = ()
+
     let cons (l: 'a list) (v: 'a) = (v, l)
 
     let map (f: 'a -> 'b) (l: 'a list) = 
