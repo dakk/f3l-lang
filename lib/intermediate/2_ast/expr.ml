@@ -11,7 +11,7 @@ type expr =
 | Int of int 
 | Float of float
 | String of string
-| Bytes of bytes
+| Char of char
 | Typed of texpr * ttype
 | Pair of texpr * texpr
 | Lambda of (iden * ttype) * texpr

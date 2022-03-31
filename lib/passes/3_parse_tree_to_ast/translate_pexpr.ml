@@ -39,7 +39,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
   (* Literals *)
   | PEUnit -> TUnit, Unit
   | PEString (s) -> TString, String (s)
-  | PEBytes (s) -> TBytes, Bytes (Bytes.of_string s)
+  | PEChar (c) -> TChar, Char (c)
   | PEFloat (f) -> TFloat, Float (f)
   | PEInt (n) -> TInt, Int (n)
   | PEBool (b) -> TBool, Bool (b)

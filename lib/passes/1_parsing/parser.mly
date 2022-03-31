@@ -18,7 +18,7 @@
 %token OPEN, EXTERNAL
 %token LAMBDA, FUN
 %token <string> STRING
-%token <string> BYTES
+%token <char> CHAR
 %token <int> INT
 %token <float> FLOAT
 %token <string> IDENT
@@ -79,7 +79,7 @@
     | TRUE            { loce $startpos $endpos @@ PEBool (true) }
     | FALSE           { loce $startpos $endpos @@ PEBool (false) }
     | x=STRING 				{ loce $startpos $endpos @@ PEString (x) }
-    | x=BYTES			 		{ loce $startpos $endpos @@ PEBytes (x) }
+    | x=CHAR			 		{ loce $startpos $endpos @@ PEChar (x) }
     | x=FLOAT					{ loce $startpos $endpos @@ PEFloat (x) }
     | x=INT 					{ loce $startpos $endpos @@ PEInt (x) }
     | i=IDENT 				{ loce $startpos $endpos @@ PERef (i) }

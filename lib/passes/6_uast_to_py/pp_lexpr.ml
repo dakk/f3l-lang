@@ -31,8 +31,8 @@ match e with
 | UString (s) -> 
   fprintf fmt "\"%s\"" s
 
-| UBytes (s) -> 
-  fprintf fmt "b\"%s\"" (Bytes.to_string s)
+| UChar (s) -> 
+  fprintf fmt "\"%c\"" s
   
 | UPair (e1, e2) -> 
   fprintf fmt "[%a,%a]" 

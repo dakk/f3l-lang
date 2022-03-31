@@ -14,7 +14,7 @@ let traverse (te: texpr) (tf: 'a t_ovverride) (jf: 'a t_join) (empty: 'a) =
   | Int (_)
   | Float (_)
   | String (_)
-  | Bytes (_)
+  | Char (_)
   | Typed (_)
   | LocalRef (_)
   | Unit 

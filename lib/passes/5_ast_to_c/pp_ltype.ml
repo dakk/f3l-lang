@@ -25,8 +25,8 @@ let rec pp_ltype fmt (a: ttype) = match a with
 | TString -> 
   fprintf fmt "char []"
 
-| TBytes -> 
-  fprintf fmt "char []"
+| TChar -> 
+  fprintf fmt "char"
 
 | TLambda (p, r) -> 
   fprintf fmt "%a (*)(%a)" 

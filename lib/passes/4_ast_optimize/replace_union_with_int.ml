@@ -16,7 +16,7 @@ let replace_union_with_int ast =
   | Int (a) -> replace_type t mp, Int (a)
   | Float (a) -> replace_type t mp, Float (a)
   | String (a) -> replace_type t mp, String (a)
-  | Bytes (a) -> replace_type t mp, Bytes (a)
+  | Char (a) -> replace_type t mp, Char (a)
   | Typed (a, b) -> replace_type t mp, Typed (replace_exp a mp, replace_type b mp)
   | LocalRef (a) -> replace_type t mp, LocalRef (a)
   | Unit -> replace_type t mp, Unit

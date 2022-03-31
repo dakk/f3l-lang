@@ -47,10 +47,10 @@ let blank = [' ' '\t' '\r']
 let newline = '\n'
 let quote = '"'
 let string = quote (letter | digit | ' ' | '\'' | '=' | ':' | '_' | '.' | '/')* quote
-(* let squote = '\''
-let char = squote (letter | digit | ' ' | '\'' | '=' | ':' | '_' | '.' | '/') squote *)
+let squote = '\''
+let char = squote (letter | digit | ' ' | '\'' | '=' | ':' | '_' | '.' | '/') squote
 
-let bytes = 'b' string 
+(* let bytes = 'b' string  *)
 
 rule token = parse 
   | newline         { Lexing.new_line lexbuf; token lexbuf }
@@ -117,8 +117,8 @@ rule token = parse
   | "(*"            { comment_multiline lexbuf; token lexbuf }
 
   | '"'             { read_string (Buffer.create 17) lexbuf }
-  (* | string as s     { STRING (String.sub s 1 ((String.length s) - 2)) } *)
-  | bytes as s     	{ BYTES (String.sub s 2 ((String.length s) - 3)) }
+  | string as s     { STRING (String.sub s 1 ((String.length s) - 2)) }
+  | char as s     	{ CHAR (String.get s 1) }
 
   (* | mident as i     { if List.exists (fun r -> r = i) reserved then raise (SyntaxError2 ("Using reserved word for module identifier")) else MIDENT i } *)
   | ident as i      { if List.exists (fun r -> r = i) reserved then raise (SyntaxError2 ("Using reserved word for identifier")) else IDENT i }

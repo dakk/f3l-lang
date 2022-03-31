@@ -9,7 +9,7 @@ type ttype =
   | TFloat
   | TBool
   | TString
-  | TBytes
+  | TChar
   | TLambda of ttype * ttype
   | TUnion of string list
   | TPair of ttype * ttype
@@ -22,7 +22,7 @@ let is_base (t: ttype) = match t with
   | TFloat -> true
   | TBool -> true
   | TString -> true
-  | TBytes -> true 
+  | TChar -> true 
   | _ -> false
 
 let rec type_final tt1: ttype = match tt1 with
@@ -41,7 +41,7 @@ let rec show_ttype (at: ttype) = match at with
 | TFloat -> "float"
 | TBool -> "bool"
 | TString -> "string"
-| TBytes -> "bytes"
+| TChar -> "char"
 | TLambda (p, r) -> "(" ^ show_ttype p ^ " -> " ^ show_ttype r ^ ")"
 | TUnion (el) -> List.fold_left (fun acc x -> acc ^ (if acc = "" then "" else " | ") ^ x) "" el
 | TPair (t1, t2) -> "(" ^ show_ttype t1 ^ " * " ^ show_ttype t2 ^ ")"

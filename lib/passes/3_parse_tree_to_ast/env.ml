@@ -24,7 +24,7 @@ let start_env = {
     "float", TFloat;
     "bool", TBool;
     "string", TString;
-    "bytes", TBytes;
+    "char", TChar;
   ];
   symbols=[
     "'a", Type;
@@ -33,7 +33,7 @@ let start_env = {
     "float", Type;
     "bool", Type;
     "string", Type;
-    "bytes", Type;
+    "char", Type;
   ]
 }
 

@@ -13,7 +13,7 @@ type pexpr =
   | PEInt of int 
   | PEFloat of float
   | PEString of string
-  | PEBytes of string
+  | PEChar of char
   | PETyped of pexpr * ptype
   | PEPair of pexpr * pexpr
   | PELambda of (iden * ptype) * pexpr

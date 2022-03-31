@@ -11,7 +11,7 @@ type uexpr =
 | UInt of int 
 | UFloat of float
 | UString of string
-| UBytes of bytes
+| UChar of char
 | UPair of uexpr * uexpr
 | ULambda of iden * uexpr
 | UUnionValue of iden

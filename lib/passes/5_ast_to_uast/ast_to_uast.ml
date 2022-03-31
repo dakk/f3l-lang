@@ -7,7 +7,7 @@ let rec translate_exp (a: Ast_expr.texpr): Untyped_ast.uexpr = match snd a with
 | Int (a) -> UInt(a)
 | Float (a) -> UFloat(a)
 | String (a) -> UString(a)
-| Bytes (a) -> UBytes(a)
+| Char (a) -> UChar(a)
 | Typed (a, _) -> translate_exp a
 | LocalRef (a) -> ULocalRef(a)
 | Unit -> UUnit

@@ -85,39 +85,6 @@ And concat two strings:
 let c: string = a.concat(b)
 ```
 
-## Bytes
-
-Bytes are sequences of bytes. Like strings you can get the _length_ and a _slice_. 
-
-```ocaml
-let a: bytes = "..."
-let b: nat = a.size()
-let c: bytes = a.slice(1, 5)
-```
-
-Bytes type is useful for encoding/decoding f3l expressions using _pack_ and _unpack_:
-
-```ocaml
-let n: nat = 12n
-let a: bytes = Bytes.pack (n)
-let b: nat option = (Bytes.unpack (a): nat option)
-
-let c: bool = n = (Option.getSome(b))
-```
-
-And concat two bytes:
-
-```ocaml
-let c: bytes = a.concat(b);
-```
-
-## Unit
-
-The unit type is a type which has only a value _Unit._
-
-```ocaml
-let a: unit = ()
-```
 
 
 

@@ -22,7 +22,7 @@
           | TRUE
           | FALSE
           | STRING
-          | BYTES
+          | CHAR
           | FLOAT
           | INT
           | IDENT

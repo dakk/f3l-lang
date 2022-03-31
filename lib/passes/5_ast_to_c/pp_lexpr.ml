@@ -44,8 +44,8 @@ match e with
 | String (s) -> 
   fprintf fmt "\"%s\"" s
 
-| Bytes (s) -> 
-  fprintf fmt "\"%s\"" (Bytes.to_string s)
+| Char (c) -> 
+  fprintf fmt "\"%c\"" c
 
 | Typed (e, t) -> 
   fprintf fmt "(%a) %a" 
