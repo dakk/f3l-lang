@@ -63,7 +63,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let (tt, ee) = transform_expr e env' ic in 
     let tt' = transform_type et env' in
     (match tt, tt', ee with 
-    | a, b, _ when a=b -> a, ee
+    | a, b, _ when compare_lazy a b -> a, ee
     | a, b, c -> raise @@ TypeError (pel, "Invalid cast from '" ^ show_ttype a ^ "' to '" ^ show_ttype b ^ "' for value: " ^ show_expr c))
 
   | PELambda ((argi, argt), e) -> 

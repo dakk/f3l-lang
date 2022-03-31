@@ -14,6 +14,7 @@ type ttype =
   | TLambda of ttype * ttype
   | TUnion of string list
   | TPair of ttype * ttype
+  (* | TCont of iden * ttype   *)
 
 let is_base (t: ttype) = match t with 
   | TUnit -> true
@@ -30,6 +31,7 @@ let rec type_final tt1: ttype = match tt1 with
 | TTypeRef(_, t) -> type_final t 
 | TPair(t1, t2) -> TPair ((type_final t1), (type_final t2))
 | TLambda (tt1, tt2) -> TLambda (type_final tt1, type_final tt2)
+(* | TCont(i, t) -> TCont(i, type_final t) *)
 | _ -> tt1
 
 
@@ -57,7 +59,7 @@ let attributes (t: ttype) = match t |> type_final with
   | TUnion (_) ->     { cmp=true;  pack=true  } 
   | TPair (_, _) ->   { cmp=true;  pack=true  } 
   | TTypeRef (_, _) ->{ cmp=true;  pack=true  }
-  | TAny ->           { cmp=true; pack=false }
+  | TAny ->           { cmp=true;  pack=false }
   
 
 let rec show_ttype (at: ttype) = match at with 

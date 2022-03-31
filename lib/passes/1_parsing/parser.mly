@@ -21,7 +21,7 @@
 %token <int> NAT
 %token <float> FLOAT
 %token <string> IDENT
-%token <string> MIDENT
+// %token <string> MIDENT
 
 %token MATCH, WITH, UNDERSCORE, PIPEGT, RSPAR, LSPAR
 %token MODULE, STRUCT, END, DOT
@@ -50,7 +50,7 @@
   | i=IDENT COLON t=type_sig	{ (i, t) }
 
   ident: | i=IDENT { i }
-  mident: | i=MIDENT { i }
+  // mident: | i=MIDENT { i }
 
   // typed_union_element: | i=IDENT OF t=IDENT { i }
 
@@ -65,7 +65,7 @@
 
     ///////////// SUGAR
     // Module dot access 
-    | t=MIDENT DOT tt=ident                         { PTBuiltin (t ^ "_" ^ tt)}
+    | t=IDENT DOT tt=ident                         { PTBuiltin (t ^ "_" ^ tt)}
     
     // Typed union 
     // | el=separated_nonempty_list(PIPE, typed_union_element)  
@@ -137,7 +137,7 @@
     ////////// SUGAR
 
     // Module dot access
-    | i=MIDENT DOT ii=IDENT         { loce $startpos $endpos @@ PERef (i ^ "_" ^ ii) }
+    | i=IDENT DOT ii=IDENT         { loce $startpos $endpos @@ PERef (i ^ "_" ^ ii) }
 
     // Typed union element 
     // | i=IDENT LPAR e=expr RPAR  { loce $startpos $endpos @@ PEPair (PERef(i), e) }
@@ -223,7 +223,7 @@
 
   // Modules; all the declarations x will be renamed to Module_name_x, and so every dot access
   dmodule:
-  | MODULE x=MIDENT EQ STRUCT dl=list(declaration) END
+  | MODULE x=IDENT EQ STRUCT dl=list(declaration) END
       { 
         let rec nbuild (dl: declaration list): declaration list = match dl with 
         | [] -> []

@@ -39,8 +39,8 @@ let letter_up = ['A'-'Z']
 let letter_dw = ['a'-'z']
 let letter = letter_up | letter_dw
 
-let mident = letter_up (letter | digit | '_')*
-let ident = letter_dw (letter | digit | '_')*
+(* let mident = letter_up (letter | digit | '_')* *)
+let ident = letter (letter | digit | '_')*
 let nat = digit digit* "n"
 let int = digit digit*
 let float = digit digit* "." digit*
@@ -121,7 +121,7 @@ rule token = parse
   (* | string as s     { STRING (String.sub s 1 ((String.length s) - 2)) } *)
   | bytes as s     	{ BYTES (String.sub s 2 ((String.length s) - 3)) }
 
-  | mident as i     { if List.exists (fun r -> r = i) reserved then raise (SyntaxError2 ("Using reserved word for module identifier")) else MIDENT i }
+  (* | mident as i     { if List.exists (fun r -> r = i) reserved then raise (SyntaxError2 ("Using reserved word for module identifier")) else MIDENT i } *)
   | ident as i      { if List.exists (fun r -> r = i) reserved then raise (SyntaxError2 ("Using reserved word for identifier")) else IDENT i }
 
   | eof             { EOF }

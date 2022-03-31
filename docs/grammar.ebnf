@@ -8,15 +8,13 @@
 
 <ident> ::= IDENT
 
-<mident> ::= MIDENT
-
 <type_sig> ::= TANY
              | <ident>
              | <type_sig> MUL <type_sig>
              | <ident> PIPE <ident> (PIPE <ident>)*
              | LPAR <type_sig> RPAR
              | <type_sig> LAMBDA <type_sig>
-             | MIDENT DOT <ident>
+             | IDENT DOT <ident>
 
 <type_expr> ::= <type_sig>
 
@@ -59,7 +57,7 @@
          | <expr> LPAR <expr> RPAR
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
-         | MIDENT DOT IDENT
+         | IDENT DOT IDENT
          | LPAR <expr> COMMA <expr> COMMA <expr> (COMMA <expr>)* RPAR
          | LSPAR <expr> (SEMICOLON <expr>)* RSPAR
          | FUN LPAR <param_opt_typed2> (COMMA <param_opt_typed2>)* RPAR
@@ -80,7 +78,7 @@
 
 <dopen> ::= OPEN <ident>
 
-<dmodule> ::= MODULE MIDENT EQ STRUCT <declaration>* END
+<dmodule> ::= MODULE IDENT EQ STRUCT <declaration>* END
 
 <declaration> ::= <dmodule>
                 | <dtype>
