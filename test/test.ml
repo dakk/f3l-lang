@@ -33,6 +33,10 @@ let compile opt exc path _ =
 
 
 
+let from_dir d r = 
+  Sys.readdir d 
+  |> Array.to_list 
+  |> List.map (fun x -> x, `Quick, compile opt r (d^x))
 
 let () =
   Alcotest.run "yallo" [
@@ -45,8 +49,10 @@ let () =
     "type", [
       "types", `Quick, compile opt None "test/type/types.ml";
       "atype", `Quick, compile opt None "test/type/atype.ml";
-      (* "atype_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/type/atype_fail.ml"; *)
-    ];
+    ] 
+      @ from_dir "test/type/fails/" (Some(TypeError(None, "")))
+      @ from_dir "test/type/ok/" None
+    ;
     "sugar", [
       "match_case", `Quick, compile opt None "test/sugar/match_case.ml";
       "pipegt", `Quick, compile opt None "test/sugar/pipegt.ml";
@@ -73,7 +79,6 @@ let () =
       "numeric", `Quick, compile opt None "test/def/numeric.ml";
       "string", `Quick, compile opt None "test/def/string.ml";
       "lambda", `Quick, compile opt None "test/def/lambda.ml";
-      "lambda_fail", `Quick, compile opt (Some(TypeError(None, ""))) "test/def/lambda_fail.ml";
       "expr", `Quick, compile opt None "test/def/expr.ml";
       "let_expr", `Quick, compile opt None "test/def/let_expr.ml";
       "union", `Quick, compile opt None "test/def/union.ml";

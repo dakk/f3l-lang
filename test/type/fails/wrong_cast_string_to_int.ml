@@ -1,0 +1,2 @@
+let a : int = "string"
+
