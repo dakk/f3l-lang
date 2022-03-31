@@ -1,11 +1,15 @@
 module Option = struct 
   type e = Some | None
-
-  type 'a t = (e * 'a)
-
-  let is_none v = if fst v = None then true else false 
-
-  let is_some v = ! is_none v 
-
-  let get_some v = snd v
+  
+  type 'a option = (e * 'a)
+  
+  let none = (None, ())
+  let some = fun v -> (Some, v) 
+  
+  let is_none = fun (v: option) -> if fst (v) = None then true else false 
+  
+  let get_some = fun v -> snd (v)
+  
+  let is_some = fun v -> not (is_none (v))
 end
+

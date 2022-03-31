@@ -26,6 +26,7 @@ let command =
         and filename  = anon ("filename" %: string)
         and past      = flag "-print-ast" no_arg ~doc:" print ast"
         and puast     = flag "-print-uast" no_arg ~doc:" print untyped ast"
+        and exstd     = flag "-no-stdlib" no_arg ~doc:" disable stdlib"
         and ppt       = flag "-print-pt" no_arg ~doc:" print parse-tree"
         and verbose   = flag "-verbose" no_arg ~doc:" enable verbosity"
         and noremoveunused   = flag "-no-remove-unused" no_arg ~doc:" disable removing unused symbols"
@@ -38,7 +39,8 @@ let command =
           print_uast = puast;
           verbose = verbose;
           no_remove_unused = noremoveunused;
-          include_paths = ["."]; (* TODO: read from parameters *)
+          include_paths = if not exstd then ["stdlib"] else [] @ ["."]; (* TODO: read from parameters *)
+          include_stdlib = not exstd;
         } in (
           let pp_err p cc m = pp_message p cc m true in 
           try run action filename opt with 

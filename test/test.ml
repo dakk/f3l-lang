@@ -8,13 +8,15 @@ let opt = Compiler.{
   print_ast = true;
   verbose = false;
   no_remove_unused = true;
-  include_paths = ["."; "./test/module"; "./test/expr"];
+  include_paths = ["stdlib"; "./test/module"; "./test/expr"; "."];
+  include_stdlib = false;
 }
 
 let optc = { opt with no_remove_unused = false }
 
 let optl = { opt with target=Some("c") }
 let optlc = { optc with target=Some("c") }
+let optstd = { opt with include_stdlib=true }
 
 
 let compile opt exc path _ = 
@@ -33,10 +35,10 @@ let compile opt exc path _ =
 
 
 
-let from_dir d r = 
+let from_dir d r o= 
   Sys.readdir d 
   |> Array.to_list 
-  |> List.map (fun x -> x, `Quick, compile opt r (d^x))
+  |> List.map (fun x -> x, `Quick, compile o r (d^x))
 
 let () =
   Alcotest.run "yallo" [
@@ -50,8 +52,14 @@ let () =
       "types", `Quick, compile opt None "test/type/types.ml";
       "atype", `Quick, compile opt None "test/type/atype.ml";
     ] 
-      @ from_dir "test/type/fails/" (Some(TypeError(None, "")))
-      @ from_dir "test/type/ok/" None
+      @ from_dir "test/type/fails/" (Some(TypeError(None, ""))) opt 
+      @ from_dir "test/type/ok/" None opt 
+    ;
+    "stdlib", [
+      "empty", `Quick, compile optstd None "test/stdlib/empty.ml";
+    ]
+      @ from_dir "test/stdlib/fails/" (Some(TypeError(None, ""))) optstd
+      @ from_dir "test/stdlib/list/" None optstd
     ;
     "sugar", [
       "match_case", `Quick, compile opt None "test/sugar/match_case.ml";

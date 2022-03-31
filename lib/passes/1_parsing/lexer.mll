@@ -76,15 +76,15 @@ rule token = parse
   | "with"          { WITH }
   | "_"             { UNDERSCORE }
   | "|>"            { PIPEGT }
-  (* | "of"            { OF }     *)
+  (* | "of"         { OF }     *)
   | "module"        { MODULE }
   | "struct"        { STRUCT }
   | "end"           { END }
   
   | "'a"            { TANY }  
   | "->"				 	 	{ LAMBDA }
-  (* | "{"             { LBRACE } *)
-  (* | "}"             { RBRACE } *)
+  (* | "{"          { LBRACE } *)
+  (* | "}"          { RBRACE } *)
   | "."					  	{ DOT }
   | "["             { LSPAR }
   | "]"             { RSPAR }

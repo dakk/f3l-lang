@@ -8,6 +8,7 @@ type options = {
   verbose: bool;
   no_remove_unused: bool;
   include_paths: string list;
+  include_stdlib: bool;
 }
 
 let default_options = {
@@ -17,7 +18,8 @@ let default_options = {
   print_uast = true;
   verbose = true;
   no_remove_unused = false;
-  include_paths = ["."];
+  include_paths = ["stdlib"; "."];
+  include_stdlib = true;
 }
 
 (* dump the parse tree, debug only *)
@@ -53,7 +55,11 @@ let build_pt (filename: string) opt =
 
   (* parse the starting file *)
   filename 
-    |> Passes.Parsing.parse_file
+    |> Passes.Parsing.parse_file 
+
+    |> app (opt.verbose && opt.include_stdlib) @@ print_str "===> Injecting stdlib"
+    |> ap opt.include_stdlib (fun pt -> [Parse_tree.DOpen ("Stdlib")] @ pt)
+
     |> app opt.verbose @@ print_str "===> Injecting opens"
     |> Passes.Parse_tree_postprocess.inject_opens opt.include_paths
     (* print pt *)

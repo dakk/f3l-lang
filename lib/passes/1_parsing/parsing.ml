@@ -48,6 +48,7 @@ let parse filename s =
     | Some (line, pos) -> raise @@ SyntaxError (Some (lexbuf.lex_curr_p, filename, line, pos), err)
     | None -> raise @@ SyntaxError (Some(lexbuf.lex_curr_p, filename, -1, 0), err)
 
+
 let parse_file filename = 
   let rec readfile ic = 
     try let line = input_line ic in (line ^ "\n")::(readfile ic) with _ -> close_in_noerr ic; []
@@ -57,3 +58,4 @@ let parse_file filename =
   |> readfile 
   |> List.fold_left (fun acc x -> acc ^ x) "" 
   |> parse filename
+  
