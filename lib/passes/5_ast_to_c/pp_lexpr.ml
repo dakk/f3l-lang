@@ -87,6 +87,17 @@ match e with
 | Mod (a, b) -> 
   pp_infix2 fmt "%" a b
 
+| FAdd(a,b) -> 
+  pp_infix2 fmt "+" a b
+  
+| FSub(a,b) -> 
+  pp_infix2 fmt "-" a b
+  
+| FMul(a,b) -> 
+  pp_infix2 fmt "*" a b
+  
+| FDiv(a,b) -> 
+  pp_infix2 fmt "/" a b
 
 (* bool *)
 | Not(a) -> 

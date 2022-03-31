@@ -67,6 +67,18 @@ match e with
 | UMod (a, b) -> 
   pp_infix2 fmt "mod" a b
 
+| UFAdd(a,b) -> 
+  pp_infix2 fmt "+" a b
+  
+| UFSub(a,b) -> 
+  pp_infix2 fmt "-" a b
+  
+| UFMul(a,b) -> 
+  pp_infix2 fmt "*" a b
+  
+| UFDiv(a,b) -> 
+  pp_infix2 fmt "/" a b
+
 
 (* bool *)
 | UNot(a) -> 

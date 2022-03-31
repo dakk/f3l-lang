@@ -23,28 +23,6 @@ type pexpr =
   | PEApply of pexpr * pexpr
   | PELetIn of iden * ptype option * pexpr * pexpr * bool
 
-  (* aritmetic *)
-  | PEAdd of pexpr * pexpr
-  | PESub of pexpr * pexpr
-  | PEMul of pexpr * pexpr
-  | PEDiv of pexpr * pexpr
-  | PEMod of pexpr * pexpr
-  | PEFAdd of pexpr * pexpr
-  | PEFSub of pexpr * pexpr
-  | PEFMul of pexpr * pexpr
-  | PEFDiv of pexpr * pexpr
-
-  (* bool *)
-  | PEAnd of pexpr * pexpr
-  | PEOr of pexpr * pexpr
-  | PENot of pexpr
-  | PELt of pexpr * pexpr
-  | PELte of pexpr * pexpr
-  | PEGt of pexpr * pexpr
-  | PEGte of pexpr * pexpr
-  | PEEq of pexpr * pexpr
-  | PENeq of pexpr * pexpr
-
   [@@deriving show {with_path = false}]
 
 

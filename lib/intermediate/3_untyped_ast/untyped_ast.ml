@@ -26,6 +26,10 @@ type uexpr =
 | UMul of uexpr * uexpr
 | UDiv of uexpr * uexpr
 | UMod of uexpr * uexpr
+| UFAdd of uexpr * uexpr
+| UFSub of uexpr * uexpr
+| UFMul of uexpr * uexpr
+| UFDiv of uexpr * uexpr
 
 
 (* bool *)

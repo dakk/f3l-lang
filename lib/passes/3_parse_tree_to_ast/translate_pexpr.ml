@@ -6,8 +6,7 @@ open Parsing
 open Translate_ptype
 
 let show_ttype_got_expect t1 t2 = "got: '" ^ show_ttype t1 ^ "' expect '" ^ show_ttype t2 ^ "'"
-let show_ttype_between_na t1 t2 = "between '" ^ show_ttype t1 ^ "' and '" ^ show_ttype t2 ^ "' is not allowed"
-let show_ttype_not_cmp t1 t2 = "Types '" ^ show_ttype t1 ^ "' and '" ^ show_ttype t2 ^ "' are not comparable"
+let show_ttype_got t1 = "got: '" ^ show_ttype t1 ^ "'"
 
 
 type iref = 
@@ -35,9 +34,6 @@ let binding_find ic (st: ireft) i: iref option =
 let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : texpr = 
   let push_ic i ii ic = (i, ii)::(List.remove_assoc i ic) in
   let pel = Pt_loc.eline pe in
-  let assert_comparable tt1 tt2 = 
-    if not (comparable tt1 tt2) then raise @@ TypeError (pel, show_ttype_not_cmp tt1 tt2); ()
-  in
   let r = (match pe with
 
   (* Literals *)
@@ -54,7 +50,6 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let te2 = transform_expr e2 env' ic in
     TPair(fst te1, fst te2), Pair(te1, te2)
 
-
   | PETyped (e, et) -> 
     let (tt, ee) = transform_expr e env' ic in 
     let tt' = transform_type et env' in
@@ -66,145 +61,7 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     let argt = transform_type argt env' in
     let (tt, ee) = transform_expr e env' (push_ic argi (Local(argt)) ic) in 
     TLambda (argt, tt), Lambda((argi, argt), (tt, ee))
-
-
-  (* Arithmetic INT *)
-  | PEAdd (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TInt && a <> TAny || b <> TInt && b <> TAny then
-      raise @@ TypeError (pel, "+ branches should be int expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TInt, Add ((tt1, ee1), (tt2, ee2))
-
-  | PEMul (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TInt && a <> TAny || b <> TInt && b <> TAny then
-      raise @@ TypeError (pel, "* branches should be int expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TInt, Mul ((tt1, ee1), (tt2, ee2))
-
-  | PEDiv (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TInt && a <> TAny || b <> TInt && b <> TAny then
-      raise @@ TypeError (pel, "/ branches should be int expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TInt, Div ((tt1, ee1), (tt2, ee2))
-
-  | PESub (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TInt && a <> TAny || b <> TInt && b <> TAny then 
-      raise @@ TypeError (pel, "- branches should be int expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TInt, Sub ((tt1, ee1), (tt2, ee2))
-
-  | PEMod (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TInt && a <> TAny || b <> TInt && b <> TAny then
-      raise @@ TypeError (pel, "mod branches should be int expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TInt, Mod ((tt1, ee1), (tt2, ee2))
-
-
-
-  (* Arithmetic FLOAT *)
-  | PEFAdd (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TFloat && a <> TAny || b <> TFloat && b <> TAny then
-      raise @@ TypeError (pel, "+ branches should be int expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TFloat, FAdd ((tt1, ee1), (tt2, ee2))
-
-  | PEFMul (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TFloat && a <> TAny || b <> TFloat && b <> TAny then
-      raise @@ TypeError (pel, "* branches should be int expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TFloat, FMul ((tt1, ee1), (tt2, ee2))
-
-  | PEFDiv (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TFloat && a <> TAny || b <> TFloat && b <> TAny then
-      raise @@ TypeError (pel, "/ branches should be int expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TFloat, FDiv ((tt1, ee1), (tt2, ee2))
-
-  | PEFSub (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TFloat && a <> TAny || b <> TFloat && b <> TAny then
-      raise @@ TypeError (pel, "- branches should be int expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TFloat, FSub ((tt1, ee1), (tt2, ee2))
-
-
-  (* Boolean *)
-  | PENot (e1) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let a = tt1 |> type_final in
-    if a = TBool || a = TAny then TBool, Not (tt1, ee1) 
-    else raise @@ TypeError (pel, "Not needs a boolean expression, got: '" ^ show_ttype tt1 ^ "'")
-
-  | PEOr (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TBool && a <> TAny || b <> TBool && b <> TAny then
-      raise @@ TypeError (pel, "Or branches should be boolean expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TBool, Or ((tt1, ee1), (tt2, ee2))
-
-  | PEAnd (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    let a,b = tt1 |> type_final, tt2 |> type_final in
-    if a <> TBool && a <> TAny || b <> TBool && b <> TAny then
-      raise @@ TypeError (pel, "And branches should be boolean expressions, got: '" ^ show_ttype tt1 ^ "' and '" ^ show_ttype tt2 ^ "'");
-    TBool, And ((tt1, ee1), (tt2, ee2))
-  
-  (* Compare *)
-  | PEGt (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    assert_comparable tt1 tt2;
-    TBool, Gt((tt1, ee1), (tt2, ee2))
-
-  | PEGte (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    assert_comparable tt1 tt2;
-    TBool, Gte((tt1, ee1), (tt2, ee2))
-    
-  | PELt (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    assert_comparable tt1 tt2;
-    TBool, Lt((tt1, ee1), (tt2, ee2))
-
-  | PELte (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    assert_comparable tt1 tt2;
-    TBool, Lte((tt1, ee1), (tt2, ee2))
-
-  | PEEq (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    assert_comparable tt1 tt2;
-    TBool, Eq((tt1, ee1), (tt2, ee2))
-
-  | PENeq (e1, e2) -> 
-    let (tt1, ee1) = transform_expr e1 env' ic in 
-    let (tt2, ee2) = transform_expr e2 env' ic in 
-    assert_comparable tt1 tt2;
-    TBool, Neq((tt1, ee1), (tt2, ee2))
-    
+   
 
   (* symbol reference *)    
   | PERef (i) -> 
@@ -218,6 +75,84 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     )
     | Some (Local(t)) -> t, LocalRef (i)
     )
+
+
+  (* native bool function *)
+  | PEApply (PERef(nf), PEPair(e1, e2)) when nf = "&&" || nf = "||" -> 
+    let (tt1, ee1) = transform_expr e1 env' ic in 
+    let (tt2, ee2) = transform_expr e2 env' ic in 
+    let a,b = tt1 |> type_final, tt2 |> type_final in
+    if a <> TBool && a <> TAny || b <> TBool && b <> TAny then
+      raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got_expect (TPair(tt1, tt2)) @@ TPair(TBool, TBool));
+    (match nf with 
+    | "&&" -> TBool, And((tt1, ee1), (tt2, ee2))
+    | "||" -> TBool, Or((tt1, ee1), (tt2, ee2))
+    | _ -> failwith "unreachable")
+
+  | PEApply (PERef(nf), e1) when nf = "not" -> 
+    let (tt1, ee1) = transform_expr e1 env' ic in 
+    let a = tt1 |> type_final in
+    if a <> TBool && a <> TAny then
+      raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TBool);
+    TBool, Not((tt1, ee1))
+
+  (* equality *)
+  | PEApply (PERef(nf), PEPair(e1, e2)) when nf = "<>" || nf = "="-> 
+    let (tt1, ee1) = transform_expr e1 env' ic in 
+    let (tt2, ee2) = transform_expr e2 env' ic in 
+    let a, b = tt1 |> type_final, tt2 |> type_final in
+    if not (compare_lazy a b) then
+      raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got (TPair(tt1, tt2)));
+    (match nf with 
+    | "=" -> TBool, Eq((tt1, ee1), (tt2, ee2))
+    | "<>" -> TBool, Neq((tt1, ee1), (tt2, ee2))
+    | _ -> failwith "unreachable")
+
+
+  (* native comparison function *)
+  | PEApply (PERef(nf), PEPair(e1, e2)) when nf = ">=" || nf = "<=" || nf = ">" || nf = "<" || nf = "<>" || nf = "="-> 
+    let (tt1, ee1) = transform_expr e1 env' ic in 
+    let (tt2, ee2) = transform_expr e2 env' ic in 
+    let a, b = tt1 |> type_final, tt2 |> type_final in
+    if (a = TInt && b = TFloat || a = TFloat && b = TInt) || (a <> TInt && a <> TFloat && a <> TAny || b <> TInt && b <> TFloat && b <> TAny) then
+      raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got (TPair(tt1, tt2)));
+    (match nf with 
+    | ">=" -> TBool, Gte((tt1, ee1), (tt2, ee2))
+    | ">" -> TBool, Gt((tt1, ee1), (tt2, ee2))
+    | "<=" -> TBool, Lte((tt1, ee1), (tt2, ee2))
+    | "<" -> TBool, Lt((tt1, ee1), (tt2, ee2))
+    | "=" -> TBool, Eq((tt1, ee1), (tt2, ee2))
+    | "<>" -> TBool, Neq((tt1, ee1), (tt2, ee2))
+    | _ -> failwith "unreachable")
+
+  (* native int function *)
+  | PEApply (PERef(nf), PEPair(e1, e2)) when nf = "+" || nf = "-" || nf = "/" || nf = "*" || nf = "mod" -> 
+    let (tt1, ee1) = transform_expr e1 env' ic in 
+    let (tt2, ee2) = transform_expr e2 env' ic in 
+    let a,b = tt1 |> type_final, tt2 |> type_final in
+    if a <> TInt && a <> TAny || b <> TInt && b <> TAny then
+      raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got_expect (TPair(tt1, tt2)) @@ TPair(TInt, TInt));
+    (match nf with 
+    | "+" -> TInt, Add((tt1, ee1), (tt2, ee2))
+    | "-" -> TInt, Sub((tt1, ee1), (tt2, ee2))
+    | "/" -> TInt, Div((tt1, ee1), (tt2, ee2))
+    | "*" -> TInt, Mul((tt1, ee1), (tt2, ee2))
+    | "mod" -> TInt, Mod((tt1, ee1), (tt2, ee2))
+    | _ -> failwith "unreachable")
+
+  (* native float function *)
+  | PEApply (PERef(nf), PEPair(e1, e2)) when nf = "+." || nf = "-." || nf = "/." || nf = "*." -> 
+    let (tt1, ee1) = transform_expr e1 env' ic in 
+    let (tt2, ee2) = transform_expr e2 env' ic in 
+    let a,b = tt1 |> type_final, tt2 |> type_final in
+    if a <> TFloat && a <> TAny || b <> TFloat && b <> TAny then
+      raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got_expect (TPair(tt1, tt2)) @@ TPair(TFloat, TFloat));
+    (match nf with 
+    | "+." -> TFloat, FAdd((tt1, ee1), (tt2, ee2))
+    | "-." -> TFloat, FSub((tt1, ee1), (tt2, ee2))
+    | "/." -> TFloat, FDiv((tt1, ee1), (tt2, ee2))
+    | "*." -> TFloat, FMul((tt1, ee1), (tt2, ee2))
+    | _ -> failwith "unreachable")
 
   (* native pair/list function *)
   | PEApply (PERef(nf), c) when nf = "fst" || nf = "snd" || nf = "hd" || nf = "tl" -> 
@@ -234,8 +169,8 @@ let rec transform_expr (pe: Parse_tree.pexpr) (env': Env.t) (ic: bindings) : tex
     | TAny, "tl" -> TAny, PairSnd (pres)
     | _ -> raise @@ TypeError (pel, nf ^ " wrong exp passed; " ^ show_ttype_got_expect tt1 @@ TPair(TAny, TAny)))
     
-      
 
+  (* other apply case *)
   | PEApply (e, c) -> 
     let (tt,ee) = transform_expr e env' ic in  
     (match tt |> type_final with

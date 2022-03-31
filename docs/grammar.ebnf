@@ -30,6 +30,24 @@
 <case> ::= <value> LAMBDA <expr>
          | UNDERSCORE LAMBDA <expr>
 
+<infix_apply> ::= <expr> ADD <expr>
+                | <expr> SUB <expr>
+                | <expr> MUL <expr>
+                | <expr> DIV <expr>
+                | <expr> MOD <expr>
+                | <expr> FADD <expr>
+                | <expr> FSUB <expr>
+                | <expr> FDIV <expr>
+                | <expr> FMUL <expr>
+                | <expr> GT <expr>
+                | <expr> GTE <expr>
+                | <expr> LT <expr>
+                | <expr> LTE <expr>
+                | <expr> EQ <expr>
+                | <expr> NEQ <expr>
+                | <expr> OR <expr>
+                | <expr> AND <expr>
+
 <expr> ::= <value>
          | LPAR <expr> COMMA <expr> RPAR
          | FUN LPAR RPAR LAMBDA <expr>
@@ -38,26 +56,9 @@
          | LET IDENT EQ <expr> IN <expr>
          | LET REC IDENT COLON <type_sig> EQ <expr> IN <expr>
          | LET REC IDENT EQ <expr> IN <expr>
-         | <expr> ADD <expr>
-         | <expr> SUB <expr>
-         | <expr> DIV <expr>
-         | <expr> MUL <expr>
-         | <expr> MOD <expr>
-         | <expr> FADD <expr>
-         | <expr> FSUB <expr>
-         | <expr> FDIV <expr>
-         | <expr> FMUL <expr>
-         | <expr> AND <expr>
-         | <expr> OR <expr>
-         | NOT <expr>
-         | <expr> LT <expr>
-         | <expr> LTE <expr>
-         | <expr> GT <expr>
-         | <expr> GTE <expr>
-         | <expr> EQ <expr>
-         | <expr> NEQ <expr>
          | IF <expr> THEN <expr> ELSE <expr>
          | <expr> LPAR <expr> RPAR
+         | <infix_apply>
          | LPAR <expr> RPAR
          | LPAR <expr> COLON <type_sig> RPAR
          | IDENT DOT IDENT

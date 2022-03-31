@@ -9,7 +9,7 @@
 // %token LBRACE, RBRACE
 // %token OF, DOT
 %token LPAR, RPAR, COMMA, COLON, SEMICOLON, PIPE, EQ 
-%token TYPE, AND, OR, NOT, TRUE, FALSE
+%token TYPE, AND, OR, TRUE, FALSE
 %token ADD, SUB, DIV, MUL, MOD
 %token FADD, FSUB, FDIV, FMUL
 %token IF, THEN, ELSE
@@ -28,10 +28,9 @@
 %token MODULE, STRUCT, END, DOT
 
 %left PIPEGT
-%left NOT
 %left OR
 %left AND
-%left NEQ
+%left NEQ, EQ
 %left LTE, LT, GT, GTE
 %left ADD, SUB
 %left MOD
@@ -89,6 +88,27 @@
     | x=value LAMBDA e=expr     { (Some(x), e) }
     | UNDERSCORE LAMBDA e=expr  { (None, e) }
 
+
+  infix_apply:
+    | e1=expr ADD e2=expr   { loce $startpos $endpos @@ PEApply (PERef("+"), PEPair(e1, e2)) }
+    | e1=expr SUB e2=expr   { loce $startpos $endpos @@ PEApply (PERef("-"), PEPair(e1, e2)) }
+    | e1=expr MUL e2=expr   { loce $startpos $endpos @@ PEApply (PERef("*"), PEPair(e1, e2)) }
+    | e1=expr DIV e2=expr   { loce $startpos $endpos @@ PEApply (PERef("/"), PEPair(e1, e2)) }
+    | e1=expr MOD e2=expr   { loce $startpos $endpos @@ PEApply (PERef("mod"), PEPair(e1, e2)) }
+    | e1=expr FADD e2=expr  { loce $startpos $endpos @@ PEApply (PERef("+."), PEPair(e1, e2)) }
+    | e1=expr FSUB e2=expr  { loce $startpos $endpos @@ PEApply (PERef("-."), PEPair(e1, e2)) }
+    | e1=expr FDIV e2=expr  { loce $startpos $endpos @@ PEApply (PERef("/."), PEPair(e1, e2)) }
+    | e1=expr FMUL e2=expr  { loce $startpos $endpos @@ PEApply (PERef("*."), PEPair(e1, e2)) }
+    | e1=expr GT e2=expr    { loce $startpos $endpos @@ PEApply (PERef(">"), PEPair(e1, e2)) }
+    | e1=expr GTE e2=expr   { loce $startpos $endpos @@ PEApply (PERef(">="), PEPair(e1, e2)) }
+    | e1=expr LT e2=expr    { loce $startpos $endpos @@ PEApply (PERef("<"), PEPair(e1, e2)) }
+    | e1=expr LTE e2=expr   { loce $startpos $endpos @@ PEApply (PERef("<="), PEPair(e1, e2)) }
+    | e1=expr EQ e2=expr    { loce $startpos $endpos @@ PEApply (PERef("="), PEPair(e1, e2)) }
+    | e1=expr NEQ e2=expr   { loce $startpos $endpos @@ PEApply (PERef("<>"), PEPair(e1, e2)) }
+    | e1=expr OR e2=expr    { loce $startpos $endpos @@ PEApply (PERef("||"), PEPair(e1, e2)) }
+    | e1=expr AND e2=expr   { loce $startpos $endpos @@ PEApply (PERef("&&"), PEPair(e1, e2)) }
+    
+
   expr:
     | e=value                   { loce $startpos $endpos @@ e }
     | LPAR t1=expr COMMA t2=expr RPAR
@@ -104,37 +124,14 @@
 		| LET REC i=IDENT COLON t=type_sig EQ e=expr IN ee=expr { loce $startpos $endpos @@ PELetIn (i, Some(t), e, ee, true) }
 		| LET REC i=IDENT EQ e=expr IN ee=expr { loce $startpos $endpos @@ PELetIn (i, None, e, ee, true) }
 
-    // arithm (int)
-    | e1=expr ADD e2=expr 			{ loce $startpos $endpos @@ PEAdd (e1,e2) }
-    | e1=expr SUB e2=expr 			{ loce $startpos $endpos @@ PESub (e1,e2) }
-    | e1=expr DIV e2=expr 			{ loce $startpos $endpos @@ PEDiv (e1,e2) }
-    | e1=expr MUL e2=expr 			{ loce $startpos $endpos @@ PEMul (e1,e2) }
-    | e1=expr MOD e2=expr 			{ loce $startpos $endpos @@ PEMod (e1,e2) }
-
-    // arithm (float)
-    | e1=expr FADD e2=expr 			{ loce $startpos $endpos @@ PEFAdd (e1,e2) }
-    | e1=expr FSUB e2=expr 			{ loce $startpos $endpos @@ PEFSub (e1,e2) }
-    | e1=expr FDIV e2=expr 			{ loce $startpos $endpos @@ PEFDiv (e1,e2) }
-    | e1=expr FMUL e2=expr 			{ loce $startpos $endpos @@ PEFMul (e1,e2) }
-
-    // boolean
-    | e1=expr AND e2=expr 			{ loce $startpos $endpos @@ PEAnd (e1,e2) }
-    | e1=expr OR e2=expr 			  { loce $startpos $endpos @@ PEOr (e1,e2) }
-    | NOT e=expr 					      { loce $startpos $endpos @@ PENot (e) }
-    | e1=expr LT e2=expr 			  { loce $startpos $endpos @@ PELt (e1,e2) }
-    | e1=expr LTE e2=expr 			{ loce $startpos $endpos @@ PELte (e1,e2) }
-    | e1=expr GT e2=expr 			  { loce $startpos $endpos @@ PEGt (e1,e2) }
-    | e1=expr GTE e2=expr 			{ loce $startpos $endpos @@ PEGte (e1,e2) }
-    | e1=expr EQ e2=expr 			  { loce $startpos $endpos @@ PEEq (e1,e2) }
-    | e1=expr NEQ e2=expr 			{ loce $startpos $endpos @@ PENeq (e1,e2) }
-
     // if then else
     | IF c=expr THEN e1=expr ELSE e2=expr 
                                 { loce $startpos $endpos @@ PEIfThenElse (c,e1,e2) }
 
 
     // apply a function
-    | i=expr LPAR p=expr RPAR 			{ loce $startpos $endpos @@ PEApply(i, p) }
+    | i=expr LPAR p=expr RPAR			      { loce $startpos $endpos @@ PEApply (i, p) }
+    | e=infix_apply                     { loce $startpos $endpos @@ e }
 		
     | LPAR e=expr RPAR 				          { loce $startpos $endpos @@ e }
     | LPAR v=expr COLON t=type_sig RPAR { loce $startpos $endpos @@ PETyped (v, t) }
@@ -198,7 +195,7 @@
                                   | (None, e) :: [] -> e
                                   | (None, _) :: _ -> raise (SyntaxError2 ("Default case should be the last"))                             
                                   | (Some(_), e) :: [] -> e (* this cause runtime problems if the match-case is not exaustive *)
-                                  | (Some(v), e) :: xl' -> PEIfThenElse (PEEq(c, v), e, cases xl')
+                                  | (Some(v), e) :: xl' -> PEIfThenElse (PEApply(PERef("="), PEPair(c, v)), e, cases xl')
                                   in loce $startpos $endpos @@ cases w }
 
 
@@ -236,7 +233,7 @@
         | (DDef(i, pt, e, b))::dl' -> (DDef(x ^ "_" ^ i, pt, e, b))::nbuild dl'
         | (DType(i, t))::dl' -> (DType(x ^ "_" ^ i, t))::nbuild dl'
         | (DExternal(i, t, n))::dl' -> (DExternal(x ^ "_" ^ i, t, n))::nbuild dl'
-        | (DOpen(i))::dl' -> raise (SyntaxError2 ("Open not allowed in module"))
+        | (DOpen(_))::_ -> raise (SyntaxError2 ("Open not allowed in module"))
         in nbuild @@ List.flatten dl
       }
 
