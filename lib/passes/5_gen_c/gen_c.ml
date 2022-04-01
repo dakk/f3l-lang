@@ -6,15 +6,30 @@ open Pp_ltype
 
 
 let pp_ast fmt ast = 
-  let pp_s fmt (i, t) =
+  let rec pp_s fmt (i, t) =
     match t with 
+
+    | Ast.Def (TLambda(_,_), Lambda((ia,ta), (t, e))) -> 
+      fprintf fmt "auto %s = [](auto %s) { return %a; };\n" 
+      i 
+      (* pp_ltype ta *)
+      ia 
+      pp_lexpr (t,e)
+
+    | Ast.Def (t, LetIn(il, tl, el, e2)) -> 
+      fprintf fmt "%a %s = %a;\n%a;\n" 
+      pp_ltype t
+      il
+      pp_lexpr el
+      pp_s (i, Ast.Def(fst e2, snd e2))
+
     | Ast.Def (t, e) -> 
-      fprintf fmt "auto %s = []() { @[%a@]@ }()\n" 
-      (* pp_ltype t  *)
+      fprintf fmt "%a %s = %a;\n" 
+      pp_ltype t
       i 
       pp_lexpr (t,e)
     | Ast.External (_, ie) ->
-      fprintf fmt "#define %s = %s\n" 
+      fprintf fmt "#define %s %s\n" 
       i 
       ie
     | _ -> ()
@@ -35,5 +50,7 @@ let generate_c (ast: t) =
   };\n"; *)
   
   pp_ast sfmt ast;
+
+  fprintf sfmt "#include <stdio.h>\nint main() { printf(\"%%d\", res); }\n";
   
-  sget ()
+  "#include <string>\nusing namespace std;\n" ^ pdefs_tostring () ^ "\n" ^ sget ()

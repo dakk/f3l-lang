@@ -53,14 +53,14 @@ match e with
     pp_lexpr e
   
 | Pair (e1, e2) -> 
-  fprintf fmt "{ .fst=%a; .snd=%a; }" 
+  fprintf fmt "{ %a, %a }" 
     pp_lexpr e1
     pp_lexpr e2
 
 | Lambda (arg, e) -> 
-    fprintf fmt "[] (%a %s) { return @[%a@]; };"    
+    fprintf fmt "[] (auto %s) { return %a; }"    
       (* pp_ltype (fst e) *)
-      pp_ltype (snd arg)
+      (* pp_ltype (snd arg) *)
       (fst arg)
       (* pp_par arg *)
       pp_lexpr e
