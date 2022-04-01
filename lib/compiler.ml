@@ -12,7 +12,7 @@ type options = {
 }
 
 let default_options = {
-  target = Some ("py");
+  target = Some ("c");
   print_pt = true;
   print_ast = true;
   print_uast = true;
@@ -109,11 +109,11 @@ let compile (filename: string) opt =
       match opt.target with 
       | Some ("c") -> 
         if opt.verbose then printf "===> Generating c code\n\n%!";        
-        Passes.Ast_to_c.generate_c ast
+        Passes.Gen_c.generate_c ast
       | Some ("py") -> 
         if opt.verbose then printf "===> Generating python code\n\n%!";
         build_uast ast opt 
-        |> Passes.Uast_to_py.generate_py 
+        |> Passes.Gen_py.generate_py 
       | _ -> ""
     )
     |> print_endline 

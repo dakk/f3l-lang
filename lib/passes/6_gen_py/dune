@@ -1,8 +1,8 @@
 (library
- (name uast_to_py)
- (public_name f3l.passes.uast_to_py)
+ (name gen_py)
+ (public_name f3l.passes.gen_py)
  (libraries num helpers untyped_ast)
- (modules uast_to_py pp_lexpr))
+ (modules gen_py pp_lexpr))
 
 
 (env

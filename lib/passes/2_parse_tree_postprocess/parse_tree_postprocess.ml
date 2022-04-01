@@ -6,14 +6,12 @@ let rec find_file (ip: string list) (m: string) =
   | [] -> raise (ModuleNotFound m)
   | d::ip' -> 
     let f = d ^ "/" ^ (String.uncapitalize_ascii m) ^ ".ml" in
-    Printf.printf "checking in %s for module %s\n" f m;
-    if Sys.file_exists f then (Printf.printf "%s found\n" f; f) else find_file ip' m
+    if Sys.file_exists f then f else find_file ip' m
 ;;
 
 
 (* replace all opens in a Parse_tree with the content of the file *)
 let rec inject_opens (ip: string list) (pt: Parse_tree.t): Parse_tree.t =
-  Printf.printf "%s\n" (List.fold_left (^) "" ip);
   List.fold_left (fun ptl dec -> 
     match dec with 
     | Parse_tree.DOpen (m) -> (

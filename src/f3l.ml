@@ -33,7 +33,7 @@ let command =
         and target    = flag "-target" (optional string) ~doc:" target language (c, py)"
       in fun () -> 
         let opt = Compiler.{
-          target = if is_none target then Some("py") else target;
+          target = if is_none target then Some("c") else target;
           print_pt = ppt;
           print_ast = past;
           print_uast = puast;

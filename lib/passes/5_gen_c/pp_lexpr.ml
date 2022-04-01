@@ -58,9 +58,11 @@ match e with
     pp_lexpr e2
 
 | Lambda (arg, e) -> 
-    fprintf fmt "lambda (%a, (%a) { return @[%a@]; }"    
-      pp_ltype (fst e)
-      pp_par arg
+    fprintf fmt "[] (%a %s) { return @[%a@]; };"    
+      (* pp_ltype (fst e) *)
+      pp_ltype (snd arg)
+      (fst arg)
+      (* pp_par arg *)
       pp_lexpr e
 
 
@@ -139,9 +141,9 @@ match e with
     pp_lexpr par     
 
 | LetIn (id, tt, e, e2) -> 
-  fprintf fmt "let %s: %a = @\n%a in @\n%a " 
+  fprintf fmt "auto %s = %a; %a" 
     id 
-    pp_ltype tt
+    (* pp_ltype tt *)
     pp_lexpr e 
     pp_lexpr e2
 
