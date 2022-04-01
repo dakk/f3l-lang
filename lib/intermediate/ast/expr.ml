@@ -1,6 +1,5 @@
 open Ttype
 
-
 type expr = 
 | LocalRef of iden 
 | GlobalRef of iden
@@ -32,7 +31,6 @@ type expr =
 | FSub of texpr * texpr
 | FMul of texpr * texpr
 | FDiv of texpr * texpr
-
 
 (* bool *)
 | And of texpr * texpr

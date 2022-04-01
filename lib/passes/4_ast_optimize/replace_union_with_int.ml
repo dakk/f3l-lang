@@ -7,7 +7,7 @@ let replace_union_with_int ast =
   | TTypeRef (_, t) -> replace_type t mp
   | TLambda (t, tt) -> TLambda (replace_type t mp, replace_type tt mp)
   | TUnion (_) -> TInt
-  | TPair(t1, t2) -> TPair (replace_type t1 mp, replace_type t2 mp)
+  | TPair (t1, t2) -> TPair (replace_type t1 mp, replace_type t2 mp)
   | _ -> t
   in
 
@@ -24,11 +24,12 @@ let replace_union_with_int ast =
   | External (a, b) -> replace_type t mp, External (a, replace_type b mp)
   | UnionValue (a) -> TInt, Int(List.assoc a mp)
   | Lambda (a, b) -> replace_type t mp, Lambda ((fst a, replace_type (snd a) mp), replace_exp b mp)
-  | PairFst (a) -> replace_type t mp, PairFst (replace_exp a mp)
-  | PairSnd (a) -> replace_type t mp, PairSnd (replace_exp a mp)
   | Apply (a, b) -> replace_type t mp, Apply (replace_exp a mp, replace_exp b mp)
   | LetIn (a, b, c, d) -> replace_type t mp, LetIn (a, replace_type b mp, replace_exp c mp, replace_exp d mp)
   | IfThenElse (a, b, c) -> replace_type t mp, IfThenElse (replace_exp a mp, replace_exp b mp, replace_exp c mp)
+
+  | PairFst (a) -> replace_type t mp, PairFst (replace_exp a mp)
+  | PairSnd (a) -> replace_type t mp, PairSnd (replace_exp a mp)
   | Not (a) -> replace_type t mp, Not (replace_exp a mp)
   | Add (a, b) -> replace_type t mp, Add (replace_exp a mp, replace_exp b mp)
   | Sub (a, b) -> replace_type t mp, Sub (replace_exp a mp, replace_exp b mp)
