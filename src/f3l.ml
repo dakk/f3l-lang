@@ -30,10 +30,10 @@ let command =
         and ppt       = flag "-print-pt" no_arg ~doc:" print parse-tree"
         and verbose   = flag "-verbose" no_arg ~doc:" enable verbosity"
         and noremoveunused   = flag "-no-remove-unused" no_arg ~doc:" disable removing unused symbols"
-        and target    = flag "-target" (optional string) ~doc:" target language (c, py)"
+        and target    = flag "-target" (optional string) ~doc:" target language (c, v, py)"
       in fun () -> 
         let opt = Compiler.{
-          target = if is_none target then Some("c") else target;
+          target = if is_none target then Some("v") else target;
           print_pt = ppt;
           print_ast = past;
           print_uast = puast;

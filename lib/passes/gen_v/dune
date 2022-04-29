@@ -1,0 +1,10 @@
+(library
+ (name gen_v)
+ (public_name f3l.passes.gen_v)
+ (libraries num helpers ast)
+ (modules gen_v pp_ltype pp_lexpr))
+
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))

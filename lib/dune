@@ -12,6 +12,8 @@
   parse_tree_to_ast
   gen_c 
   gen_py
+  gen_ir
+  gen_v
   ast_to_uast
  )
  (modules intermediate passes compiler))

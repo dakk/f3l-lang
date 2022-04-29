@@ -1,0 +1,10 @@
+(library
+ (name gen_ir)
+ (public_name f3l.passes.gen_ir)
+ (libraries num helpers ast)
+ (modules gen_ir))
+
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))
